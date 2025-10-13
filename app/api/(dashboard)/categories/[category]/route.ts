@@ -107,16 +107,20 @@ export const DELETE = async (request: Request, context: { params: any }) => {
 
     const category = await Category.findOne({_id: categoryId, user: userId});
     if(!category){
-        return new NextResponse(JSON.stringify({message: "category not found or does not belong to the user"}){
-
-            status:404,
+        return new NextResponse(JSON.stringify({message: "category not found or does not belong to the user"}),
+        {
+            status : 404,
         }
     )}
 
-    await Category.findByIdAndDelete ( category)
+    await Category.findByIdAndDelete(categoryId)
+    return new NextResponse(JSON.stringify({message: "category successfully deleted"}),
+        {
+            status : 200,
+        }
+    )
 
 
-    
   } catch (error: any) {
     return new NextResponse(
       JSON.stringify({ message: "Error in deleting category", error: error.message }),

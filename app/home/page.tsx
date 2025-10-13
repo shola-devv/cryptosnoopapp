@@ -1,4 +1,4 @@
-"use client"
+   "use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
 import { 
   User, 
   Mail, 
@@ -79,22 +79,30 @@ export default function UserProfile() {
   const totalValue = 69646.94
   const totalChange = 1.8
 
+  const handleNavigation = (path) => {
+    window.location.href = path
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
+        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#c750f7' }}>
-                <span className="text-white font-bold text-lg sm:text-xl">C</span>
-              </div>
+              
+                <Image
+                                    src="/cryptosnooplogo1.png"
+                                    alt="DIVAFlex Logo"
+                                    width={48}
+                                    height={32}
+                                    className="object-contain"
+                                    priority
+                                  />
+              
               <div className="flex flex-col leading-none">
-                <span className="font-bold text-base sm:text-lg leading-tight" style={{ color: '#c750f7' }}>crypto</span>
-                <span className="text-slate-700 dark:text-slate-300 font-bold text-base sm:text-lg leading-tight -mt-1">
+                <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>crypto</span>
+                <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
                   Snoop
                 </span>
               </div>
@@ -104,46 +112,110 @@ export default function UserProfile() {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
         {/* Profile Header */}
         <section className="mb-6">
           <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.3)' }}>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-start gap-4">
+            <CardContent className="p-3 sm:p-6">
+              {/* Mobile Layout */}
+              <div className="flex sm:hidden flex-col gap-4">
+                {/* Top Row: Avatar and Hello Text */}
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-shrink-0">
+                    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: '#c750f7' }}></div>
+                    <Avatar className="w-12 h-12 border-2 relative" style={{ borderColor: '#c750f7' }}>
+                      <AvatarImage src="/placeholder.svg?height=48&width=48" alt="John Doe" />
+                      <AvatarFallback className="text-sm font-bold text-white" style={{ backgroundColor: '#c750f7' }}>JD</AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-white">WELCOME!</p>
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
+                    {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                </div>
+
+                {/* Order Value Section */}
+                <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-3">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total balance</p>
+                  <div className="flex items-baseline justify-between">
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                      {showBalance ? totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '••••••'}
+                    </p>
+                    <Button 
+                      size="sm" 
+                      className="text-white font-semibold text-xs h-7 px-2"
+                      style={{ backgroundColor: '#c750f7' }}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Profit Section */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
+                    <p className="text-base font-bold text-green-600">
+                      {showBalance ? `+${(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                    </p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
+                    <p className="text-base font-bold text-red-600">
+                      {showBalance ? `-${Math.abs(totalChange * 0.6 * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Desktop Layout */}
+              <div className="hidden sm:flex flex-row items-start gap-4">
                 <div className="relative flex-shrink-0">
                   <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: '#c750f7' }}></div>
                   <Avatar className="w-16 h-16 border-2 relative" style={{ borderColor: '#c750f7' }}>
-                    <AvatarImage src="/placeholder.svg?height=64&width=64" alt="John Doe" />
+                    <AvatarImage src="/walodja.jpg" alt="profile picture" />
                     <AvatarFallback className="text-lg font-bold text-white" style={{ backgroundColor: '#c750f7' }}>JD</AvatarFallback>
                   </Avatar>
                 </div>
                 
-                <div className="flex-1">
+                <div className="flex-1 w-full">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">Welcome!</h2>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome!</h2>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBalance(!showBalance)}>
                       {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </Button>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Total Value</p>
-                      <p className="text-lg font-bold text-slate-800 dark:text-white">
-                        {showBalance ? `${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                  <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-4 mb-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">Total Ballance</p>
+                    <div className="flex items-baseline justify-between">
+                      <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                        {showBalance ? totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '••••••'}
+                      </p>
+                      <Button 
+                        size="sm" 
+                        className="text-white font-semibold"
+                        style={{ backgroundColor: '#c750f7' }}
+                      >
+                        View
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
+                      <p className="text-lg font-bold text-green-600">
+                        {showBalance ? `+${(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                       </p>
                     </div>
-                    
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">24h Change</p>
-                      <p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {showBalance ? `${totalChange >= 0 ? '+' : ''}${Math.abs(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
+                      <p className="text-lg font-bold text-red-600">
+                        {showBalance ? `-${Math.abs(totalChange * 0.6 * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                       </p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Total Assets</p>
-                      <p className="text-lg font-bold text-slate-800 dark:text-white">{portfolio.length}</p>
                     </div>
                   </div>
                 </div>
@@ -154,165 +226,72 @@ export default function UserProfile() {
 
         {/* Tabs Section */}
         <section className="mb-8">
-          <Tabs defaultValue="assets" className="w-full" onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3 mb-2 h-auto p-1" style={{ backgroundColor: 'rgba(199, 80, 247, 0.1)' }}>
-              <TabsTrigger 
-                value="assets" 
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 relative h-full text-sm font-semibold flex flex-col items-center gap-2 py-3"
-                asChild
-              >
-                <a href="/home/assets">
-                  <div className="w-24 h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="/placeholder.svg?height=72&width=96" alt="Assets" className="w-full h-full object-cover" />
-                  </div>
-                  <span>ASSETS</span>
-                </a>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="monitor" 
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 relative h-full text-sm font-semibold flex flex-col items-center gap-2 py-3"
-                asChild
-              >
-                <a href="/home/monitor-accounts">
-                  <div className="w-24 h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="/placeholder.svg?height=72&width=96" alt="Monitor Accounts" className="w-full h-full object-cover" />
-                  </div>
-                  <span>MONITOR ACCOUNTS</span>
-                </a>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="wallets" 
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 relative h-full text-sm font-semibold flex flex-col items-center gap-2 py-3"
-                asChild
-              >
-                <a href="/home/wallets">
-                  <div className="w-24 h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="/placeholder.svg?height=72&width=96" alt="Wallets" className="w-full h-full object-cover" />
-                  </div>
-                  <span>WALLETS</span>
-                </a>
-              </TabsTrigger>
-            </TabsList>
+          <div className="grid w-full grid-cols-3 mb-2 h-auto p-1 gap-1 rounded-lg" style={{ backgroundColor: 'rgba(199, 80, 247, 0.1)' }}>
+            <button 
+              onClick={() => handleNavigation("/home/assets")}
+              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
             
-            {/* Indicator Dots */}
-            <div className="flex justify-center gap-2 mb-6">
-              <div 
-                className="w-2 h-2 rounded-full transition-all duration-300"
-                style={{ backgroundColor: activeTab === 'assets' ? '#c750f7' : '#cbd5e1' }}
-              ></div>
-              <div 
-                className="w-2 h-2 rounded-full transition-all duration-300"
-                style={{ backgroundColor: activeTab === 'monitor' ? '#c750f7' : '#cbd5e1' }}
-              ></div>
-              <div 
-                className="w-2 h-2 rounded-full transition-all duration-300"
-                style={{ backgroundColor: activeTab === 'wallets' ? '#c750f7' : '#cbd5e1' }}
-              ></div>
-            </div>
-
-            {/* Assets Tab */}
-            <TabsContent value="assets">
-              <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Wallet className="w-5 h-5" style={{ color: '#c750f7' }} />
-                    Available Cryptocurrencies
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
+            >
+              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img src="/cryptosnooplogo1.png" alt="Assets" className="w-full h-full object-cover" />
+              </div>
+              <span className="text-xs sm:text-sm leading-tight">ASSETS</span>
+            </button>
+            <button 
+              onClick={() => handleNavigation("/home/monitor-accounts")}
+              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
+              
+            >
+              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img src="/cryptosnooplogo1.png" alt="Monitor Accounts" className="w-full h-full object-cover" />
+              </div>
+              <span className="text-xs sm:text-sm leading-tight">MONITOR</span>
+            </button>
+            <button 
+              onClick={() => handleNavigation("/home/wallets")}
+              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
+            >
+              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img src="/cryptosnooplogo1.png" alt="Wallets" className="w-full h-full object-cover" />
+              </div>
+              <span className="text-xs sm:text-sm leading-tight">WALLETS</span>
+            </button>
+          </div>
+          
+          
+             <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="space-y-2 sm:space-y-3">
                     {cryptoCoins.map((coin) => (
                       <div 
                         key={coin.id} 
-                        className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow"
+                        className="flex items-center justify-between p-2 sm:p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow gap-2 sm:gap-4 flex-wrap sm:flex-nowrap"
                       >
-                        <div className="flex items-center gap-4 flex-1">
+                        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
                           <div 
-                            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold text-white"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold text-white flex-shrink-0"
                             style={{ backgroundColor: '#c750f7' }}
                           >
                             {coin.icon}
                           </div>
-                          <div>
-                            <p className="font-semibold text-slate-800 dark:text-white">{coin.name}</p>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">{coin.symbol}</p>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-sm sm:text-base text-slate-800 dark:text-white truncate">{coin.name}</p>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{coin.symbol}</p>
                           </div>
                         </div>
-                        <div className="text-right mr-4">
-                          <p className="font-bold text-slate-800 dark:text-white">${coin.price.toLocaleString()}</p>
-                          <p className={`text-sm font-semibold ${coin.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {coin.change >= 0 ? <TrendingUp className="w-4 h-4 inline mr-1" /> : <TrendingDown className="w-4 h-4 inline mr-1" />}
+                        <div className="text-right flex-shrink-0">
+                          <p className="font-bold text-sm sm:text-base text-slate-800 dark:text-white">${coin.price.toLocaleString()}</p>
+                          <p className={`text-xs sm:text-sm font-semibold ${coin.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {coin.change >= 0 ? <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" /> : <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />}
                             {coin.change >= 0 ? '+' : ''}{coin.change}%
                           </p>
                         </div>
                         <Button 
                           size="sm" 
-                          className="text-white font-semibold"
+                          className="text-white font-semibold text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0"
                           style={{ backgroundColor: '#c750f7' }}
                         >
-                          <Plus className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Security Tab */}
-            <TabsContent value="monitor">
-              <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5" style={{ color: '#c750f7' }} />
-                    Monitor Accounts
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="text-center py-8 text-slate-500">
-                    <p>Monitor accounts feature coming soon...</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Portfolio Tab */}
-            <TabsContent value="wallets">
-              <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Wallet className="w-5 h-5" style={{ color: '#c750f7' }} />
-                    My Crypto Wallets
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {portfolio.map((coin) => (
-                      <div 
-                        key={coin.id} 
-                        className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <div 
-                            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold text-white"
-                            style={{ backgroundColor: '#c750f7' }}
-                          >
-                            {coin.icon}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-800 dark:text-white">{coin.symbol}</p>
-                          </div>
-                        </div>
-                        <div className="text-right mr-4">
-                          <p className="font-bold text-slate-800 dark:text-white">${coin.price.toLocaleString()}</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="font-semibold"
-                          style={{ borderColor: '#c750f7', color: '#c750f7' }}
-                        >
-                          Remove
+                          <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </div>
                     ))}
@@ -320,52 +299,20 @@ export default function UserProfile() {
                 </CardContent>
               </Card>
 
-              {/* Available Coins to Add */}
-              <Card className="border-0 shadow-lg mt-6" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Plus className="w-5 h-5" style={{ color: '#c750f7' }} />
-                    Add Coins to Portfolio
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {cryptoCoins.filter(coin => !portfolio.find(p => p.id === coin.id)).map((coin) => (
-                      <div 
-                        key={coin.id} 
-                        className="flex items-center justify-between p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <div 
-                            className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold text-white"
-                            style={{ backgroundColor: '#c750f7' }}
-                          >
-                            {coin.icon}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-800 dark:text-white">{coin.symbol}</p>
-                          </div>
-                        </div>
-                        <div className="text-right mr-4">
-                          <p className="font-bold text-slate-800 dark:text-white">${coin.price.toLocaleString()}</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          className="text-white font-semibold"
-                          style={{ backgroundColor: '#c750f7' }}
-                        >
-                          <Plus className="w-4 h-4 mr-1" />
-                          Add
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </section>
+                </section>
       </div>
+      <footer className=" bg-white dark:bg-slate-900 border-t border-purple-200 dark:border-purple-900 py-12">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#c750f7] to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <span className="text-white font-bold text-2xl">C</span>
+            </div>
+            <h4 className="text-2xl font-bold text-slate-900 dark:text-white">CryptoSnoop</h4>
+          </div>
+          <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
+          <p className="text-slate-500 dark:text-slate-500 text-sm">© 2025 CryptoSnoop. All rights reserved.</p>
+        </div>
+      </footer>
     </main>
   )
 }

@@ -32,17 +32,17 @@ const CryptoSnoop = () => {
     {
       title: "Hassle-Free Tracking",
       description: "CryptoSnoop helps you track your crypto assets and account hassle-free without necessarily connecting your wallet. Monitor your portfolio with real-time data and insights.",
-      icon: <Shield className="w-16 h-16 text-[#6CC6FF]" />,
+      icon: "/eye.png"
     },
     {
       title: "Easy Management",
       description: "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallet information securely in one centralized location.",
-      icon: <Wallet className="w-16 h-16 text-[#6CC6FF]" />,
+      icon: "/wallet.png"
     },
     {
       title: "Easy Login and Security",
       description: "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
-      icon: <Lock className="w-16 h-16 text-[#6CC6FF]" />,
+      icon: "/padlock.png"
     },
   ];
 
@@ -63,7 +63,7 @@ const CryptoSnoop = () => {
                   />
                 </div>
             <h1 className="text-xl font-bold bg-black bg-clip-text text-transparent">
-              CryptoSnoop
+            cryptoSnoop
             </h1>
           </div>
           <div className="flex gap-3">
@@ -97,7 +97,7 @@ const CryptoSnoop = () => {
                     alt="DIVAFlex Logo"
                     width={38}
                     height={28}
-                    className="object-contain flex-shrink-0 animate-bounce"
+                    className="object-contain flex-shrink-0 animate-slide-in-left-repeat"
                     priority
                   />
                 <p className="text-gray-700 text-base sm:text-lg">Manage crypto assets with live data</p>
@@ -108,7 +108,7 @@ const CryptoSnoop = () => {
                     alt="DIVAFlex Logo"
                     width={38}
                     height={28}
-                    className="object-contain flex-shrink-0 animate-bounce"
+                    className="object-contain flex-shrink-0 "
                     priority
                   />
                 <p className="text-gray-700 text-base sm:text-lg">Keep all your wallet labels securely in one place</p>
@@ -119,7 +119,7 @@ const CryptoSnoop = () => {
                     alt="DIVAFlex Logo"
                     width={38}
                     height={28}
-                    className="object-contain flex-shrink-0 animate-bounce"
+                    className="object-contain flex-shrink-0 "
                     priority
                   />
                 <p className="text-gray-700 text-base sm:text-lg">Monitor remote crypto wallets</p>
@@ -175,9 +175,16 @@ const CryptoSnoop = () => {
                 } items-center gap-12 md:gap-16`}
               >
                 <div className="flex-1">
-                  <div className="bg-gradient-to-br from-[#6CC6FF]/20 to-[#5AB5EE]/20 rounded-3xl p-12 flex items-center justify-center h-96">
-                    {feature.icon}
+                  <div className="bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 rounded-3xl p-12 flex items-center justify-center h-96 relative">
+                  <Image
+                     src={feature.icon}
+                     alt={feature.title}
+                     fill
+                     className="object-cover rounded-3xl"
+                     priority
+                      />
                   </div>
+
                 </div>
                 <div className="flex-1 space-y-6">
                   <h3 className="text-4xl font-bold text-gray-900">{feature.title}</h3>
