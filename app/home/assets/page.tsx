@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Trash2, TrendingUp, TrendingDown, Plus, Edit2, Check, X, DollarSign, PieChart, ArrowLeft, LogOut } from "lucide-react"
 
+
 export default function CryptoPortfolioPage() {
   const [assets, setAssets] = useState([])
   const [editingId, setEditingId] = useState(null)
@@ -324,18 +325,31 @@ export default function CryptoPortfolioPage() {
       </div>
 
       {/* Footer */}
-     <footer className=" bg-white dark:bg-slate-900 border-t border-purple-200 dark:border-purple-900 py-12">
-        <div className="container mx-auto px-4 sm:px-6 text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#c750f7] to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <span className="text-white font-bold text-2xl">C</span>
-            </div>
-            <h4 className="text-2xl font-bold text-slate-900 dark:text-white">CryptoSnoop</h4>
-          </div>
-          <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
-          <p className="text-slate-500 dark:text-slate-500 text-sm">© 2025 CryptoSnoop. All rights reserved.</p>
-        </div>
-      </footer>
+      <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
+             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+               <div className="flex items-center justify-center gap-6 mb-6">
+                 <a href="#home" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Home</a>
+                 <a href="#help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
+                 <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Assets</a>
+                 <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+               </div>
+               <div className="flex items-center justify-center gap-3 mb-4">
+               <div className="w-12 h-12 flex items-center justify-center">
+                       <Image
+                         src="/cryptosnooplogo1.png"
+                         alt="DIVAFlex Logo"
+                         width={48}
+                         height={32}
+                         className="object-contain"
+                         priority
+                       />
+                     </div>
+                 <h4 className="text-xl font-bold">CryptoSnoop</h4>
+               </div>
+               <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
+               <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
+             </div>
+           </footer>
     </div>
   )
 }
