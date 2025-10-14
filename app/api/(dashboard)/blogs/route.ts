@@ -13,9 +13,11 @@ export const GET = async (request: Request) => {
     const categoryId = searchParams.get("categoryId");
     const searchKeywords = searchParams.get("keywords") as string;
     const startDate = searchParams.get("startDate");
-    const startDate = searchParams.get("endDate");
-
-
+    const endDate = searchParams.get("endDate");
+    const page: any = parseInt(searchParams.get("page") || "1");
+    const Limit:any = parseInt(searchParams.get("Limit") || "10");
+    
+    
 
     // ✅ Validate IDs
     if (!userId || !Types.ObjectId.isValid(userId)) {
@@ -88,7 +90,9 @@ export const GET = async (request: Request) => {
     }
 
 
-    const blogs = await Blog.find(filter);
+    const skip = (page - 1) * Limit;   
+
+    const blogs = await Blog.find(filter).sort({createdAt:"asc"}).skip(skip).limit(limit);
 
     return new NextResponse(JSON.stringify({ blogs }), {
       status: 200,

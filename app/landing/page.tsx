@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Shield, Wallet, Lock, TrendingUp, Eye, Database } from 'lucide-react';
 import Image from "next/image"
 
+
 const CryptoSnoop = () => {
   const [currentCoin, setCurrentCoin] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -47,7 +48,18 @@ const CryptoSnoop = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden">
+      {/* Background Image - Only on hero section */}
+      <div className="absolute top-0 right-0 w-full h-[100vh] lg:w-1/2 lg:right-[-10%] opacity-60 pointer-events-none z-0">
+        <Image
+          src="/bitcoin.png"
+          alt="Background"
+          fill
+          className="object-contain object-right-bottom lg:object-right"
+          priority
+        />
+      </div>
+
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4 flex items-center justify-between">
@@ -75,11 +87,11 @@ const CryptoSnoop = () => {
       </header>
 
       {/* Hero Section */}
-      <main className="pt-20 sm:pt-32 pb-8">
+      <main className="pt-20 sm:pt-32 pb-8 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <div className="hidden md:flex md:justify-start md:max-w-7xl md:mx-auto mb-4">
-              <span className="px-4 py-1 ml-32 rounded-lg bg-[#c750f7] text-white text-sm font-medium">
+            <div className="flex justify-center sm:justify-center md:justify-start mb-4">
+              <span className="px-4 py-1 md:ml-36 lg:ml-72 sm:ml-12 rounded-lg bg-[#c750f7] text-white text-sm font-medium">
                 Portfolio Management
               </span>
             </div>
@@ -100,7 +112,7 @@ const CryptoSnoop = () => {
                     className="object-contain flex-shrink-0 animate-slide-in-left-repeat"
                     priority
                   />
-                <p className="text-gray-700 text-base sm:text-lg">Manage crypto assets with live data</p>
+                <p className="text-gray-700 text-base sm:text-lg font-bold">Manage crypto assets with live data</p>
               </div>
               <div className="flex items-center justify-center gap-3">
                 <Image
@@ -111,7 +123,7 @@ const CryptoSnoop = () => {
                     className="object-contain flex-shrink-0 "
                     priority
                   />
-                <p className="text-gray-700 text-base sm:text-lg">Keep all your wallet labels securely in one place</p>
+                <p className="text-gray-700 text-base sm:text-lg font-bold">Keep all your wallet labels securely in one place</p>
               </div>
               <div className="flex items-center justify-center gap-3">
                 <Image
@@ -122,7 +134,7 @@ const CryptoSnoop = () => {
                     className="object-contain flex-shrink-0 "
                     priority
                   />
-                <p className="text-gray-700 text-base sm:text-lg">Monitor remote crypto wallets</p>
+                <p className="text-gray-700 text-base sm:text-lg font-bold">Monitor remote crypto wallets</p>
               </div>
             </div>
             <button className="px-8 py-3 rounded-lg bg-[#c750f7] text-white font-semibold hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl text-lg">
@@ -156,7 +168,7 @@ const CryptoSnoop = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-3xl font-bold text-gray-900">{coins[currentCoin].price}</p>
-                    <button className="bg-[#c750f7] hover:bg-[#5AB5EE] text-white rounded-xl p-3 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <button className="bg-[#c750f7] hover:bg-[#d575fc] text-white rounded-xl p-3 transition-all duration-300 shadow-lg hover:shadow-xl">
                       <Plus className="w-5 h-5" />
                     </button>
                   </div>
@@ -175,12 +187,13 @@ const CryptoSnoop = () => {
                 } items-center gap-12 md:gap-16`}
               >
                 <div className="flex-1">
-                  <div className="bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 rounded-3xl p-12 flex items-center justify-center h-96 relative">
+                  <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 flex items-center justify-center">
                   <Image
                      src={feature.icon}
                      alt={feature.title}
-                     fill
-                     className="object-cover rounded-3xl"
+                     width={300}
+                     height={300}
+                     className="object-contain w-3/4 h-3/4 transition-all duration-500"
                      priority
                       />
                   </div>
@@ -188,17 +201,17 @@ const CryptoSnoop = () => {
                 </div>
                 <div className="flex-1 space-y-6">
                   <h3 className="text-4xl font-bold text-gray-900">{feature.title}</h3>
-                  <p className="text-xl text-gray-600 leading-relaxed">{feature.description}</p>
+                  <p className="text-xl text-gray-600 leading-relaxed font-bold">{feature.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* CTA Section */}
-          <div className="mt-32 text-center bg-[#c750f7] rounded-3xl p-16 shadow-2xl">
-            <h3 className="text-4xl font-bold text-white mb-6">Ready to start tracking?</h3>
-            <p className="text-xl text-white/90 mb-8">Join thousands of users managing their crypto portfolio with ease</p>
-            <button className="px-8 py-3 rounded-lg bg-white text-[#c750f7] font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl text-lg">
+          <div className="mt-32 text-center rounded-3xl p-16 ">
+            <h3 className="text-4xl font-bold text-[#c750f7] mb-6">Want to start tracking?</h3>
+            <p className="text-xl text-[#c750f7] mb-8 font-bold">Use cryptosnoop to manage your portfolio with ease</p>
+            <button className="px-8 py-3 rounded-lg bg-[#c750f7] text-white font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl text-lg">
               Get Started Now
             </button>
           </div>
@@ -206,7 +219,7 @@ const CryptoSnoop = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-32 bg-white text-gray-900 py-12">
+      <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
           <div className="w-12 h-12 flex items-center justify-center">

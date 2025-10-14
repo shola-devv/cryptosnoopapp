@@ -211,7 +211,7 @@ export default function UserProfile() {
                         {showBalance ? `+${(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                       </p>
                     </div>
-                    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+                    <div className="  dark:bg-slate-800 rounded-lg p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
                       <p className="text-lg font-bold text-red-600">
                         {showBalance ? `-${Math.abs(totalChange * 0.6 * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
@@ -304,9 +304,16 @@ export default function UserProfile() {
       <footer className=" bg-white dark:bg-slate-900 border-t border-purple-200 dark:border-purple-900 py-12">
         <div className="container mx-auto px-4 sm:px-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#c750f7] to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <span className="text-white font-bold text-2xl">C</span>
-            </div>
+            <div className="w-12 h-12 flex items-center justify-center">
+                              <Image
+                                src="/cryptosnooplogo1.png"
+                                alt="DIVAFlex Logo"
+                                width={48}
+                                height={32}
+                                className="object-contain"
+                                priority
+                              />
+                            </div>
             <h4 className="text-2xl font-bold text-slate-900 dark:text-white">CryptoSnoop</h4>
           </div>
           <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
