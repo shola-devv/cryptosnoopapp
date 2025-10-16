@@ -4,6 +4,7 @@
 
 import { useState, useRef } from "react"
 import { LogOut, ArrowLeft, Plus, Copy, Check, Save, Edit, Trash, Wallet } from "lucide-react"
+import Image from "next/image"
 
 
 export default function AccountsPage() {
@@ -118,7 +119,7 @@ export default function AccountsPage() {
        
        <a href="/home">
         <button className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#c750f7] dark:hover:text-[#c750f7] transition-colors mb-6">
-        <ArrowLeft className="w-8 h-6 text-[#c750f7]" />
+        <ArrowLeft className="w-8 h-8 text-[#c750f7]" />
         </button>
         </a>
          
@@ -139,7 +140,7 @@ export default function AccountsPage() {
         {/* Add New Account Form */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#c750f7] to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#c750f7]  rounded-xl flex items-center justify-center">
               <Plus className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add New Account</h2>
@@ -194,7 +195,7 @@ export default function AccountsPage() {
               <button
                 onClick={addNewAddress}
                 disabled={!newAddress.trim() || !newLabel.trim()}
-                className="w-full h-12 bg-gradient-to-r from-[#c750f7] to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full h-12 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add
@@ -337,11 +338,11 @@ export default function AccountsPage() {
        <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div className="flex items-center justify-center gap-6 mb-6">
-                  <a href="#home" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Home</a>
-                  <a href="#help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                  <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Assets</a>
-                  <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
-                </div>
+            <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
+            <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
+            <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+            <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+          </div>
                 <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-12 h-12 flex items-center justify-center">
                         <Image

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Trash2, TrendingUp, TrendingDown, Plus, Edit2, Check, X, DollarSign, PieChart, ArrowLeft, LogOut } from "lucide-react"
-
+import Image from "next/image"
 
 export default function CryptoPortfolioPage() {
   const [assets, setAssets] = useState([])
@@ -101,20 +101,20 @@ export default function CryptoPortfolioPage() {
       <div className="container mx-auto px-4 sm:px-6 py-8">
         {/* Back Button */}
         <a href="/home">
-        <button className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#c750f7] dark:hover:text-[#c750f7] transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" />
+        <button className="flex items-center gap-2 text-[#c750f7]  dark:text-slate-400 hover:text-[#c750f7] dark:hover:text-[#c750f7] transition-colors mb-6">
+          <ArrowLeft className="w-8 h-8 font-semibold" />
         </button>
         </a>
 
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2 bg-gradient-to-r from-[#c750f7] to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold dark:text-white mb-2 text-[#c750f7] bg-clip-text ">
             assets
           </h1>
         </div>
 
         {/* Portfolio Summary Card */}
-        <div className="bg-gradient-to-br from-[#c750f7] to-purple-600 rounded-3xl p-8 mb-8 shadow-2xl shadow-purple-500/30 relative overflow-hidden">
+        <div className="bg-[#c750f7] rounded-3xl p-8 mb-8 shadow-2xl shadow-purple-500/30 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-900/20 rounded-full -ml-32 -mb-32 blur-3xl"></div>
           
@@ -149,7 +149,7 @@ export default function CryptoPortfolioPage() {
               <PieChart className="w-6 h-6 text-[#c750f7]" />
               Your Assets
             </h2>
-            <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#c750f7] to-purple-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all">
+            <button className="flex items-center gap-2 px-4 py-2 bg-[#c750f7] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all">
               <Plus className="w-4 h-4" />
               Add Asset
             </button>
@@ -162,7 +162,7 @@ export default function CryptoPortfolioPage() {
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Assets Yet</h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6">Start building your portfolio by adding cryptocurrencies</p>
-              <button className="px-6 py-3 bg-gradient-to-r from-[#c750f7] to-purple-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all inline-flex items-center gap-2">
+              <button className="px-6 py-3 bg-[#c750f7] text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all inline-flex items-center gap-2">
                 <Plus className="w-5 h-5" />
                 Add Your First Asset
               </button>
@@ -272,7 +272,7 @@ export default function CryptoPortfolioPage() {
                       </div>
                       <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-[#c750f7] to-purple-600 rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-[#c750f7] to-[#cf56ff] rounded-full transition-all duration-500"
                           style={{ width: `${percentOfPortfolio}%` }}
                         ></div>
                       </div>
@@ -289,7 +289,7 @@ export default function CryptoPortfolioPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-purple-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
                   <PieChart className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 font-medium">Total Assets</p>
@@ -299,7 +299,7 @@ export default function CryptoPortfolioPage() {
 
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-purple-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 font-medium">Best Performer</p>
@@ -328,11 +328,11 @@ export default function CryptoPortfolioPage() {
       <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                <div className="flex items-center justify-center gap-6 mb-6">
-                 <a href="#home" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Home</a>
-                 <a href="#help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                 <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Assets</a>
-                 <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
-               </div>
+            <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
+            <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
+            <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+            <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+          </div>
                <div className="flex items-center justify-center gap-3 mb-4">
                <div className="w-12 h-12 flex items-center justify-center">
                        <Image

@@ -1,4 +1,4 @@
-   "use client"
+"use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -77,7 +77,8 @@ export default function UserProfile() {
   const [activeTab, setActiveTab] = useState("assets")
 
   const totalValue = 69646.94
-  const totalChange = 1.8
+  const totalChange = 1.8;
+  const assets = 7;
 
   const handleNavigation = (path) => {
     window.location.href = path
@@ -132,7 +133,7 @@ export default function UserProfile() {
                     <p className="text-sm font-semibold text-slate-800 dark:text-white">WELCOME!</p>
                   </div>
                   <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
-                    {showBalance ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                    {showBalance ? <Eye className="w-4 h-4 font-extrabold" /> : <EyeOff className="w-4 h-4 font-extrabold" />}
                   </Button>
                 </div>
 
@@ -148,23 +149,24 @@ export default function UserProfile() {
                       className="text-white font-semibold text-xs h-7 px-2"
                       style={{ backgroundColor: '#c750f7' }}
                     >
-                      View
+                      Monitor
+                      <MapPin />
                     </Button>
                   </div>
                 </div>
 
                 {/* Profit Section */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                  <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                     <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
                     <p className="text-base font-bold text-green-600">
                       {showBalance ? `+${(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                     </p>
                   </div>
-                  <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                  <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                     <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
                     <p className="text-base font-bold text-red-600">
-                      {showBalance ? `-${Math.abs(totalChange * 0.6 * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                      {showBalance ? `-${assets}` : '••••••'}
                     </p>
                   </div>
                 </div>
@@ -199,13 +201,14 @@ export default function UserProfile() {
                         className="text-white font-semibold"
                         style={{ backgroundColor: '#c750f7' }}
                       >
-                        View
+                       Monitor 
+                       <MapPin />
                       </Button>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+                    <div className=" dark:bg-slate-800 rounded-lg p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
                       <p className="text-lg font-bold text-green-600">
                         {showBalance ? `+${(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
@@ -214,7 +217,7 @@ export default function UserProfile() {
                     <div className="  dark:bg-slate-800 rounded-lg p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
                       <p className="text-lg font-bold text-red-600">
-                        {showBalance ? `-${Math.abs(totalChange * 0.6 * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                        {showBalance ? `-${assets}` : '••••••'}
                       </p>
                     </div>
                   </div>
@@ -226,35 +229,35 @@ export default function UserProfile() {
 
         {/* Tabs Section */}
         <section className="mb-8">
-          <div className="grid w-full grid-cols-3 mb-2 h-auto p-1 gap-1 rounded-lg" style={{ backgroundColor: 'rgba(199, 80, 247, 0.1)' }}>
+          <div className="grid w-full grid-cols-3 mb-2 h-auto p-1 gap-1 rounded-lg">
             <button 
               onClick={() => handleNavigation("/home/assets")}
               className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
             
             >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                <img src="/cryptosnooplogo1.png" alt="Assets" className="w-full h-full object-cover" />
+              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0" style={{ backgroundColor: '#eee8f0' }}>
+                <img src="/assets.png" alt="Assets" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
               </div>
-              <span className="text-xs sm:text-sm leading-tight">ASSETS</span>
+              <span className="text-xs sm:text-sm leading-tight">Assets</span>
             </button>
             <button 
               onClick={() => handleNavigation("/home/monitor-accounts")}
               className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
               
             >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                <img src="/cryptosnooplogo1.png" alt="Monitor Accounts" className="w-full h-full object-cover" />
+              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0" style={{ backgroundColor: '#eee8f0' }}>
+                <img src="/accounts.png" alt="Monitor Accounts" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
               </div>
-              <span className="text-xs sm:text-sm leading-tight">MONITOR</span>
+              <span className="text-xs sm:text-sm leading-tight">Accounts</span>
             </button>
             <button 
               onClick={() => handleNavigation("/home/wallets")}
               className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
             >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 bg-slate-200 dark:bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                <img src="/cryptosnooplogo1.png" alt="Wallets" className="w-full h-full object-cover" />
+              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0" style={{ backgroundColor: '#eee8f0' }}>
+                <img src="/address.png" alt="Wallets" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
               </div>
-              <span className="text-xs sm:text-sm leading-tight">WALLETS</span>
+              <span className="text-xs sm:text-sm leading-tight">Adresses</span>
             </button>
           </div>
           
@@ -301,12 +304,12 @@ export default function UserProfile() {
 
                 </section>
       </div>
- <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
+ <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center gap-6 mb-6">
-            <a href="#home" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Home</a>
-            <a href="#help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-            <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Assets</a>
+            <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
+            <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
+            <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
             <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">

@@ -4,20 +4,59 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Shield, Wallet, Lock, TrendingUp, Eye, Database } from 'lucide-react';
 import Image from "next/image"
 
+interface CoinData {
+  id: string;
+  name: string;
+  symbol: string;
+  price: number;
+  icon: string;
+  priceChange1d: number;
+}
+
+interface ApiResponse {
+  source: string;
+  data: {
+    result: CoinData[];
+  };
+  timestamp: number;
+  age?: number;
+  rateLimitRemaining?: number;
+}
 
 const CryptoSnoop = () => {
   const [currentCoin, setCurrentCoin] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [coins, setCoins] = useState<CoinData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const coins = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '$67,234.50', logo: '₿' },
-    { name: 'Ethereum', symbol: 'ETH', price: '$3,845.20', logo: 'Ξ' },
-    { name: 'Solana', symbol: 'SOL', price: '$142.80', logo: '◎' },
-    { name: 'Cardano', symbol: 'ADA', price: '$0.58', logo: '₳' },
-    { name: 'Ripple', symbol: 'XRP', price: '$0.52', logo: '✕' },
-  ];
+  // Fetch market data on component mount and every 2 minutes
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        const response = await fetch('/api/market-data');
+        const data: ApiResponse = await response.json();
+        
+        if (data.data && data.data.result) {
+          setCoins(data.data.result);
+        }
+      } catch (error) {
+        console.error('Failed to fetch market data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMarketData();
+    
+    // Refresh every 2 minutes (120000 ms)
+    const refreshInterval = setInterval(fetchMarketData, 120000);
+
+    return () => clearInterval(refreshInterval);
+  }, []);
 
   useEffect(() => {
+    if (coins.length === 0) return;
+
     const interval = setInterval(() => {
       setIsAnimating(true);
       setTimeout(() => {
@@ -27,17 +66,17 @@ const CryptoSnoop = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [coins.length]);
 
   const features = [
     {
       title: "Hassle-Free Tracking",
-      description: "CryptoSnoop helps you track your crypto assets and account hassle-free without necessarily connecting your wallet. Monitor your portfolio with real-time data and insights.",
+      description: "CryptoSnoop helps you track your crypto assets and accounts hassle-free without necessarily connecting your wallet. Monitor your portfolio and holdings with real-time data and insights.",
       icon: "/eye.png"
     },
     {
       title: "Easy Management",
-      description: "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallet information securely in one centralized location.",
+      description: "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallets and label them securely all in one centralized location.",
       icon: "/wallet.png"
     },
     {
@@ -145,35 +184,54 @@ const CryptoSnoop = () => {
           {/* Coin Widget Carousel */}
           <div className="relative overflow-hidden py-8 my-8">
             <div className="flex justify-center items-center min-h-[220px]">
-              <div
-                className={`transition-all duration-500 ${
-                  isAnimating ? 'opacity-0 transform translate-x-full' : 'opacity-100 transform translate-x-0'
-                }`}
-              >
-                <div className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-8 w-80 border border-white/50"
-                     style={{
-                       background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(108, 198, 255, 0.2))',
-                       boxShadow: '0 8px 32px 0 rgba(90, 181, 238, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)',
-                     }}>
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-[#6CC6FF] to-[#5AB5EE] rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                        {coins[currentCoin].logo}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900">{coins[currentCoin].name}</h3>
-                        <p className="text-gray-600 text-sm font-medium">{coins[currentCoin].symbol}</p>
+              {loading ? (
+                <div className="w-12 h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
+              ) : coins.length > 0 ? (
+                <div
+                  className={`transition-all duration-500 ${
+                    isAnimating ? 'opacity-0 transform translate-x-full' : 'opacity-100 transform translate-x-0'
+                  }`}
+                >
+                  <div className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-8 w-80 border border-white/50"
+                       style={{
+                         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(108, 198, 255, 0.2))',
+                         boxShadow: '0 8px 32px 0 rgba(90, 181, 238, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)',
+                       }}>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-transparent rounded-full flex items-center justify-center overflow-hidden shadow-lg">
+                          <Image
+                            src={coins[currentCoin].icon}
+                            alt={coins[currentCoin].name}
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">{coins[currentCoin].name}</h3>
+                          <p className="text-gray-600 text-sm font-medium">{coins[currentCoin].symbol}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-3xl font-bold text-gray-900">{coins[currentCoin].price}</p>
-                    <button className="bg-[#c750f7] hover:bg-[#d575fc] text-white rounded-xl p-3 transition-all duration-300 shadow-lg hover:shadow-xl">
-                      <Plus className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-3xl font-bold text-gray-900">
+                          ${coins[currentCoin].price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </p>
+                        <p className={`text-sm font-medium mt-1 ${coins[currentCoin].priceChange1d >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {coins[currentCoin].priceChange1d >= 0 ? '+' : ''}{coins[currentCoin].priceChange1d.toFixed(2)}% (24h)
+                        </p>
+                      </div>
+                      <button className="bg-[#c750f7] hover:bg-[#d575fc] text-white rounded-xl p-3 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <Plus className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="text-gray-500 text-lg">...</div>
+              )}
             </div>
           </div>
 
@@ -200,8 +258,10 @@ const CryptoSnoop = () => {
 
                 </div>
                 <div className="flex-1 space-y-6">
-                  <h3 className="text-4xl font-bold text-gray-900">{feature.title}</h3>
-                  <p className="text-xl text-gray-600 leading-relaxed font-bold">{feature.description}</p>
+                  <h3 className="text-4xl font-bold text-gray-900 text-center md:text-left">{feature.title}</h3>
+                  <p className="text-xl text-gray-600 leading-relaxed font-bold text-center md:text-left">
+              {feature.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -210,9 +270,9 @@ const CryptoSnoop = () => {
           {/* CTA Section */}
           <div className="mt-32 text-center rounded-3xl p-16 ">
             <h3 className="text-4xl font-bold text-[#c750f7] mb-6">Want to start tracking?</h3>
-            <p className="text-xl text-[#c750f7] mb-8 font-bold">Use cryptosnoop to manage your portfolio with ease</p>
+            <p className="text-xl text-[#c750f7] mb-8 font-bold">Use cryptosnoop to manage your crypto assets and holdings with ease</p>
             <button className="px-8 py-3 rounded-lg bg-[#c750f7] text-white font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl text-lg">
-              Get Started Now
+              Get Tracking now
             </button>
           </div>
         </div>
@@ -222,10 +282,10 @@ const CryptoSnoop = () => {
      <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                <div className="flex items-center justify-center gap-6 mb-6">
-                 <a href="/privacy
-                 " className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">contact us</a>
-                 <a href="/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
-                 <a href="/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+                 <p   onClick={() => { window.location.href = 'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
+                }} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline">contact us</p>
+                 <a href="/landing/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
+                 <a href="/landing/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
                </div>
                <div className="flex items-center justify-center gap-3 mb-4">
                <div className="w-12 h-12 flex items-center justify-center">

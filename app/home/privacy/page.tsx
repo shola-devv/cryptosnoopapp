@@ -25,7 +25,7 @@ const PrivacyPolicy = () => {
               cryptoSnoop
             </h1>
           </div>
-         <a href="/landing" className="px-6 py-2 rounded-lg  text-black underline  hover:text-[#d575fc] ">
+         <a href="/home" className="px-6 py-2 rounded-lg  text-black underline  hover:text-[#d575fc] ">
             Back
           </a>
         </div>
@@ -188,7 +188,6 @@ const PrivacyPolicy = () => {
             </p>
           </section>
 
-        
           {/* Third-Party Links */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-black mb-6">Third-Party Links</h2>
@@ -226,15 +225,14 @@ const PrivacyPolicy = () => {
             
           </section>
 
-            {/* Disclaimer */}
-          <section className="mb-12">
+         {/* Disclaimer */}
+          <section className="mb-12 ">
             <h2 className="text-3xl font-bold text-black mb-6">Disclaimer</h2>
             
             <p className="text-gray-700 leading-relaxed mb-4">
               No part of the content on this web application provides financial advice. Any use or reliance on our content for any purpose is solely at your own risk and discretion. You should conduct your own research, review, analyse and verify our content before relying on them.
             </p>
           </section>
-
         </div>
       </div>
 

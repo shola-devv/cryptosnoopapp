@@ -87,8 +87,8 @@ export default function HelpPage() {
         {/* Header with Back Button and Connection Status */}
         <div className="mb-6 flex items-center justify-between">
           <Link 
-            href="/betPage" 
-            className="inline-flex items-center text-purple-600 hover:text-purple-800 transition-colors font-semibold"
+            href="/home" 
+            className="inline-flex items-center text-[#c750f7] hover:text-[#c750f7] transition-colors font-semibold"
           >
             <ArrowLeft className="w-8 h-8 font-extrabold mr-2" />
           </Link>
@@ -106,16 +106,16 @@ export default function HelpPage() {
           <CardContent>
             <div className="space-y-3">
               {faqItems.map((item, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div key={index} className="border text-[#c750f7] rounded-lg overflow-hidden">
                   <button
                     className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
                     onClick={() => toggleFaq(index)}
                   >
                     <span className="font-semibold text-left">{item.question}</span>
                     {expandedFaq === index ? (
-                      <ChevronUp className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-[#c750f7] flex-shrink-0" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                      <ChevronDown className="w-5 h-5 text-[#c750f7] text-gray-400 flex-shrink-0" />
                     )}
                   </button>
                   {expandedFaq === index && (
@@ -185,7 +185,7 @@ export default function HelpPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Button
-                className="h-12 bg-gradient-to-b from-purple-500 to-purple-700 shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 hover:bg-purple-700 font-bold text-white "
+                className="h-12 bg-gradient-to-b bg-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 hover:  font-bold text-white "
                 onClick={() => {
                   window.location.href = 'mailto:support@divaflex.com?subject=Support Request&body=Hello DIVAFlex Support Team,%0D%0A%0D%0APlease describe your issue here...';
                 }}
@@ -196,9 +196,9 @@ export default function HelpPage() {
               
               <Button
                 variant="outline"
-                className="h-12  border-purple-500 text-purple-600 hover:bg-purple-50 active:translate-y-1 font-bold  shadow-lg"
+                className="h-12  text-[#c750f7] border-[#c750f7] hover:bg-purple-50 active:translate-y-1 font-bold  shadow-lg"
                 onClick={() => {
-                  window.location.href = 'mailto:feedback@divaflex.com?subject=Feedback&body=Hello DIVAFlex Team,%0D%0A%0D%0AHere is my feedback...';
+                  window.location.href = 'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
@@ -206,7 +206,6 @@ export default function HelpPage() {
               </Button>
             </div>
             <div className="mt-4 text-sm text-gray-600">
-              <p><strong>Support Email:</strong> support@divaflex.com</p>
               <p><strong>Response Time:</strong> Within 24 hours</p>
             </div>
           </CardContent>
@@ -225,30 +224,30 @@ export default function HelpPage() {
         </div>
       </div>
        <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div className="flex items-center justify-center gap-6 mb-6">
-                  <a href="#home" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Home</a>
-                  <a href="#help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                  <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Assets</a>
-                  <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
-                </div>
-                <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-12 flex items-center justify-center">
-                        <Image
-                          src="/cryptosnooplogo1.png"
-                          alt="DIVAFlex Logo"
-                          width={48}
-                          height={32}
-                          className="object-contain"
-                          priority
-                        />
-                      </div>
-                  <h4 className="text-xl font-bold">CryptoSnoop</h4>
-                </div>
-                <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
-                <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
-              </div>
-            </footer>
+               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                 <div className="flex items-center justify-center gap-6 mb-6">
+                   <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
+                   <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
+                   <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+                   <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+                 </div>
+                 <div className="flex items-center justify-center gap-3 mb-4">
+                 <div className="w-12 h-12 flex items-center justify-center">
+                         <Image
+                           src="/cryptosnooplogo1.png"
+                           alt="DIVAFlex Logo"
+                           width={48}
+                           height={32}
+                           className="object-contain"
+                           priority
+                         />
+                       </div>
+                   <h4 className="text-xl font-bold">CryptoSnoop</h4>
+                 </div>
+                 <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
+                 <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
+               </div>
+             </footer>
     </div>
   )
 }
