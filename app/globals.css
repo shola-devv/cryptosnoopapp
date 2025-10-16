@@ -87,3 +87,18 @@
     font-family: var(--font-poppins), system-ui, sans-serif;
   }
 }
+
+
+/* Loading bar color */
+#nprogress .bar {
+  background: #d575fc !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #d575fc, 0 0 5px #d575fc !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #d575fc !important;
+  border-left-color: #d575fc !important;
+}
