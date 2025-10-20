@@ -219,7 +219,7 @@ const PrivacyPolicy = () => {
             </div>
             
             <p className="text-gray-700 leading-relaxed mb-4">
-              If you have any questions or concerns about this Privacy Policy or our data practices, <span   onClick={() => { window.location.href = 'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
+              If you have any questions or concerns about this Privacy Policy or our data practices, <span   onClick={() => { window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }} className= " cursor-pointer text-[#c750f7] transition-colors duration-300 font-medium underline">contact us</span>
             </p>
             

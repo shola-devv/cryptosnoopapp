@@ -1,0 +1,209 @@
+app/
+└── api/
+    └── accounts/
+        └── [account]/
+            └── route.ts
+```
+
+**File path:** `app/api/accounts/[account]/route.ts`
+
+**Route URL examples:**
+- GET: `http://localhost:3000/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+- PATCH: `http://localhost:3000/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+- DELETE: `http://localhost:3000/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+
+---
+
+### **For Address API:**
+```
+app/
+└── api/
+    └── addresses/
+        └── [address]/
+            └── route.ts
+```
+
+**File path:** `app/api/addresses/[address]/route.ts`
+
+**Route URL examples:**
+- GET: `http://localhost:3000/api/addresses/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+- PATCH: `http://localhost:3000/api/addresses/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+- DELETE: `http://localhost:3000/api/addresses/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea`
+
+---
+
+## How It Works
+
+1. **`[account]` and `[address]`** are **dynamic route segments**
+2. They capture the ID from the URL
+3. Access them in your code with `context.params.account` or `context.params.address`
+
+---
+
+## Complete Project Structure
+```
+my-app/
+├── app/
+│   └── api/
+│       ├── accounts/
+│       │   └── [account]/
+│       │       └── route.ts  ← (GET, PATCH, DELETE for single account)
+│       └── addresses/
+│           └── [address]/
+│               └── route.ts  ← (GET, PATCH, DELETE for single address)
+├── lib/
+│   ├── db.ts
+│   └── models/
+│       ├── user.ts
+│       ├── account.ts
+│       └── address.ts
+
+
+
+FETCH ACC
+fetch('/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea')
+
+UPDATE ACC
+fetch('/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea', {
+  method: 'PATCH',
+  body: JSON.stringify({ address: '0x123...', data: [...] })
+})
+
+
+DELETE ACC
+fetch('/api/accounts/507f1f77bcf86cd799439011?userId=507f191e810c19729de860ea', {
+  method: 'DELETE'
+})
+
+
+
+
+
+
+
+
+
+
+
+
+// Get all assets
+fetch('/api/assets?userId=507f191e810c19729de860ea')
+
+// Create asset
+fetch('/api/assets?userId=507f191e810c19729de860ea', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'Bitcoin', quantity: 2.5 })
+})
+
+// Get specific asset by name
+fetch('/api/assets/Bitcoin?userId=507f191e810c19729de860ea')
+
+// Update asset
+fetch('/api/assets/Bitcoin?userId=507f191e810c19729de860ea', {
+  method: 'PATCH',
+  body: JSON.stringify({ quantity: 3.0 })
+})
+
+// Delete asset
+fetch('/api/assets/Bitcoin?userId=507f191e810c19729de860ea', {
+  method: 'DELETE'
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Example: Create Asset Form
+'use client';
+import { usePortfolio } from '../hooks/usePortfolio';
+
+export function CreateAssetForm() {
+  const { refreshAssets } = usePortfolio();
+
+  const handleSubmit = async (formData) => {
+    const response = await fetch('/api/assets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      // Immediately refresh assets
+      refreshAssets();
+    }
+  };
+
+  return <form onSubmit={handleSubmit}>{/* form fields */}</form>;
+}
+
+// Example: Create Account Form
+export function CreateAccountForm() {
+  const { refreshAccounts } = usePortfolio();
+
+  const handleSubmit = async (formData) => {
+    const response = await fetch('/api/accounts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      // Immediately refresh accounts
+      refreshAccounts();
+    }
+  };
+
+  return <form onSubmit={handleSubmit}>{/* form fields */}</form>;
+}
+
+// Example: Save Address Form
+export function SaveAddressForm() {
+  const { refreshAddresses } = usePortfolio();
+
+  const handleSubmit = async (formData) => {
+    const response = await fetch('/api/addresses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      // Immediately refresh addresses
+      refreshAddresses();
+    }
+  };
+
+  return <form onSubmit={handleSubmit}>{/* form fields */}</form>;
+}
+
+// Example: Bulk operation that affects multiple resources
+export function BulkImportForm() {
+  const { refreshAll } = usePortfolio();
+
+  const handleSubmit = async (formData) => {
+    const response = await fetch('/api/bulk-import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      // Refresh everything at once
+      refreshAll();
+    }
+  };
+
+  return <form onSubmit={handleSubmit}>{/* form fields */}</form>;
+}

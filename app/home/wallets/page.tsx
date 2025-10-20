@@ -143,7 +143,7 @@ export default function AccountsPage() {
             <div className="w-10 h-10 bg-[#c750f7]  rounded-xl flex items-center justify-center">
               <Plus className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add New Account</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add New Address</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -218,8 +218,8 @@ export default function AccountsPage() {
               <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Wallet className="w-10 h-10 text-[#c750f7]" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Accounts Yet</h3>
-              <p className="text-slate-600 dark:text-slate-400">Add your first crypto account to get started</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Addresses Yet</h3>
+              <p className="text-slate-600 dark:text-slate-400">Add your first address to get started</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -340,7 +340,7 @@ export default function AccountsPage() {
                 <div className="flex items-center justify-center gap-6 mb-6">
             <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
             <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-            <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+             <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
             <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
           </div>
                 <div className="flex items-center justify-center gap-3 mb-4">
@@ -354,7 +354,7 @@ export default function AccountsPage() {
                           priority
                         />
                       </div>
-                  <h4 className="text-xl font-bold">CryptoSnoop</h4>
+                  <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
                 <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>

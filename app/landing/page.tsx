@@ -49,7 +49,7 @@ const CryptoSnoop = () => {
     fetchMarketData();
     
     // Refresh every 2 minutes (120000 ms)
-    const refreshInterval = setInterval(fetchMarketData, 120000);
+    const refreshInterval = setInterval(fetchMarketData, 180000);
 
     return () => clearInterval(refreshInterval);
   }, []);
@@ -129,8 +129,8 @@ const CryptoSnoop = () => {
       <main className="pt-20 sm:pt-32 pb-8 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <div className="flex justify-center sm:justify-center md:justify-start mb-4">
-              <span className="px-4 py-1 md:ml-36 lg:ml-72 sm:ml-12 rounded-lg bg-[#c750f7] text-white text-sm font-medium">
+            <div className="flex justify-center sm:justify-center  mb-4">
+              <span className="px-4 py-1  md:mr-12 lg:mr-16 sm:ml-12 rounded-lg bg-[#c750f7] text-white text-sm font-medium">
                 Portfolio Management
               </span>
             </div>
@@ -282,11 +282,11 @@ const CryptoSnoop = () => {
      <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                <div className="flex items-center justify-center gap-6 mb-6">
-                 <p   onClick={() => { window.location.href = 'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
+                 <p   onClick={() => { window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline">contact us</p>
                  <a href="/landing/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
-                 <a href="/landing/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
-               </div>
+                  <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
+              </div>
                <div className="flex items-center justify-center gap-3 mb-4">
                <div className="w-12 h-12 flex items-center justify-center">
                        <Image
@@ -298,7 +298,7 @@ const CryptoSnoop = () => {
                          priority
                        />
                      </div>
-                 <h4 className="text-xl font-bold">CryptoSnoop</h4>
+                 <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
                </div>
                <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
                <p className="text-gray-600">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>

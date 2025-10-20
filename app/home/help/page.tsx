@@ -185,9 +185,9 @@ export default function HelpPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Button
-                className="h-12 bg-gradient-to-b bg-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 hover:  font-bold text-white "
+                className="h-12bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden hover:  font-bold text-white "
                 onClick={() => {
-                  window.location.href = 'mailto:support@divaflex.com?subject=Support Request&body=Hello DIVAFlex Support Team,%0D%0A%0D%0APlease describe your issue here...';
+                  window.location.href = 'mailto:cryptosnoopapp.com?subject=Support Request&body=Hello Cryptosnoop Support Team,%0D%0A%0D%0APlease describe your issue here...';
                 }}
               >
                 <Mail className="w-5 h-5 mr-2" />
@@ -198,7 +198,7 @@ export default function HelpPage() {
                 variant="outline"
                 className="h-12  text-[#c750f7] border-[#c750f7] hover:bg-purple-50 active:translate-y-1 font-bold  shadow-lg"
                 onClick={() => {
-                  window.location.href = 'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
+                  window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
@@ -228,21 +228,21 @@ export default function HelpPage() {
                  <div className="flex items-center justify-center gap-6 mb-6">
                    <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
                    <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                   <a href="#assets" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">our socials</a>
+                   <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
                    <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
                  </div>
                  <div className="flex items-center justify-center gap-3 mb-4">
                  <div className="w-12 h-12 flex items-center justify-center">
                          <Image
                            src="/cryptosnooplogo1.png"
-                           alt="DIVAFlex Logo"
+                           alt="cryptosnoop Logo"
                            width={48}
                            height={32}
                            className="object-contain"
                            priority
                          />
                        </div>
-                   <h4 className="text-xl font-bold">CryptoSnoop</h4>
+                   <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
                  </div>
                  <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
                  <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>

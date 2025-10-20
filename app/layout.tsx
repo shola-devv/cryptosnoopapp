@@ -1,7 +1,11 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { AnimatePresence, motion } from 'framer-motion';
+import { UserProvider } from "@/context/UserContext";
+import DatabaseWarmer from "@/components/DatabaseWarmer"; // New component
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -48,11 +52,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         
-            {children}
+            <UserProvider>
+          <DatabaseWarmer />
+          {children}
+        </UserProvider>
         
       </body>
     </html>
