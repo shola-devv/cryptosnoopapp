@@ -153,7 +153,7 @@ export default function HelpPage() {
               </Link>
               
               <Link 
-                href="/home/wallets"
+                href="/home/addresses"
                 className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">your Adresses</h3>

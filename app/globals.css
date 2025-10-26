@@ -84,7 +84,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-poppins), system-ui, sans-serif;
+    font-family: var(--font-geist),system-ui, sans-serif;
   }
 }
 

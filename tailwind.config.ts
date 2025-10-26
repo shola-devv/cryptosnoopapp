@@ -145,7 +145,10 @@ const config = {
   		},
   		backdropBlur: {
   			xs: '2px'
-  		}
+  		},
+		fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+      },
   	}
   },
   plugins: [require("tailwindcss-animate")],

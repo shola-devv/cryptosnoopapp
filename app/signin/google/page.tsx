@@ -1,11 +1,10 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Geist } from "next/font/google"
+
 import { ArrowLeft } from "lucide-react"
 
 // Initialize fonts
-const geist = Geist({ subsets: ["latin"] })
 
 export default function SignInWithGoogle() {
   return (

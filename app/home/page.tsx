@@ -101,7 +101,7 @@ export default function UserProfile() {
  const [isSending, setIsSending] = useState(false);
 
   const userId = '68e54cbbec084f39199b2731';   // in the handleclick addd || !user?.id, in the link too
-
+   const name = "Olushola"
   
 const handleAddAsset = async () => {
   if (!quantity || parseFloat(quantity) <= 0) return;
@@ -410,7 +410,7 @@ const handleAddAsset = async () => {
                     </Avatar>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-slate-800 dark:text-white">WELCOME!</p>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {name} !</p>
                   </div>
                   <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
                     <Eye className="w-4 h-4 font-extrabold" />
@@ -465,7 +465,7 @@ const handleAddAsset = async () => {
                 
                 <div className="flex-1 w-full">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome!</h2>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome {name} !</h2>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBalance(!showBalance)}>
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -533,7 +533,7 @@ const handleAddAsset = async () => {
               <span className="text-xs sm:text-sm leading-tight">Accounts</span>
             </button>
             <button 
-              onClick={() => {handleNavigation("/home/wallets"); buzzClick();}}
+              onClick={() => {handleNavigation("/home/addresses"); buzzClick();}}
               className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
             >
               <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center  flex-shrink-0 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden" >
@@ -762,7 +762,7 @@ const handleAddAsset = async () => {
             <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
           </div>
           <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
-          <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
+          <p className="text-gray-600">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
         </div>
       </footer>
     </main>
