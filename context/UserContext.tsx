@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 type Asset = {
   _id: string;
@@ -22,6 +23,9 @@ type Address = {
 
 type User = {
   id: string;
+  email?: string;
+  name?: string;
+  image?: string;
   assets: Asset[];
   accounts: Account[];
   addresses: Address[];
@@ -30,23 +34,45 @@ type User = {
 const UserContext = createContext<{
   user: User | null;
   setUser: (u: User) => void;
+  isLoading: boolean;
+  isAuthenticated: boolean;
 }>({
   user: null,
   setUser: () => {},
+  isLoading: true,
+  isAuthenticated: false,
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
 
-  // On mount, load user from Privy or session
+  // Load user from NextAuth session
   useEffect(() => {
-    // TODO: Get userId from Privy auth
-    const userId = '68e54cbbec084f39199b2731';
-    setUser({ id: userId, assets: [], accounts: [], addresses: [] });
-  }, []);
+    if (status === 'authenticated' && session?.user) {
+      const userId = session.user.id;
+      
+      setUser({ 
+        id: userId,
+        email: session.user.email || undefined,
+        name: session.user.name || undefined,
+        image: session.user.image || undefined,
+        assets: [], 
+        accounts: [], 
+        addresses: [] 
+      });
+    } else if (status === 'unauthenticated') {
+      setUser(null);
+    }
+  }, [session, status]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ 
+      user, 
+      setUser,
+      isLoading: status === 'loading',
+      isAuthenticated: status === 'authenticated'
+    }}>
       {children}
     </UserContext.Provider>
   );

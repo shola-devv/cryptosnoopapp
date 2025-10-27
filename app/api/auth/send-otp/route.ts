@@ -1,13 +1,49 @@
+import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import Otp from "@/lib/models/otp";
-import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { headers } from "next/headers";
+
+// Simple in-memory rate limiting (for production, use Redis or a proper rate limiting service)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+// Rate limit: 3 requests per 5 minutes per IP
+const RATE_LIMIT_MAX = 15;
+const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+function checkRateLimit(identifier: string): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(identifier);
+
+  if (!record || now > record.resetTime) {
+    // No record or window expired, create new record
+    rateLimitMap.set(identifier, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW,
+    });
+    return { allowed: true };
+  }
+
+  if (record.count >= RATE_LIMIT_MAX) {
+    // Rate limit exceeded
+    let retryAfter = Math.ceil((record.resetTime - now) / 1000);
+  
+     return {
+  allowed: false, retryAfter,
+   };
+  }
+
+  // Increment count
+  record.count++;
+  return { allowed: true };
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email } = body;
 
+    // Validation
     if (!email) {
       return NextResponse.json(
         { success: false, message: "Email is required" },
@@ -15,34 +51,52 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Get IP address for rate limiting
+    const headersList = headers();
+    const ip = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "unknown";
+    const identifier = `${ip}-${email}`; // Rate limit per IP + email combo
+
+    // Check rate limit
+    const rateLimitCheck = checkRateLimit(identifier);
+    if (!rateLimitCheck.allowed) {
+      console.log(`🚫 [Send OTP] Rate limit exceeded for ${email} from ${ip}`);
       return NextResponse.json(
-        { success: false, message: "Invalid email format" },
-        { status: 400 }
+        {
+          success: false,
+          message: `Too many requests. Please try again in ${rateLimitCheck.retryAfter} seconds.`,
+          retryAfter: rateLimitCheck.retryAfter,
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': rateLimitCheck.retryAfter?.toString() || '300',
+          }
+        }
       );
     }
+
+    const emailString = email.trim().toLowerCase();
+    console.log("📧 [Send OTP] Sending OTP to:", emailString);
 
     await connect();
 
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`🎲 [Send OTP] Generated OTP: gotcha...(it's not the otp, duhh)`);
 
-    // 🔥 IMPORTANT: Delete any existing OTP for this email first
-    await Otp.deleteMany({ email });
-    console.log(`🗑️ Cleared old OTPs for ${email}`);
+    // Delete any existing OTP for this email
+    await Otp.deleteMany({ email: emailString });
+    console.log(`🗑️ [Send OTP] Cleared old OTPs`);
 
-    // Store new OTP in database
-    // Note: MongoDB TTL index will auto-delete after 5 minutes (expires: 300)
+    // Save new OTP
     const otpRecord = new Otp({
-      email,
-      otp,
+      email: emailString,
+      otp: otp,
       createdAt: new Date(),
     });
 
     await otpRecord.save();
-    console.log(`💾 New OTP saved for ${email} (expires in 5 minutes)`);
+    console.log(`💾 [Send OTP] OTP saved to DB`);
 
     // Configure email transporter
     const transporter = nodemailer.createTransport({
@@ -56,7 +110,7 @@ export async function POST(request: Request) {
     // Send OTP email
     await transporter.sendMail({
       from: `"CryptoSnoop" <${process.env.MAIL_USER}>`,
-      to: email,
+      to: emailString,
       subject: "Your CryptoSnoop OTP Code",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -80,24 +134,22 @@ export async function POST(request: Request) {
       `,
     });
 
-    console.log(`✅ OTP sent to ${email}`);
+    console.log(`✅ [Send OTP] OTP email sent to ${emailString}`);
+
     return NextResponse.json(
-      { success: true, message: "OTP sent successfully" },
+      {
+        success: true,
+        message: "OTP sent successfully",
+      },
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("❌ Error sending OTP:", error);
-    
-    // More specific error messages
-    if (error.code === 'EAUTH') {
-      return NextResponse.json(
-        { success: false, message: "Email authentication failed. Please check MAIL_USER and MAIL_PASS" },
-        { status: 500 }
-      );
-    }
-
+    console.error("❌ [Send OTP] Error:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to send OTP. Please try again." },
+      {
+        success: false,
+        message: error.message || "Failed to send OTP",
+      },
       { status: 500 }
     );
   }

@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { UserProvider } from "@/context/UserContext";
+import { Provider } from './providers';
 import DatabaseWarmer from "@/components/DatabaseWarmer"; // New component
 import { inter } from "./fonts";
 
@@ -60,10 +60,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable}`}>
       <body className="antialiased">
         
-            <UserProvider>
-          <DatabaseWarmer />
+            <Providers>
+            <DatabaseWarmer />
           {children}
-        </UserProvider>
+       
+            </Providers>
         
       </body>
     </html>

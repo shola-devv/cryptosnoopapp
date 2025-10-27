@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
@@ -13,11 +13,42 @@ interface AuthModalProps {
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resendTimer, setResendTimer] = useState(0);
+
+  // Countdown timer for resend
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => {
+        setResendTimer(resendTimer - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
+     
+  // Auto-clear error after 3 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Reset modal to initial state when closed
+  useEffect(() => {
+    if (!isOpen) {
+      setEmail("");
+      setOtpSent(false);
+      setOtp("");
+      setError("");
+      setResendTimer(0);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -28,29 +59,30 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       return;
     }
 
-    if (!username) {
-      setError("Please enter your username");
-      return;
-    }
-
     setLoading(true);
     setError("");
 
     try {
       const res = await signIn("email-otp", {
-        email,
-        username,
+        email: email.trim().toLowerCase(), // Normalize email
         redirect: false,
       });
 
       if (res?.error === "OTP_SENT") {
         setOtpSent(true);
         setError("");
+        setResendTimer(120); // 2 minutes
       } else if (res?.error) {
         setError(res.error);
+        setTimeout(() => {
+          setError("");
+        }, 4500);
       }
     } catch (err) {
       setError("Failed to send OTP. Please try again.");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
       console.error(err);
     } finally {
       setLoading(false);
@@ -69,16 +101,16 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     try {
       const res = await signIn("email-otp", {
-        email,
-        username,
-        otp,
+        email: email.trim().toLowerCase(), // Normalize email
+        otp: otp.trim(), // Just trim, don't modify
         redirect: false,
       });
 
       if (res?.ok) {
         // Successfully authenticated
+        setError("Verification successful, logging you in...");
         onClose();
-        router.push("/dashboard");
+        router.push("/home");
       } else if (res?.error) {
         setError(res.error === "CredentialsSignin" ? "Invalid OTP" : res.error);
       }
@@ -135,9 +167,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         <button
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full bg-white border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 mb-6 disabled:opacity-50"
+          className="w-full bg-white border-2 border-gray-300 text-gray-700 px-2 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 my-6 disabled:opacity-50"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-5 h-5"  viewBox="0 0 24 24">
             <path
               fill="currentColor"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -186,14 +218,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 disabled={loading}
                 className="border-2 border-gray-300 p-3 rounded-lg focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100"
               />
-              <input
-                type="text"
-                placeholder="Choose a username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                disabled={loading}
-                className="border-2 border-gray-300 p-3 rounded-lg focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100"
-              />
+             
               <button
                 onClick={handleEmailLogin}
                 disabled={loading}
@@ -207,7 +232,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <div className="text-center mb-2">
                 <p className="text-sm text-gray-600">We've sent a 6-digit code to</p>
                 <p className="font-medium text-gray-800">{email}</p>
-                  <p className="text-sm text-gray-600">Don't see it? check spam.</p>
+                <p className="text-sm text-gray-600">Don't see it? check spam.</p>
               </div>
               <input
                 type="text"
@@ -227,15 +252,32 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {loading ? "Verifying..." : "Verify & Continue"}
               </button>
               <button
-                onClick={() => {
-                  setOtpSent(false);
-                  setOtp("");
-                  setError("");
+                onClick={async () => {
+                  if (resendTimer === 0) {
+                    setLoading(true);
+                    try {
+                      const res = await signIn("email-otp", {
+                        email: email.trim().toLowerCase(),
+                        redirect: false,
+                      });
+                      if (res?.error === "OTP_SENT") {
+                        setResendTimer(120);
+                        setError("");
+                      }
+                    } catch (err) {
+                      setError("Failed to resend OTP");
+                    } finally {
+                      setLoading(false);
+                    }
+                  }
                 }}
-                disabled={loading}
-                className="text-sm text-gray-600 hover:text-gray-800 underline"
+                disabled={loading || resendTimer > 0}
+                className="text-sm text-gray-600 hover:text-gray-800 underline disabled:opacity-50 disabled:no-underline"
               >
-                resend otp in 
+                {resendTimer > 0 
+                  ? `Resend OTP in ${Math.floor(resendTimer / 60)}:${(resendTimer % 60).toString().padStart(2, '0')}`
+                  : "Resend OTP"
+                }
               </button>
             </>
           )}

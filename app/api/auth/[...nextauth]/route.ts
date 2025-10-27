@@ -1,34 +1,142 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import connect from "@/lib/db";
+import Otp from "@/lib/models/otp";
 
-// Helper function to generate username from email
+// Helper function to generate username - returns 'user' for everyone
 function generateUsername(email: string): string {
-  const baseUsername = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
-  const randomSuffix = Math.floor(Math.random() * 1000);
-  return `${baseUsername}${randomSuffix}`;
+  return 'user';
 }
 
-// Helper function to create user in database
-async function createUserInDB(email: string, username: string, provider: string, image?: string) {
+// Helper function to send OTP via API
+async function sendOTP(email: string): Promise<void> {
   try {
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/create-user`, {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/send-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        username,
-        provider,
-        image: image || null,
-      }),
+      body: JSON.stringify({ email }),
     });
 
     const data = await response.json();
-    return data;
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to send OTP');
+    }
+
+    console.log(`✅ [NextAuth] OTP sent via API to ${email}`);
+  } catch (error: any) {
+    console.error("❌ [NextAuth] Error sending OTP:", error);
+    throw error;
+  }
+}
+
+// Helper function to verify OTP directly (not via fetch)
+async function verifyOTP(email: string, otp: string): Promise<boolean> {
+  try {
+    const emailString = email.trim().toLowerCase();
+    const otpString = otp.trim();
+
+    console.log("🔍 [NextAuth] Verifying OTP for:", emailString);
+
+    await connect();
+
+    // Find OTP record
+    const record = await Otp.findOne({ email: emailString, otp: otpString });
+
+    if (!record) {
+      console.log(`❌ [NextAuth] No matching OTP found`);
+      return false;
+    }
+
+    // Delete OTP after verification
+    await Otp.deleteOne({ _id: record._id });
+    console.log(`✅ [NextAuth] OTP verified and deleted`);
+
+    return true;
   } catch (error) {
-    console.error('Error creating user in DB:', error);
+    console.error("❌ [NextAuth] Error verifying OTP:", error);
+    return false;
+  }
+}
+
+// Helper function to create user in database (direct DB access, not HTTP)
+async function createUserInDB(email: string, username: string, provider: string, image?: string) {
+  try {
+    // Import User model dynamically to avoid circular dependencies
+    const User = (await import("@/lib/models/user")).default;
+    
+    console.log("📥 [createUserInDB] Request:", { email, username, provider });
+
+    await connect();
+
+    // Check if user already exists by email
+    let user = await User.findOne({ email });
+
+    if (user) {
+      console.log(`✅ [createUserInDB] User already exists: ${email}`);
+      return {
+        success: true,
+        user: {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+          profile: user.profile,
+          image: user.image,
+        },
+        message: "User already exists"
+      };
+    }
+
+    // Create new user with provided username (no uniqueness check needed now)
+    user = new User({
+      email,
+      username: username,
+      provider,
+      image: image || null,
+      profile: 0,
+      password: "oauth_user", // Placeholder for OAuth users
+      subscription: {
+        id: "",
+        status: "free",
+        plan: "free",
+      },
+    });
+
+    await user.save();
+
+    console.log(`✅ [createUserInDB] New user created: ${email} (${username})`);
+
+    return {
+      success: true,
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+        profile: user.profile,
+        image: user.image,
+      },
+      message: "User created successfully",
+    };
+  } catch (error: any) {
+    console.error('❌ [createUserInDB] Error:', error);
+    
+    // Handle MongoDB duplicate key errors (only email should be unique now)
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern || {})[0];
+      console.log(`❌ [createUserInDB] Duplicate key error on field: ${field}`);
+      throw new Error(`${field} already exists`);
+    }
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((e: any) => e.message);
+      console.log(`❌ [createUserInDB] Validation error:`, messages);
+      throw new Error(messages.join(', '));
+    }
+
     throw error;
   }
 }
@@ -41,76 +149,65 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
 
-    // Email OTP Provider
+    // Email OTP Provider - No username field required
     CredentialsProvider({
       id: "email-otp",
       name: "Email",
       credentials: {
         email: { label: "Email", type: "text" },
-        username: { label: "Username", type: "text" },
         otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
         try {
-          // Step 1: If no OTP provided, trigger OTP sending
-          if (!credentials?.otp) {
-            const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/send-otp`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: credentials?.email,
-              }),
-            });
-
-            if (response.ok) {
-              // OTP sent successfully, throw special error
-              throw new Error("OTP_SENT");
-            } else {
-              const errorData = await response.json();
-              throw new Error(errorData.message || "Failed to send OTP");
-            }
-          }
-
-          // Step 2: Verify OTP (this will auto-delete OTP after verification)
-          const verifyResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/verify-otp`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: credentials?.email,
-              otp: credentials?.otp,
-            }),
+          console.log("🔐 [NextAuth] Authorize called with:", { 
+            email: credentials?.email, 
+            hasOtp: !!credentials?.otp 
           });
 
-          const verifyData = await verifyResponse.json();
+          if (!credentials?.email) {
+            throw new Error("Email is required");
+          }
 
-          if (verifyData.success) {
-            // OTP verified (and deleted from DB by verify-otp route)
-            // Now create or get user from your MongoDB
-            const username = credentials?.username || generateUsername(credentials?.email!);
-            const userResult = await createUserInDB(
-              credentials?.email!,
-              username,
-              'email'
-            );
+          // Step 1: If no OTP provided, send OTP
+          if (!credentials?.otp) {
+            console.log("📤 [NextAuth] No OTP provided, sending OTP...");
+            await sendOTP(credentials.email);
+            throw new Error("OTP_SENT");
+          }
 
-            if (userResult.success) {
-              return {
-                id: userResult.user.id,
-                email: userResult.user.email,
-                name: userResult.user.username,
-                image: userResult.user.image,
-              };
-            } else {
-              throw new Error("Failed to create user");
-            }
+          // Step 2: Verify OTP
+          console.log("🔍 [NextAuth] OTP provided, verifying...");
+          const isValid = await verifyOTP(credentials.email, credentials.otp);
+
+          if (!isValid) {
+            console.log("❌ [NextAuth] OTP verification failed");
+            throw new Error("Invalid OTP");
+          }
+
+          console.log("✅ [NextAuth] OTP verified, creating user...");
+
+          // Step 3: Auto-generate username from email
+          const username = generateUsername(credentials.email);
+          
+          const userResult = await createUserInDB(
+            credentials.email,
+            username,
+            'email'
+          );
+
+          if (userResult.success && userResult.user) {
+            console.log("✅ [NextAuth] User created/found:", userResult.user.email);
+            return {
+              id: userResult.user.id,
+              email: userResult.user.email,
+              name: userResult.user.username,
+              image: userResult.user.image || null,
+            };
           } else {
-            throw new Error(verifyData.message || "Invalid OTP");
+            throw new Error("Failed to create user");
           }
         } catch (error: any) {
+          console.error("❌ [NextAuth] Authorize error:", error.message);
           throw error;
         }
       },
@@ -118,7 +215,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   pages: {
-    signIn: "/", // Redirect to landing page (modal will handle sign-in)
+    signIn: "/",
   },
 
   session: {
@@ -140,7 +237,6 @@ export const authOptions: NextAuthOptions = {
           );
         } catch (error) {
           console.error('Error creating Google user:', error);
-          // Don't block sign-in if user already exists
         }
       }
       return true;

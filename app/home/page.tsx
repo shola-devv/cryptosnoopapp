@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
-
+import { signOut } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 import {
   User,
@@ -40,6 +42,16 @@ export default function UserProfile() {
   const [quantity, setQuantity] = useState("")
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
+
+  //session
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+   useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
 
   const {
     portfolio,
@@ -100,8 +112,8 @@ export default function UserProfile() {
 
  const [isSending, setIsSending] = useState(false);
 
-  const userId = '68e54cbbec084f39199b2731';   // in the handleclick addd || !user?.id, in the link too
-   const name = "Olushola"
+  const userId = session?.user?.id;
+  const name = session?.user?.name;
   
 const handleAddAsset = async () => {
   if (!quantity || parseFloat(quantity) <= 0) return;
@@ -746,7 +758,7 @@ const handleAddAsset = async () => {
             <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
             <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
              <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-            <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+            <a  onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">
           <div className="w-12 h-12 flex items-center justify-center">
