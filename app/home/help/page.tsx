@@ -34,47 +34,58 @@ export default function HelpPage() {
 
 
   const faqItems = [
-    {
-      question: "How do I fund my account?",
-      answer: "You can fund your account by clicking the 'Fund Account' button in the header or on your profile page. Connect your wallet and transfer USDC to start betting. The minimum deposit is 10 USDC."
-    },
-    {
-      question: "What sports can I bet on?",
-      answer: "DIVAFlex currently supports betting on Football, Baseball, Golf, and Basketball. We're constantly adding new sports and events based on user demand."
-    },
-    {
-      question: "How do withdrawals work?",
-      answer: "You can withdraw your funds at any time from your profile page. Your withdrawable balance includes your account balance minus any active bets. Withdrawals are processed instantly to your connected wallet."
-    },
-    {
-      question: "What is the difference between Account Balance and Allowance?",
-      answer: "Account Balance is the total amount you've deposited. Allowance is the amount you've approved for the smart contract to use for placing bets. You need to approve allowance before placing your first bet."
-    },
-    {
-      question: "How are odds calculated?",
-      answer: "Our odds are calculated based on real-time market data and adjusted dynamically based on betting activity. We use a decentralized oracle system to ensure fair and accurate odds."
-    },
-    {
-      question: "What happens if a game is cancelled?",
-      answer: "If a game is cancelled or postponed, all bets are automatically voided and your funds are returned to your account balance within 24 hours."
-    },
-    {
-      question: "Is there a betting limit?",
-      answer: "Yes, betting limits vary by sport and event. Minimum bet is 1 USDC, and maximum bet depends on the liquidity pool for each event. You'll see the max bet amount when placing your bet."
-    },
-    {
-      question: "How do I check my betting history?",
-      answer: "Go to the 'Positions' page from the main navigation to view all your active and past bets, including results and payout history."
-    },
-    {
-      question: "What wallets are supported?",
-      answer: "We support MetaMask, Coinbase Wallet, WalletConnect, and Rabby Wallet. Make sure you're connected to the Base network for the best experience."
-    },
-    {
-      question: "How do I contact support?",
-      answer: "You can reach our support team by clicking the 'Contact Support' button below or emailing us directly at support@divaflex.com. We typically respond within 24 hours."
-    }
-  ]
+  {
+    question: "What is CryptoSnoop?",
+    answer:
+      "CryptoSnoop is a crypto tracking platform that helps you monitor wallet addresses, portfolio performance, and smart money movements across multiple chains in real time.",
+  },
+  {
+    question: "Do I need to connect my wallet?",
+    answer:
+      "No, you don’t have to connect your wallet to start tracking. Simply paste any wallet address to view its portfolio, token holdings, and recent transactions instantly.",
+  },
+  {
+    question: "Which blockchains are supported?",
+    answer:
+      "CryptoSnoop supports major blockchains like Ethereum, Base, Arbitrum, Polygon, and Binance Smart Chain — with more networks being added over time.",
+  },
+  {
+    question: "Can I track multiple wallets?",
+    answer:
+      "Yes, you can add and label as many wallets as you want. CryptoSnoop keeps your watchlist organized so you can monitor different portfolios in one dashboard.",
+  },
+  {
+    question: "Is my data secure?",
+    answer:
+      "Absolutely. Your wallet data is never stored on our servers. We use read-only blockchain access and advanced encryption to ensure your information stays private and secure.",
+  },
+  {
+    question: "How often is data updated?",
+    answer:
+      "Portfolio data, balances, and token prices are updated in real time using reliable blockchain APIs and market feeds to ensure accurate insights every second.",
+  },
+  {
+    question: "Can I see what smart money is doing?",
+    answer:
+      "Yes! CryptoSnoop lets you track smart wallets, see where large traders are moving funds, and discover trending tokens based on live on-chain activity.",
+  },
+  {
+    question: "Is CryptoSnoop free to use?",
+    answer:
+      "Yes, basic tracking features are free. Premium plans with deeper analytics, alerts, and early-access features will be available soon.",
+  },
+  {
+    question: "Can I export my portfolio data?",
+    answer:
+      "No. You can export wallet data and transaction history in CSV format for personal analysis or accounting purposes.",
+  },
+  {
+    question: "How do I get help or report a bug?",
+    answer:
+      "If you experience any issues or have suggestions, reach out via the 'Contact Support' button in the app or email us directly at support@cryptosnoop.com.",
+  },
+];
+
 
   const toggleFaq = (index: number) => {
     setExpandedFaq(expandedFaq === index ? null : index)

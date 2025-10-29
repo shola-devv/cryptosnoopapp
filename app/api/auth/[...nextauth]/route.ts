@@ -1,4 +1,3 @@
-
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -239,12 +238,17 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google" && user.email) {
         try {
           const username = generateUsername(user.email);
-          await createUserInDB(
+          const userResult = await createUserInDB(
             user.email,
             username,
             'google',
             user.image || undefined
           );
+          
+          // Store MongoDB ID in the user object so jwt callback can access it
+          if (userResult.success && userResult.user) {
+            user.id = userResult.user.id; // MongoDB _id
+          }
         } catch (error) {
           console.error('Error creating Google user:', error);
         }
@@ -252,9 +256,10 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      // On sign in (when user object exists)
       if (user) {
-        token.id = user.id;
+        token.id = user.id; // This is now the MongoDB ID
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
