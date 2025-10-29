@@ -14,6 +14,10 @@ import {
   ArrowLeft
 } from "lucide-react"
 import { usePortfolio } from "@/hooks/usePortfolio"
+import { signOut } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 export default function MonitorWalletsPage() {
   const [showBalance, setShowBalance] = useState(true)
@@ -21,6 +25,12 @@ export default function MonitorWalletsPage() {
   const [monitoredWallet, setMonitoredWallet] = useState(null)
   const [isLoadingWallet, setIsLoadingWallet] = useState(false)
   const [walletError, setWalletError] = useState("")
+const { data: session, status } = useSession();
+  const router = useRouter();
+  const userId = session?.user?.id;
+  const name = session?.user?.name;
+  
+
 
   const { isLoading, error, refreshAll } = usePortfolio()
 
@@ -497,8 +507,8 @@ export default function MonitorWalletsPage() {
               our socials
             </a>
             <a
-              href="#logout"
-              className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
+              onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+              className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 cursor-pointer font-medium underline"
             >
               Logout
             </a>

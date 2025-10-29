@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import AuthModal from "@/components/AuthModal";
+import SlideIn from '@/components/SlideIn';
 
 interface CoinData {
   id: string;
@@ -283,6 +284,8 @@ const CryptoSnoop = () => {
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 } items-center gap-12 md:gap-16`}
               >
+                
+                <SlideIn direction={(index % 2 === 0 ? "left" : "right") as "left" | "right"} delay={0.2}>
                 <div className="flex-1">
                   <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 flex items-center justify-center">
                     <Image
@@ -295,6 +298,9 @@ const CryptoSnoop = () => {
                     />
                   </div>
                 </div>
+               </SlideIn>
+          
+             <SlideIn direction={index % 2 === 0 ? "right" : "left"} delay={0.4}>
                 <div className="flex-1 space-y-6">
                   <h3 className="text-4xl font-bold text-gray-900 text-center md:text-left">
                     {feature.title}
@@ -303,24 +309,31 @@ const CryptoSnoop = () => {
                     {feature.description}
                   </p>
                 </div>
+                </SlideIn>
+                
               </div>
             ))}
           </div>
 
           {/* CTA Section */}
           <div className="mt-32 text-center rounded-3xl p-16 ">
+             <SlideIn direction="down" delay={0.2}>
             <h3 className="text-4xl font-bold text-[#c750f7] mb-6">
               Want to start tracking?
             </h3>
             <p className="text-xl text-[#c750f7] mb-8 font-bold">
               Use cryptosnoop to manage your crypto assets and holdings with ease
             </p>
+        
+        </SlideIn>
+            <SlideIn direction="up" delay={0.2}>
             <button
               onClick={() => setIsAuthModalOpen(true)}
               className="px-8 py-3 rounded-lg bg-[#c750f7] text-white font-semibold hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl text-lg"
             >
               Get Tracking now
             </button>
+            </SlideIn>
           </div>
         </div>
       </main>

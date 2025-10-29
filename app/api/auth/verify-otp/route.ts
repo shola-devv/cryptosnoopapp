@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import Otp from "@/lib/models/otp";
-import nodemailer from "nodemailer";
+
 import { headers } from "next/headers";
 
 // Simple in-memory rate limiting (for production, use Redis or a proper rate limiting service)

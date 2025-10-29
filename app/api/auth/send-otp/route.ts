@@ -3,6 +3,8 @@ import connect from "@/lib/db";
 import Otp from "@/lib/models/otp";
 import nodemailer from "nodemailer";
 import { headers } from "next/headers";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
 
 // Simple in-memory rate limiting (for production, use Redis or a proper rate limiting service)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -80,23 +82,36 @@ export async function POST(request: Request) {
 
     await connect();
 
+    // Generate secure OTP using crypto.randomInt
+function generateSecureOTP(): string {
+  let otp = '';
+  for (let i = 0; i < 6; i++) {
+    otp += crypto.randomInt(0, 10).toString();
+  }
+  return otp;
+}
+
     // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = generateSecureOTP();
     console.log(`🎲 [Send OTP] Generated OTP: gotcha...(it's not the otp, duhh)`);
+
+    // Hash the OTP before storing
+    const hashedOTP = await bcrypt.hash(otp, 10);
+    console.log(`🔐 [Send OTP] OTP hashed for storage`);
 
     // Delete any existing OTP for this email
     await Otp.deleteMany({ email: emailString });
     console.log(`🗑️ [Send OTP] Cleared old OTPs`);
 
-    // Save new OTP
+    // Save new OTP (hashed)
     const otpRecord = new Otp({
       email: emailString,
-      otp: otp,
+      otp: hashedOTP,
       createdAt: new Date(),
     });
 
     await otpRecord.save();
-    console.log(`💾 [Send OTP] OTP saved to DB`);
+    console.log(` [Send OTP] OTP saved to DB`);
 
     // Configure email transporter
     const transporter = nodemailer.createTransport({
@@ -107,7 +122,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send OTP email
+    // Send OTP email (send plain OTP to user)
     await transporter.sendMail({
       from: `"CryptoSnoop" <${process.env.MAIL_USER}>`,
       to: emailString,
@@ -115,20 +130,28 @@ export async function POST(request: Request) {
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #FFFFFF; margin: 0;">CryptoSnoop</h1>
+            <h1 style="color: #ffffff; margin: 0;">CryptoSnoop</h1>
           </div>
           <div style="background: linear-gradient(135deg, #c750f7 0%, #d575fc 100%); padding: 30px; border-radius: 15px; text-align: center;">
             <h2 style="color: white; margin: 0 0 20px 0;">Your OTP Code</h2>
             <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block;">
-              <h1 style="color: #FFFFFF; font-size: 42px; letter-spacing: 10px; margin: 0;">${otp}</h1>
+              <h1 style="color: #ffffff; font-size: 42px; letter-spacing: 10px; margin: 0;">${otp}</h1>
             </div>
             <p style="color: white; margin-top: 20px; font-size: 14px;">This code will expire in 5 minutes</p>
+            <p style="color: white; margin-top: 10px; font-size: 12px;">Never share this code with anyone, including CryptoSnoop staff.</p>
+          </div>
+          <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 10px; margin-top: 20px;">
+            <p style="color: #856404; margin: 0; font-size: 14px; font-weight: bold;">⚠️ Security Warning</p>
+            <p style="color: #856404; margin: 5px 0 0 0; font-size: 13px;">
+              If you didn't request this code, someone may be trying to access your account. 
+              Please secure your email account immediately.
+            </p>
           </div>
           <p style="color: #666; margin-top: 20px; text-align: center; font-size: 14px;">
-            If you didn't request this code, please ignore this email.
+            This is an automated message. Please do not reply to this email.
           </p>
           <p style="color: #999; margin-top: 30px; text-align: center; font-size: 12px;">
-            © ${new Date().getFullYear()} CryptoSnoop. All rights reserved.
+            © ${new Date().getFullYear()} CryptoSnoop.app . All rights reserved.
           </p>
         </div>
       `,

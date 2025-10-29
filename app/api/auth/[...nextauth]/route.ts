@@ -1,8 +1,10 @@
+
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connect from "@/lib/db";
 import Otp from "@/lib/models/otp";
+import bcrypt from "bcryptjs";
 
 // Helper function to generate username - returns 'user' for everyone
 function generateUsername(email: string): string {
@@ -44,14 +46,22 @@ async function verifyOTP(email: string, otp: string): Promise<boolean> {
     await connect();
 
     // Find OTP record
-    const record = await Otp.findOne({ email: emailString, otp: otpString });
+    const record = await Otp.findOne({ email: emailString });
 
     if (!record) {
-      console.log(`❌ [NextAuth] No matching OTP found`);
+      console.log(`❌ [NextAuth] No OTP record found for email`);
       return false;
     }
 
-    // Delete OTP after verification
+    // Compare the provided OTP with the hashed OTP in the database
+    const isMatch = await bcrypt.compare(otpString, record.otp);
+
+    if (!isMatch) {
+      console.log(`❌ [NextAuth] OTP does not match`);
+      return false;
+    }
+
+    // Delete OTP after successful verification
     await Otp.deleteOne({ _id: record._id });
     console.log(`✅ [NextAuth] OTP verified and deleted`);
 

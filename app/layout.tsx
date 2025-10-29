@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Provider } from './providers';
+import { Providers } from "@/providers/provider";
 import DatabaseWarmer from "@/components/DatabaseWarmer"; // New component
 import { inter } from "./fonts";
 

@@ -1,4 +1,5 @@
 import { Schema, model, models, connection } from "mongoose";
+import mongoose from "mongoose";
 
 const OtpSchema = new Schema({
   email: { 
@@ -32,6 +33,6 @@ if (connection.readyState === 1) {
 }
 
 // Ensure the model is only created once
-const Otp = models.Otp || model("Otp", OtpSchema);
+const Otp = mongoose.models.Otp || mongoose.model("Otp", OtpSchema);
 
 export default Otp;

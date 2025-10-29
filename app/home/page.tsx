@@ -31,6 +31,7 @@ import {
 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { usePortfolio } from "@/hooks/usePortfolio"
+import {useEffect} from 'react'
 
 export default function UserProfile() {
   const [showBalance, setShowBalance] = useState(true)
@@ -42,7 +43,7 @@ export default function UserProfile() {
   const [quantity, setQuantity] = useState("")
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
-
+ 
   //session
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -53,6 +54,8 @@ export default function UserProfile() {
     }
   }, [status, router]);
 
+   const userId = session?.user?.id;
+  const name = session?.user?.name;
   const {
     portfolio,
     assets,
@@ -112,8 +115,7 @@ export default function UserProfile() {
 
  const [isSending, setIsSending] = useState(false);
 
-  const userId = session?.user?.id;
-  const name = session?.user?.name;
+  
   
 const handleAddAsset = async () => {
   if (!quantity || parseFloat(quantity) <= 0) return;
@@ -758,7 +760,7 @@ const handleAddAsset = async () => {
             <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
             <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
              <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-            <a  onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+            <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">
           <div className="w-12 h-12 flex items-center justify-center">

@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-
+import { signOut } from "next-auth/react";
 
 
 export default function notFound() {
@@ -74,7 +74,7 @@ export default function notFound() {
         </a>
         <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
         <a
-          href="#logout"
+          onClick={() => signOut({ callbackUrl: "/auth/signin" })}
           className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
         >
           Logout
@@ -96,7 +96,7 @@ export default function notFound() {
       <p className="text-slate-600 dark:text-slate-400 mb-2">
         Track your crypto journey with confidence
       </p>
-      <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
+      <p className="text-gray-600">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
     </div>
   </footer>
 </main>

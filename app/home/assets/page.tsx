@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { signOut } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 export default function CryptoPortfolioPage() {
   const { portfolio, assets, marketData, refreshAssets, refreshAll, isLoading, error } = usePortfolio()
@@ -20,8 +24,11 @@ export default function CryptoPortfolioPage() {
   const [selectedCoin, setSelectedCoin] = useState<any>(null)
   const [quantity, setQuantity] = useState("")
   const [showBalance, setShowBalance] = useState(true)
-
-  const userId = '68e54cbbec084f39199b2731'
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const userId = session?.user?.id;
+  const name = session?.user?.name;
+  
 
   // Calculate totals from portfolio data
   const totalValue = portfolio?.totalValue || 0
@@ -834,8 +841,8 @@ const handleCancelEdit = () => {
                 <div className="flex items-center justify-center gap-6 mb-6">
                   <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
                   <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                   <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-                  <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+                   <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="cursor-pointer text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
+                  <a onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
                 </div>
                 <div className="flex items-center justify-center gap-3 mb-4">
                 <div className="w-12 h-12 flex items-center justify-center">

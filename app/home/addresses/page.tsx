@@ -4,11 +4,27 @@ import { useState, useRef, useEffect } from "react"
 import { LogOut, ArrowLeft, Plus, Copy, Check, Save, Edit, Trash, Wallet } from "lucide-react"
 import Image from "next/image"
 import { usePortfolio } from "@/hooks/usePortfolio"
+import { signOut } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button"
 
 export default function AccountsPage() {
+ const { data: session, status } = useSession();
+  const router = useRouter();
+  const userId = session?.user?.id;
+  const name = session?.user?.name;
+
+   useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
+
+
   const { addresses, refreshAddresses, refreshAll, isLoading, error } = usePortfolio()
   
-  const userId = '68e54cbbec084f39199b2731'
+  
 
   // State for new account form
   const [newAddress, setNewAddress] = useState("")
@@ -646,7 +662,7 @@ export default function AccountsPage() {
                         <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
                         <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
                          <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-                        <a href="#logout" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+                        <a onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline cursor-pointer">Logout</a>
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-4">
                       <div className="w-12 h-12 flex items-center justify-center">
