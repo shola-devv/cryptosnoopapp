@@ -1,0 +1,186 @@
+import React, { useEffect, useState } from 'react';
+import { Settings, Check, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+const avatarOptions = [
+  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
+  { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
+  { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
+  { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
+  { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
+];
+
+export default function ProfileModal({ isOpen, onClose, currentName, currentAvatar, onSave }) {
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [newName, setNewName] = useState('');
+
+  // Sync props when modal opens or props change
+  useEffect(() => {
+    if (isOpen) {
+      setNewName(currentName ?? '');
+      // currentAvatar might be an id or an avatar object
+      if (!currentAvatar) {
+        setSelectedAvatar(null);
+      } else if (typeof currentAvatar === 'number' || typeof currentAvatar === 'string') {
+        const found = avatarOptions.find((a) => String(a.id) === String(currentAvatar));
+        setSelectedAvatar(found ?? null);
+      } else if (typeof currentAvatar === 'object') {
+        // try to match by id first, otherwise use as-is (defensive)
+        const found = avatarOptions.find((a) => a.id === currentAvatar.id);
+        setSelectedAvatar(found ?? currentAvatar);
+      } else {
+        setSelectedAvatar(null);
+      }
+    }
+  }, [isOpen, currentName, currentAvatar]);
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape' && isOpen) onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
+  const handleSave = () => {
+    if (newName.trim()) {
+      onSave({ avatar: selectedAvatar, name: newName.trim() });
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      onClick={onClose}
+      aria-modal="true"
+      role="dialog"
+    >
+      <div
+        className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
+        style={{ boxShadow: '0 20px 60px -10px rgba(199, 80, 247, 0.5)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-slate-400 hover:text-[#c750f7] transition-colors"
+          aria-label="Close modal"
+        >
+          <X className="w-6 h-6" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">
+            Customize Profile
+          </h2>
+       
+        </div>
+
+        {/* Avatar Selection */}
+        <div className="mb-6">
+          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">
+            Choose Avatar
+          </Label>
+          <div className="grid grid-cols-5 gap-3">
+            {avatarOptions.map((avatar) => {
+              const isSelected = selectedAvatar?.id === avatar.id;
+              const bgColor = avatar.color + '20'; // semi-transparent background
+              return (
+                <button
+                  key={avatar.id}
+                  onClick={() => setSelectedAvatar(avatar)}
+                  className="relative w-full aspect-square rounded-full flex items-center justify-center text-2xl transition-all hover:scale-110 focus:outline-none"
+                  style={{
+                    backgroundColor: bgColor,
+                    border: isSelected ? `3px solid ${avatar.color}` : '2px solid transparent',
+                    boxShadow: isSelected ? `0 0 20px ${avatar.color}40` : 'none'
+                  }}
+                  title={avatar.label}
+                  aria-pressed={isSelected}
+                >
+                  <span aria-hidden>{avatar.emoji}</span>
+                  {isSelected && (
+                    <div
+                      className="absolute -top-1 -right-1 rounded-full p-0.5"
+                      style={{ backgroundColor: avatar.color }}
+                    >
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Preview */}
+        {selectedAvatar && (
+          <div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
+            <div className="flex items-center gap-3">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
+                style={{ backgroundColor: selectedAvatar.color }}
+              >
+                {selectedAvatar.emoji}
+              </div>
+              <div>
+                <p className="font-semibold text-slate-800 dark:text-white">
+                  {newName || 'Your Name'}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {selectedAvatar.label}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Username Input */}
+        <div className="mb-6">
+          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
+            Username
+          </Label>
+          <Input
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
+            placeholder="Enter your name"
+            maxLength={30}
+          />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {newName.length}/30 characters
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <Button
+            onClick={onClose}
+            variant="outline"
+            className="flex-1 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={!newName.trim() || !selectedAvatar}
+            className="flex-1 text-white font-bold border-4 border-[#d575fc] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#c750f7' }}
+          >
+            Save Changes
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

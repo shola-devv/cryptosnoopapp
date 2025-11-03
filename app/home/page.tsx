@@ -32,6 +32,9 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { usePortfolio } from "@/hooks/usePortfolio"
 import {useEffect} from 'react'
+import { Settings, Check } from 'lucide-react';
+import ProfileModal from '@/components/profileModal'
+
 
 export default function UserProfile() {
   const [showBalance, setShowBalance] = useState(true)
@@ -184,7 +187,24 @@ const handleAddAsset = async () => {
   }
 };
 
+
+//profile handler
+const handleProfileSave = async ({ avatar, name }) => {
+  if (avatar) setUserAvatar(avatar);
+  // You can also save to your backend here
+  // await fetch('/api/profile', { method: 'PATCH', body: JSON.stringify({ avatar, name }) });
+};
  
+const [showProfileModal, setShowProfileModal] = useState(false);
+const [userAvatar, setUserAvatar] = useState({
+  id: 1,
+  emoji: '👤',
+  color: '#c750f7',
+  label: 'Default'
+});
+
+
+
 
   // ✅ LOADING STATE
   if (isLoading) {
@@ -416,20 +436,31 @@ const handleAddAsset = async () => {
               <div className="flex sm:hidden flex-col gap-4">
                 {/* Top Row: Avatar and Hello Text */}
                 <div className="flex items-center gap-3">
-                  <div className="relative flex-shrink-0">
-                    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: '#c750f7' }}></div>
-                    <Avatar className="w-12 h-12 border-2 relative" style={{ borderColor: '#c750f7' }}>
-                      <AvatarImage src="/placeholder.svg?height=48&width=48" alt="John Doe" />
-                      <AvatarFallback className="text-sm font-bold text-white" style={{ backgroundColor: '#c750f7' }}>JD</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {name} !</p>
-                  </div>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
-                    <Eye className="w-4 h-4 font-extrabold" />
-                  </Button>
-                </div>
+  <div className="relative flex-shrink-0">
+    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
+    <div
+      className="w-12 h-12 rounded-full border-2 relative flex items-center justify-center text-xl"
+      style={{ 
+        borderColor: userAvatar.color,
+        backgroundColor: userAvatar.color
+      }}
+    >
+      {userAvatar.emoji}
+    </div>
+  </div>
+  <div className="flex-1 flex items-center gap-2">
+    <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {name}!</p>
+    <button 
+      onClick={() => {setShowProfileModal(true); buzzClick();}}
+      className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+    >
+      <Settings className="w-4 h-4 text-slate-600 dark:text-slate-400 hover:text-[#c750f7]" />
+    </button>
+  </div>
+  <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
+    <Eye className="w-4 h-4 font-extrabold" />
+  </Button>
+</div>
 
                 {/* Order Value Section */}
                 <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-3">
@@ -467,23 +498,36 @@ const handleAddAsset = async () => {
                 </div>
               </div>
               
-              {/* Desktop Layout */}
-              <div className="hidden sm:flex flex-row items-start gap-4">
-                <div className="relative flex-shrink-0">
-                  <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: '#c750f7' }}></div>
-                  <Avatar className="w-16 h-16 border-2 relative" style={{ borderColor: '#c750f7' }}>
-                    <AvatarImage src="/walodja.jpg" alt="profile picture" />
-                    <AvatarFallback className="text-lg font-bold text-white" style={{ backgroundColor: '#c750f7' }}>JD</AvatarFallback>
-                  </Avatar>
-                </div>
-                
-                <div className="flex-1 w-full">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome {name}!</h2>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBalance(!showBalance)}>
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                  </div>
+             {/* Desktop Layout */}
+<div className="hidden sm:flex flex-row items-start gap-4">
+  <div className="relative flex-shrink-0">
+    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
+    <div
+      className="w-16 h-16 rounded-full border-2 relative flex items-center justify-center text-3xl"
+      style={{ 
+        borderColor: userAvatar.color,
+        backgroundColor: userAvatar.color
+      }}
+    >
+      {userAvatar.emoji}
+    </div>
+  </div>
+  
+  <div className="flex-1 w-full">
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome {name}!</h2>
+        <button 
+          onClick={() => {setShowProfileModal(true); buzzClick();}}
+          className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+        >
+          <Settings className="w-5 h-5 text-slate-600 dark:text-slate-400 hover:text-[#c750f7]" />
+        </button>
+      </div>
+      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBalance(!showBalance)}>
+        <Eye className="w-4 h-4" />
+      </Button>
+    </div>
                   
                   <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-4 mb-4">
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">Total Balance</p>
@@ -606,7 +650,9 @@ const handleAddAsset = async () => {
                   </div>
                 </CardContent>
               </Card>
-
+              <p className="text-center text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium mt-4">
+         Support for more coins coming soon!
+      </p>
                 </section>
       </div>
 
@@ -752,6 +798,15 @@ const handleAddAsset = async () => {
     </div>
   </div>
 )}
+
+{/* Profile Modal */}
+<ProfileModal 
+  isOpen={showProfileModal}
+  onClose={() => setShowProfileModal(false)}
+  currentName={name}
+  currentAvatar={userAvatar}
+  onSave={handleProfileSave}
+/>
 
 
  <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10">
