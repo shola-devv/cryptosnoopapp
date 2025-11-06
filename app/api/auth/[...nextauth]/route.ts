@@ -263,6 +263,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
+        token.profile = user.profile;
       }
       return token;
     },
@@ -273,6 +274,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.image = token.picture as string;
+         session.user.profile = token.profile;
       }
       return session;
     },

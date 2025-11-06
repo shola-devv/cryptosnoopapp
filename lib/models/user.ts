@@ -9,13 +9,14 @@ const UserSchema = new Schema(
       required: false,  // Make optional for OAuth users
       default: null 
     },
-    profile: { type: Number, required: true, default: 0 },
+    profile: { type: Number, default: 0  },
     provider: { 
       type: String, 
       enum: ['google', 'email'], 
       required: true 
     },
-    image: { type: String, default: null },
+    
+    image: { type: String, required: true, default: null },
     subscription: {
       id: { type: String, default: "" },
       status: { type: String, default: "free" },

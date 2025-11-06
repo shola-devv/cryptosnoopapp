@@ -12,22 +12,28 @@ const avatarOptions = [
   { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
 ];
 
-export default function ProfileModal({ isOpen, onClose, currentName, currentAvatar, onSave }) {
+export default function ProfileModal({
+  isOpen,
+  onClose,
+  currentName,
+  currentAvatar,
+  currentUserId,
+  onSave
+}) {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [newName, setNewName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   // Sync props when modal opens or props change
   useEffect(() => {
     if (isOpen) {
       setNewName(currentName ?? '');
-      // currentAvatar might be an id or an avatar object
       if (!currentAvatar) {
         setSelectedAvatar(null);
       } else if (typeof currentAvatar === 'number' || typeof currentAvatar === 'string') {
         const found = avatarOptions.find((a) => String(a.id) === String(currentAvatar));
         setSelectedAvatar(found ?? null);
       } else if (typeof currentAvatar === 'object') {
-        // try to match by id first, otherwise use as-is (defensive)
         const found = avatarOptions.find((a) => a.id === currentAvatar.id);
         setSelectedAvatar(found ?? currentAvatar);
       } else {
@@ -45,10 +51,37 @@ export default function ProfileModal({ isOpen, onClose, currentName, currentAvat
     return () => window.removeEventListener('keydown', handler);
   }, [isOpen, onClose]);
 
-  const handleSave = () => {
-    if (newName.trim()) {
+  // ✅ New handleSave that calls PATCH API
+  const handleSave = async () => {
+    if (!newName.trim() || !selectedAvatar) return;
+    setIsSaving(true);
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUserId,
+          newUsername: newName.trim(),
+          newProfile: selectedAvatar // maps 1–5 → 0–4
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || 'Failed to update profile.');
+        return;
+      }
+
+      alert('Profile updated successfully!');
       onSave({ avatar: selectedAvatar, name: newName.trim() });
       onClose();
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Something went wrong while saving your changes.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -81,7 +114,6 @@ export default function ProfileModal({ isOpen, onClose, currentName, currentAvat
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">
             Customize Profile
           </h2>
-       
         </div>
 
         {/* Avatar Selection */}
@@ -92,7 +124,7 @@ export default function ProfileModal({ isOpen, onClose, currentName, currentAvat
           <div className="grid grid-cols-5 gap-3">
             {avatarOptions.map((avatar) => {
               const isSelected = selectedAvatar?.id === avatar.id;
-              const bgColor = avatar.color + '20'; // semi-transparent background
+              const bgColor = avatar.color + '20';
               return (
                 <button
                   key={avatar.id}
@@ -173,11 +205,11 @@ export default function ProfileModal({ isOpen, onClose, currentName, currentAvat
           </Button>
           <Button
             onClick={handleSave}
-            disabled={!newName.trim() || !selectedAvatar}
+            disabled={!newName.trim() || !selectedAvatar || isSaving}
             className="flex-1 text-white font-bold border-4 border-[#d575fc] disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#c750f7' }}
           >
-            Save Changes
+            {isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </div>

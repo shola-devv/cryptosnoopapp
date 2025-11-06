@@ -58,7 +58,10 @@ export default function UserProfile() {
   }, [status, router]);
 
    const userId = session?.user?.id;
-  const name = session?.user?.name;
+   const name = session?.user?.name;
+   const profile = session?.user?.profile ?? 0
+  
+
   const {
     portfolio,
     assets,
@@ -76,14 +79,13 @@ export default function UserProfile() {
   console.log(accounts)
   console.log(addresses)
   console.log(assets)
+   console.log(profile)
+    console.log(profile)
 
-  const totalValue = portfolio?.totalValue || 0
-  const totalChange =
-    (portfolio?.breakdown?.reduce((sum, asset) => {
-      return sum + (asset.changePercent || 0) * (asset.value || 0)
-    }, 0) /
-      totalValue) *
-      100 || 0
+ const totalValue = portfolio?.totalValue || 0;
+const totalChange = portfolio?.portfolioChangePercent ?? 0;
+  console.log(totalChange)
+    
   const totalAssets = assets?.length || 0
 
   const cryptoCoins =
@@ -189,20 +191,20 @@ const handleAddAsset = async () => {
 
 
 //profile handler
-const handleProfileSave = async ({ avatar, name }) => {
-  if (avatar) setUserAvatar(avatar);
-  // You can also save to your backend here
-  // await fetch('/api/profile', { method: 'PATCH', body: JSON.stringify({ avatar, name }) });
-};
- 
-const [showProfileModal, setShowProfileModal] = useState(false);
-const [userAvatar, setUserAvatar] = useState({
-  id: 1,
-  emoji: '👤',
-  color: '#c750f7',
-  label: 'Default'
-});
 
+const avatarOptions = [
+  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
+  { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
+  { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
+  { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
+  { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
+];
+
+const [userAvatar, setUserAvatar] = useState(avatarOptions[0]);
+ const [showProfileModal, setShowProfileModal] = useState(false);
+const handleProfileSave = () => {
+  refreshAll(); // Session updates automatically
+};
 
 
 
@@ -432,21 +434,31 @@ const [userAvatar, setUserAvatar] = useState({
         <section className="mb-6">
           <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.3)' }}>
             <CardContent className="p-3 sm:p-6">
+            
+            
               {/* Mobile Layout */}
               <div className="flex sm:hidden flex-col gap-4">
                 {/* Top Row: Avatar and Hello Text */}
                 <div className="flex items-center gap-3">
   <div className="relative flex-shrink-0">
     <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
-    <div
-      className="w-12 h-12 rounded-full border-2 relative flex items-center justify-center text-xl"
-      style={{ 
-        borderColor: userAvatar.color,
-        backgroundColor: userAvatar.color
-      }}
-    >
-      {userAvatar.emoji}
-    </div>
+   <div
+  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
+  style={{ 
+    borderColor: userAvatar.color,
+    backgroundColor: userAvatar.color
+  }}
+>
+  {profile !== undefined ? (
+    <img 
+      src={`/profile${profile}.png`}
+      alt={userAvatar.label}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    userAvatar.emoji
+  )}
+</div>
   </div>
   <div className="flex-1 flex items-center gap-2">
     <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {name}!</p>
@@ -484,10 +496,17 @@ const [userAvatar, setUserAvatar] = useState({
                 {/* Profit Section */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
-                    <p className={`text-base font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {showBalance ? `${totalChange >= 0 ? '+' : ''}$${Math.abs(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
-                    </p>
+                      
+<p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+  Change in 24HR
+</p>
+<p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+  {showBalance
+    ? `${totalChange >= 0 ? '+' : '-'}$${Math.abs((totalChange * totalValue) / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    : '••••••'}
+</p>
+
+
                   </div>
                   <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                     <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
@@ -502,15 +521,23 @@ const [userAvatar, setUserAvatar] = useState({
 <div className="hidden sm:flex flex-row items-start gap-4">
   <div className="relative flex-shrink-0">
     <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
-    <div
-      className="w-16 h-16 rounded-full border-2 relative flex items-center justify-center text-3xl"
-      style={{ 
-        borderColor: userAvatar.color,
-        backgroundColor: userAvatar.color
-      }}
-    >
-      {userAvatar.emoji}
-    </div>
+   <div
+  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
+  style={{ 
+    borderColor: userAvatar.color,
+    backgroundColor: userAvatar.color
+  }}
+>
+  {profile !== undefined ? (
+    <img 
+      src={`/profile${profile}.png`}
+      alt={userAvatar.label}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    userAvatar.emoji
+  )}
+</div>
   </div>
   
   <div className="flex-1 w-full">
@@ -549,10 +576,18 @@ const [userAvatar, setUserAvatar] = useState({
                   
                   <div className="grid grid-cols-2 gap-3">
                     <div className=" dark:bg-slate-800 rounded-lg p-4">
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Change in 24HR</p>
-                      <p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {showBalance ? `${totalChange >= 0 ? '+' : ''}$${Math.abs(totalChange * totalValue / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
-                      </p>
+                      
+<p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+  Change in 24HR
+</p>
+<p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+  {showBalance ? (
+    `${totalChange >= 0 ? '+' : '-'}$${Math.abs((totalChange * totalValue) / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })} | ${Math.abs(totalChange).toFixed(2)}%`
+  ) : (
+    '••••••'
+  )}
+</p>
+
                     </div>
                     <div className="  dark:bg-slate-800 rounded-lg p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
@@ -570,35 +605,81 @@ const [userAvatar, setUserAvatar] = useState({
         {/* Tabs Section */}
         <section className="mb-8">
           <div className="grid w-full grid-cols-3 mb-2 h-auto p-1 gap-1 rounded-lg">
-            <button 
-              onClick={() => {handleNavigation("/home/assets"); buzzClick();}}
-              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
-            
-            >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center  flex-shrink-0 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden" >
-                <Album className="font-extrabold w-10 h-8 text-white" />
-              </div>
-              <span className="text-xs sm:text-sm leading-tight">Assets</span>
-            </button>
-            <button 
-              onClick={() => {handleNavigation("/home/monitor-accounts"); buzzClick();}}
-              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
-              
-            >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center  flex-shrink-0 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden" >
-                <ChartBarIncreasingIcon  className="font-extrabold w-8 h-8 text-white" />
-              </div>
-              <span className="text-xs sm:text-sm leading-tight">Accounts</span>
-            </button>
-            <button 
-              onClick={() => {handleNavigation("/home/addresses"); buzzClick();}}
-              className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
-            >
-              <div className="w-16 h-12 sm:w-24 sm:h-18 rounded-lg flex items-center justify-center  flex-shrink-0 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden" >
-                <MapPin className="font-extrabold w-8 h-8 text-white" />
-              </div>
-              <span className="text-xs sm:text-sm leading-tight">Addresses</span>
-            </button>
+            <button
+  onClick={() => {
+    handleNavigation("/home/assets");
+    buzzClick();
+  }}
+  className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
+>
+  <div
+    className="w-12 h-10 sm:w-16 sm:h-12 md:w-18 md:h-14 
+               rounded-xl flex items-center justify-center flex-shrink-0 
+               bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
+  >
+    <Album className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+  </div>
+
+  <span
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+  >
+    Assets
+  </span>
+</button>
+
+           <button
+  onClick={() => {
+    handleNavigation("/home/monitor-accounts");
+    buzzClick();
+  }}
+  className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
+>
+  <div
+    className="w-12 h-10 sm:w-16 sm:h-12 md:w-18 md:h-14 
+               rounded-xl flex items-center justify-center flex-shrink-0 
+               bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
+  >
+    <ChartBarIncreasingIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+  </div>
+
+  <span
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+  >
+    Accounts
+  </span>
+</button>
+
+           <button
+  onClick={() => {
+    handleNavigation("/home/addresses");
+    buzzClick();
+  }}
+  className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
+>
+  <div
+    className="w-12 h-10 sm:w-16 sm:h-12 md:w-18 md:h-14 
+               rounded-xl flex items-center justify-center flex-shrink-0 
+               bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
+  >
+    <MapPin className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+  </div>
+
+  <span
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+  >
+    Addresses
+  </span>
+</button>
+
           </div>
           
           
@@ -736,7 +817,11 @@ const [userAvatar, setUserAvatar] = useState({
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
+            maxLength={9}
           />
+           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {quantity.length}/9 characters
+          </p>
         </div>
 
         {quantity && (
@@ -804,9 +889,11 @@ const [userAvatar, setUserAvatar] = useState({
   isOpen={showProfileModal}
   onClose={() => setShowProfileModal(false)}
   currentName={name}
-  currentAvatar={userAvatar}
+  currentAvatar={profile ?? 0}          // numeric 0–4 from session
+  currentUserId={session?.user?.id}   // 👈 required for PATCH
   onSave={handleProfileSave}
 />
+
 
 
  <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10">

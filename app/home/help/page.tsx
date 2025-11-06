@@ -232,6 +232,7 @@ export default function HelpPage() {
         </Card>
 
         {/* Logout Button */}
+         
         <div className="mt-12 flex justify-center">
           <Button
             variant="outline"
@@ -242,6 +243,20 @@ export default function HelpPage() {
             Logout
           </Button>
         </div>
+     
+     {/* DELETE Button. the handle delete func shoulf have a alert(are you syre) */}
+         
+        <div className="mt-12 flex justify-center">
+          <Button
+            variant="outline"
+            className="px-6 py-3 bg-red-600 text-white border-red-600 active:translate-y-1  font-bold"
+            onClick={handleLogout}
+          >
+          
+            Delete Account
+          </Button>
+        </div>
+
       </div>
        <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

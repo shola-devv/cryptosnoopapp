@@ -2,7 +2,7 @@ import connect  from "@/lib/db"
 import User from "@/lib/models/user"
 import { NextResponse } from "next/server"
 import {Types} from "mongoose"
-
+import { useSession } from 'next-auth/react';
 
 
 
@@ -10,15 +10,27 @@ const Objectid = require("mongoose").Types.objectid
 
 
 
-export const GET = async ()=>{
+export const GET = async (request: Request)=>{
+   const { data: session, status } = useSession();
 
   try{
-  await connect();
+
+  const body = await request.json();
+    const { userId, password } = body;
+    const password_ = "olushola12345"
+    const userId_ = "64b8f3f5f1d2c9e6f8a4e2b1" //admin user id for testing
+
+    if (userId === userId_ || password === password ) {
+     
+     await connect();
   const users = await User.find();
   return new NextResponse(JSON.stringify(users), {status:200});
 
+    }
+
+ 
   } catch (error:any){
-    return new NextResponse("error in fetching users" + error.message, {status: 500})
+    return new NextResponse("protected api dumbass" + error.message, {status: 500})
   }
 
 
@@ -43,10 +55,10 @@ const newUser = new User(body);
 export const PATCH = async (request: Request) => {
   try {
     const body = await request.json();
-    const { userId, newUsername } = body;
+    const { userId, newUsername, newImage } = body;
 
     await connect();
-    
+
     if (!userId || !newUsername) {
       return new NextResponse(
         JSON.stringify({ message: "ID or username not found" }),
@@ -56,14 +68,17 @@ export const PATCH = async (request: Request) => {
 
     if (!Types.ObjectId.isValid(userId)) {
       return new NextResponse(
-        JSON.stringify({ message: "Invalid user id" }), 
+        JSON.stringify({ message: "Invalid user id" }),
         { status: 400 }
       );
     }
 
     const updatedUser = await User.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
-      { username: newUsername },
+      {
+        username: newUsername,
+        profile: newImage, // number between 0–4
+      },
       { new: true }
     );
 
@@ -75,19 +90,19 @@ export const PATCH = async (request: Request) => {
     }
 
     return new NextResponse(
-      JSON.stringify({ message: "User updated successfully", user: updatedUser }),
+      JSON.stringify({
+        message: "User updated successfully",
+        user: updatedUser,
+      }),
       { status: 200 }
     );
-
   } catch (error: any) {
     return new NextResponse(
-      JSON.stringify({ message: "Error in updating user: " + error.message }),
+      JSON.stringify({ message: "Error updating user: " + error.message }),
       { status: 500 }
     );
   }
-}
-
-
+};
 
 export const DELETE = async (request: Request) => {
   try {

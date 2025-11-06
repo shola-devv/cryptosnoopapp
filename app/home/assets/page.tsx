@@ -530,6 +530,7 @@ const handleCancelEdit = () => {
                               value={editAmount}
                               onChange={e => setEditAmount(e.target.value)}
                               className="w-24 px-2 py-1 border border-[#c750f7] rounded-lg text-sm font-bold dark:bg-slate-800 dark:text-white"
+                              maxLength={9} 
                             />
                             <button onClick={() => handleSaveAmount(asset.name, editAmount)} className="p-1 bg-green-500 rounded">
                               <Check className="w-3 h-3 text-white" />
@@ -685,7 +686,11 @@ const handleCancelEdit = () => {
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
+                    maxLength={9}
                     />
+                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                       {quantity.length}/9 characters
+                      </p>
                   </div>
 
                   {quantity && (

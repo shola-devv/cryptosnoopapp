@@ -1,5 +1,10 @@
 "use client"
 
+
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { useState, useRef, useEffect } from "react"
 import { LogOut, ArrowLeft, Plus, Copy, Check, Save, Edit, Trash, Wallet } from "lucide-react"
 import Image from "next/image"
@@ -473,6 +478,7 @@ export default function AccountsPage() {
                 placeholder="Main Trading Wallet"
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
                 disabled={isSending}
+                maxLength={40}
               />
             </div>
 
@@ -654,7 +660,9 @@ export default function AccountsPage() {
           )}
         </div>
       </div>
-
+      <p className="text-center text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium mt-4">
+         For your safety, never share or store passwords, private keys, or seed phrases here.
+      </p>
       {/* Footer */}
       <footer className=" bottom-0 left-0 w-full mt-8 bg-white text-gray-900 py-12  z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

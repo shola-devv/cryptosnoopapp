@@ -1,263 +1,203 @@
-"use client";
-import { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
-import Image from "next/image";
-import GoogleSignInButton from '@/components/GoogleSignInButton';
+import React, { useEffect, useState } from 'react';
+import { Settings, Check, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const avatarOptions = [
+  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
+  { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
+  { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
+  { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
+  { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
+];
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [resendTimer, setResendTimer] = useState(0);
+export default function ProfileModal({
+  isOpen,
+  onClose,
+  currentName,
+  currentAvatar,
+  currentUserId,
+  onSave
+}) {
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0);
+  const [newName, setNewName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Countdown timer for resend
+  // Sync props when modal opens - currentAvatar is just the index (0-4)
   useEffect(() => {
-    if (resendTimer > 0) {
-      const timer = setTimeout(() => {
-        setResendTimer(resendTimer - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (isOpen) {
+      setNewName(currentName ?? '');
+      setSelectedAvatarIndex(currentAvatar ?? 0);
     }
-  }, [resendTimer]);
-     
-  // Auto-clear error after 3 seconds
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError("");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  }, [isOpen, currentName, currentAvatar]);
 
-  // Reset modal to initial state when closed
+  // Close on Escape
   useEffect(() => {
-    if (!isOpen) {
-      setEmail("");
-      setOtpSent(false);
-      setOtp("");
-      setError("");
-      setResendTimer(0);
+    const handler = (e) => {
+      if (e.key === 'Escape' && isOpen) onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
+  const handleSave = async () => {
+    if (!newName.trim()) return;
+    setIsSaving(true);
+
+    try {
+      const response = await fetch('/api/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUserId,
+          newUsername: newName.trim(),
+          newImage: selectedAvatarIndex
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || 'Failed to update profile.');
+        return;
+      }
+
+      alert('Profile updated successfully!');
+      onSave();
+      onClose();
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Something went wrong while saving your changes.');
+    } finally {
+      setIsSaving(false);
     }
-  }, [isOpen]);
+  };
 
   if (!isOpen) return null;
 
-  // Handle email submission (send OTP)
-  async function handleEmailLogin() {
-    if (!email) {
-      setError("Please enter your email");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await signIn("email-otp", {
-        email: email.trim().toLowerCase(), // Normalize email
-        redirect: false,
-      });
-
-      if (res?.error === "OTP_SENT") {
-        setOtpSent(true);
-        setError("");
-        setResendTimer(120); // 2 minutes
-      } else if (res?.error) {
-        setError(""); //res.error
-        setTimeout(() => {
-          setError("Failed to send OTP. Please try again.");
-        }, 4500);
-      }
-    } catch (err) {
-      setError("Failed to send OTP. Please try again.");
-      setTimeout(() => {
-        setError("");
-      }, 1500);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Handle OTP verification
-  async function handleVerifyOtp() {
-    if (!otp) {
-      setError("Please enter the OTP");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await signIn("email-otp", {
-        email: email.trim().toLowerCase(), // Normalize email
-        otp: otp.trim(), // Just trim, don't modify
-        redirect: false,
-      });
-
-      if (res?.ok) {
-        // Successfully authenticated
-        setError("Verification successful, logging you in...");
-        onClose();
-        router.push("/home");
-      } else if (res?.error) {
-        setError(res.error === "CredentialsSignin" ? "Invalid OTP" : res.error);
-      }
-    } catch (err) {
-      setError("Failed to verify OTP. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignIn() {
-    try {
-      await signIn("google", { callbackUrl: "/dashboard" });
-    } catch (error) {
-      console.error("Google sign-in error:", error);
-      setError("Failed to sign in with Google");
-    }
-  }
-
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 animate-in fade-in zoom-in duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      onClick={onClose}
+      aria-modal="true"
+      role="dialog"
+    >
+      <div
+        className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
+        style={{ boxShadow: '0 20px 60px -10px rgba(199, 80, 247, 0.5)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4  text-[#c750f7]  hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 text-slate-400 hover:text-[#c750f7] transition-colors"
+          aria-label="Close modal"
         >
           <X className="w-6 h-6" />
         </button>
 
         {/* Header */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-12 h-12 flex items-center justify-center mr-2">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={48}
-              height={32}
-              className="object-contain"
-              priority
-            />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-[#c750f7] font-bold text-xl leading-tight">crypto</span>
-            <span className="text-slate-700 font-bold text-xl leading-tight -mt-1">Snoop</span>
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">
+            Customize Profile
+          </h2>
+        </div>
+
+        {/* Avatar Selection */}
+        <div className="mb-6">
+          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">
+            Choose Avatar
+          </Label>
+          <div className="grid grid-cols-5 gap-3">
+            {avatarOptions.map((avatar, index) => {
+              const isSelected = selectedAvatarIndex === index;
+              const bgColor = avatar.color + '20';
+              return (
+                <button
+                  key={avatar.id}
+                  onClick={() => setSelectedAvatarIndex(index)}
+                  className="relative w-full aspect-square rounded-full flex items-center justify-center text-2xl transition-all hover:scale-110 focus:outline-none"
+                  style={{
+                    backgroundColor: bgColor,
+                    border: isSelected ? `3px solid ${avatar.color}` : '2px solid transparent',
+                    boxShadow: isSelected ? `0 0 20px ${avatar.color}40` : 'none'
+                  }}
+                  title={avatar.label}
+                  aria-pressed={isSelected}
+                >
+                  <span aria-hidden>{avatar.emoji}</span>
+                  {isSelected && (
+                    <div
+                      className="absolute -top-1 -right-1 rounded-full p-0.5"
+                      style={{ backgroundColor: avatar.color }}
+                    >
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-center mb-2">Sign In / Sign Up</h2>
-        
-
-        {/* Google Sign-in Button */}
-       <GoogleSignInButton />
-
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or continue with email</span>
+        {/* Preview */}
+        <div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
+              style={{ backgroundColor: avatarOptions[selectedAvatarIndex].color }}
+            >
+              {avatarOptions[selectedAvatarIndex].emoji}
+            </div>
+            <div>
+              <p className="font-semibold text-slate-800 dark:text-white">
+                {newName || 'Your Name'}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {avatarOptions[selectedAvatarIndex].label}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
+        {/* Username Input */}
+        <div className="mb-6">
+          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
+            Username
+          </Label>
+          <Input
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
+            placeholder="Enter your name"
+            maxLength={30}
+          />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {newName.length}/30 characters
+          </p>
+        </div>
 
-        {/* Email OTP Flow */}
-        <div className="flex flex-col gap-4">
-          {!otpSent ? (
-            <>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                className="border-2 border-gray-300 p-3 rounded-lg focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100"
-              />
-             
-              <button
-                onClick={handleEmailLogin}
-                disabled={loading}
-                className="bg-[#c750f7] text-white px-4 py-3 rounded-lg font-medium hover:bg-[#d575fc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Sending..." : "Send OTP"}
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="text-center mb-2">
-                <p className="text-sm text-gray-600">We've sent a 6-digit code to</p>
-                <p className="font-medium text-gray-800">{email}</p>
-                <p className="text-sm text-gray-600">Don't see it? check spam.</p>
-              </div>
-              <input
-                type="text"
-                placeholder="Enter 6-digit OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                onKeyPress={(e) => e.key === "Enter" && handleVerifyOtp()}
-                disabled={loading}
-                maxLength={6}
-                className="border-2 border-gray-300 p-3 rounded-lg text-center text-2xl tracking-widest focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100"
-              />
-              <button
-                onClick={handleVerifyOtp}
-                disabled={loading}
-                className="bg-[#c750f7] text-white px-4 py-3 rounded-lg font-medium hover:bg-[#d575fc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? "Verifying..." : "Verify & Continue"}
-              </button>
-              <button
-                onClick={async () => {
-                  if (resendTimer === 0) {
-                    setLoading(true);
-                    try {
-                      const res = await signIn("email-otp", {
-                        email: email.trim().toLowerCase(),
-                        redirect: false,
-                      });
-                      if (res?.error === "OTP_SENT") {
-                        setResendTimer(120);
-                        setError("");
-                      }
-                    } catch (err) {
-                      setError("Failed to resend OTP");
-                    } finally {
-                      setLoading(false);
-                    }
-                  }
-                }}
-                disabled={loading || resendTimer > 0}
-                className="text-sm text-gray-600 hover:text-gray-800 underline disabled:opacity-50 disabled:no-underline"
-              >
-                {resendTimer > 0 
-                  ? `Resend OTP in ${Math.floor(resendTimer / 60)}:${(resendTimer % 60).toString().padStart(2, '0')}`
-                  : "Resend OTP"
-                }
-              </button>
-            </>
-          )}
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <Button
+            onClick={onClose}
+            variant="outline"
+            className="flex-1 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={!newName.trim() || isSaving}
+            className="flex-1 text-white font-bold border-4 border-[#d575fc] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#c750f7' }}
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </Button>
         </div>
       </div>
     </div>
