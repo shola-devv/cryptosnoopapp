@@ -52,7 +52,7 @@ export default function CryptoPortfolioPage() {
       setMessage("Asset deleted successfully!")
       setMessageType("success")
       await refreshAssets()
-      setTimeout(() => {alert('Address deleted successfully!')}, 3000);
+      setTimeout(() => {alert('Asset deleted successfully!')}, 3000);
     } catch (error) {
       console.error(error)
       setMessage("Failed to delete asset.")
@@ -526,12 +526,17 @@ const handleCancelEdit = () => {
                         {editingId === asset._id ? (
                           <div className="flex items-center gap-2">
                             <input
-                              type="number"
-                              value={editAmount}
-                              onChange={e => setEditAmount(e.target.value)}
-                              className="w-24 px-2 py-1 border border-[#c750f7] rounded-lg text-sm font-bold dark:bg-slate-800 dark:text-white"
-                              maxLength={9} 
-                            />
+  type="number"
+  value={editAmount}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (value === '' || value.length <= 9) {
+      setEditAmount(value);
+    }
+  }}
+  max={99999999}
+  className="w-24 px-2 py-1 border border-[#c750f7] rounded-lg text-sm font-bold dark:bg-slate-800 dark:text-white"
+/>
                             <button onClick={() => handleSaveAmount(asset.name, editAmount)} className="p-1 bg-green-500 rounded">
                               <Check className="w-3 h-3 text-white" />
                             </button>
@@ -684,12 +689,18 @@ const handleCancelEdit = () => {
                       type="number"
                       placeholder="Enter quantity"
                       value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
+                      onChange={(e) => {
+    const value = e.target.value;
+    // Limit to 9 digits
+    if (value.length <= 9) {
+      setQuantity(value);
+    }
+  }}
                       className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
-                    maxLength={9}
+                    
                     />
                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                       {quantity.length}/9 characters
+                       {quantity.toString().length}/9 digits
                       </p>
                   </div>
 

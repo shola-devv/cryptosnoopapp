@@ -530,7 +530,7 @@ const handleProfileSave = () => {
 >
   {profile !== undefined ? (
     <img 
-      src={`/profile${profile}.png`}
+      src={`/profile${profile}.jpg`}
       alt={userAvatar.label}
       className="w-full h-full object-cover"
     />
@@ -815,12 +815,18 @@ const handleProfileSave = () => {
             type="number"
             placeholder="Enter quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => {
+    const value = e.target.value;
+    // Limit to 9 digits
+    if (value.length <= 9) {
+      setQuantity(value);
+    }
+  }}
+    
             className="border-slate-300 dark:border-slate-600 focus:border-[#c750f7] focus:ring-[#c750f7]"
-            maxLength={9}
           />
            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {quantity.length}/9 characters
+            {quantity.toString().length}/9 digits
           </p>
         </div>
 
@@ -908,7 +914,7 @@ const handleProfileSave = () => {
           <div className="w-12 h-12 flex items-center justify-center">
                   <Image
                     src="/cryptosnooplogo1.png"
-                    alt="DIVAFlex Logo"
+                    alt="cryptosnooplogo Logo"
                     width={48}
                     height={32}
                     className="object-contain"

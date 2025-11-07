@@ -19,7 +19,7 @@ import Image from "next/image"
 import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-const { data: session, status } = useSession();
+
 
 // import { usePrivy } from '@privy-io/react-auth'
 
@@ -29,7 +29,8 @@ export default function HelpPage() {
   const [networkName, setNetworkName] = useState("Base")
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const router = useRouter();
-    const userId = session?.user?.id;
+  const { data: session, status } = useSession();
+  const userId = session?.user?.id;
     const name = session?.user?.name;
 
 
