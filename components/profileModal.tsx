@@ -20,25 +20,15 @@ export default function ProfileModal({
   currentUserId,
   onSave
 }) {
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0);
   const [newName, setNewName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Sync props when modal opens or props change
+  // Sync props when modal opens - currentAvatar is just the index (0-4)
   useEffect(() => {
     if (isOpen) {
       setNewName(currentName ?? '');
-      if (!currentAvatar) {
-        setSelectedAvatar(null);
-      } else if (typeof currentAvatar === 'number' || typeof currentAvatar === 'string') {
-        const found = avatarOptions.find((a) => String(a.id) === String(currentAvatar));
-        setSelectedAvatar(found ?? null);
-      } else if (typeof currentAvatar === 'object') {
-        const found = avatarOptions.find((a) => a.id === currentAvatar.id);
-        setSelectedAvatar(found ?? currentAvatar);
-      } else {
-        setSelectedAvatar(null);
-      }
+      setSelectedAvatarIndex(currentAvatar ?? 0);
     }
   }, [isOpen, currentName, currentAvatar]);
 
@@ -51,9 +41,8 @@ export default function ProfileModal({
     return () => window.removeEventListener('keydown', handler);
   }, [isOpen, onClose]);
 
-  // ✅ New handleSave that calls PATCH API
   const handleSave = async () => {
-    if (!newName.trim() || !selectedAvatar) return;
+    if (!newName.trim()) return;
     setIsSaving(true);
 
     try {
@@ -63,7 +52,7 @@ export default function ProfileModal({
         body: JSON.stringify({
           userId: currentUserId,
           newUsername: newName.trim(),
-          newProfile: selectedAvatar // maps 1–5 → 0–4
+          newImage: selectedAvatarIndex
         }),
       });
 
@@ -75,7 +64,7 @@ export default function ProfileModal({
       }
 
       alert('Profile updated successfully!');
-      onSave({ avatar: selectedAvatar, name: newName.trim() });
+      onSave();
       onClose();
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -122,13 +111,13 @@ export default function ProfileModal({
             Choose Avatar
           </Label>
           <div className="grid grid-cols-5 gap-3">
-            {avatarOptions.map((avatar) => {
-              const isSelected = selectedAvatar?.id === avatar.id;
+            {avatarOptions.map((avatar, index) => {
+              const isSelected = selectedAvatarIndex === index;
               const bgColor = avatar.color + '20';
               return (
                 <button
                   key={avatar.id}
-                  onClick={() => setSelectedAvatar(avatar)}
+                  onClick={() => setSelectedAvatarIndex(index)}
                   className="relative w-full aspect-square rounded-full flex items-center justify-center text-2xl transition-all hover:scale-110 focus:outline-none"
                   style={{
                     backgroundColor: bgColor,
@@ -154,27 +143,25 @@ export default function ProfileModal({
         </div>
 
         {/* Preview */}
-        {selectedAvatar && (
-          <div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
-            <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
-            <div className="flex items-center gap-3">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
-                style={{ backgroundColor: selectedAvatar.color }}
-              >
-                {selectedAvatar.emoji}
-              </div>
-              <div>
-                <p className="font-semibold text-slate-800 dark:text-white">
-                  {newName || 'Your Name'}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {selectedAvatar.label}
-                </p>
-              </div>
+        <div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
+              style={{ backgroundColor: avatarOptions[selectedAvatarIndex].color }}
+            >
+              {avatarOptions[selectedAvatarIndex].emoji}
+            </div>
+            <div>
+              <p className="font-semibold text-slate-800 dark:text-white">
+                {newName || 'Your Name'}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {avatarOptions[selectedAvatarIndex].label}
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Username Input */}
         <div className="mb-6">
@@ -205,7 +192,7 @@ export default function ProfileModal({
           </Button>
           <Button
             onClick={handleSave}
-            disabled={!newName.trim() || !selectedAvatar || isSaving}
+            disabled={!newName.trim() || isSaving}
             className="flex-1 text-white font-bold border-4 border-[#d575fc] disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#c750f7' }}
           >
@@ -216,3 +203,4 @@ export default function ProfileModal({
     </div>
   );
 }
+
