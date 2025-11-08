@@ -46,6 +46,9 @@ export default function ProfileModal({
     setIsSaving(true);
 
     try {
+      // Optimistically update the parent component UI immediately
+      onSave(newName.trim(), selectedAvatarIndex);
+
       const response = await fetch('/api/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -60,15 +63,18 @@ export default function ProfileModal({
 
       if (!response.ok) {
         alert(data.message || 'Failed to update profile.');
+        // Revert by calling onSave with original values
+        onSave(currentName, currentAvatar);
         return;
       }
 
-      alert('Profile updated successfully!');
-      onSave();
+      // Success - close modal
       onClose();
     } catch (error) {
       console.error('Error saving profile:', error);
       alert('Something went wrong while saving your changes.');
+      // Revert on error
+      onSave(currentName, currentAvatar);
     } finally {
       setIsSaving(false);
     }
@@ -203,4 +209,3 @@ export default function ProfileModal({
     </div>
   );
 }
-

@@ -46,7 +46,20 @@ export default function UserProfile() {
   const [quantity, setQuantity] = useState("")
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
- 
+  const [profile, setProfile] = useState(undefined); // profile index 0-4 or undefined
+  const [userName, setUserName] = useState('');
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  
+  const avatarOptions = [
+  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
+  { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
+  { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
+  { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
+  { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
+];
+  const [userAvatar, setUserAvatar] = useState(avatarOptions[0]);
+
+
   //session
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -59,7 +72,7 @@ export default function UserProfile() {
 
    const userId = session?.user?.id;
    const name = session?.user?.name;
-   const profile = session?.user?.profile ?? 0
+   
   
 
   const {
@@ -192,18 +205,43 @@ const handleAddAsset = async () => {
 
 //profile handler
 
-const avatarOptions = [
-  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
-  { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
-  { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
-  { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
-  { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
-];
+const fetchUserProfile = async (userId) => {
+  try {
+    const response = await fetch(`/api/users?userId=${userId}`);
+    const data = await response.json();
+    
+    if (response.ok && data.user) {
+      const avatarIndex = data.user.image ?? 0;
+      setProfile(avatarIndex);
+      setUserAvatar(avatarOptions[avatarIndex]);
+      setUserName(data.user.username || data.user.name || 'User');
+      console.log(data.user.username)
+      console.log(data.user.name)
 
-const [userAvatar, setUserAvatar] = useState(avatarOptions[0]);
- const [showProfileModal, setShowProfileModal] = useState(false);
-const handleProfileSave = () => {
-  refreshAll(); // Session updates automatically
+    }
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
+};
+
+// Load profile on mount
+useEffect(() => {
+  if (session?.user?.id) {
+    fetchUserProfile(session.user.id);
+  }
+}, [session?.user?.id]);
+
+// Optimistic update handler
+const handleProfileSave = (newName, newAvatarIndex) => {
+  // Immediately update UI (optimistic)
+  setProfile(newAvatarIndex);
+  setUserAvatar(avatarOptions[newAvatarIndex]);
+  setUserName(newName);
+  
+  // Then fetch from server to confirm
+  if (session?.user?.id) {
+    fetchUserProfile(session.user.id);
+  }
 };
 
 
@@ -442,7 +480,7 @@ const handleProfileSave = () => {
                 <div className="flex items-center gap-3">
   <div className="relative flex-shrink-0">
     <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
-   <div
+  <div
   className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
   style={{ 
     borderColor: userAvatar.color,
@@ -451,7 +489,7 @@ const handleProfileSave = () => {
 >
   {profile !== undefined ? (
     <img 
-      src={`/profile${profile}.png`}
+      src={`/profile${profile}.jpg`}
       alt={userAvatar.label}
       className="w-full h-full object-cover"
     />
@@ -461,7 +499,7 @@ const handleProfileSave = () => {
 </div>
   </div>
   <div className="flex-1 flex items-center gap-2">
-    <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {name}!</p>
+    <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {userName}!</p>
     <button 
       onClick={() => {setShowProfileModal(true); buzzClick();}}
       className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
@@ -538,12 +576,13 @@ const handleProfileSave = () => {
     userAvatar.emoji
   )}
 </div>
+
   </div>
   
   <div className="flex-1 w-full">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome {name}!</h2>
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white">welcome {userName}!</h2>
         <button 
           onClick={() => {setShowProfileModal(true); buzzClick();}}
           className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"

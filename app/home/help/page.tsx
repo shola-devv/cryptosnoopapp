@@ -19,6 +19,7 @@ import Image from "next/image"
 import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { deleteAccount } from "@/components/deleteAccount";
 
 
 // import { usePrivy } from '@privy-io/react-auth'
@@ -32,6 +33,61 @@ export default function HelpPage() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
     const name = session?.user?.name;
+  
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState("");
+
+  const CONFIRM_PHRASE = "DELETE MY ACCOUNT";
+
+
+
+
+
+
+
+
+
+
+
+const handleDelete = async () => {
+    // Get the user ID from the session
+    if (!session?.user?.id) {
+      setError("No user session found");
+      return;
+    }
+
+    // Verify they typed the correct confirmation phrase
+    if (confirmText !== CONFIRM_PHRASE) {
+      setError("Please type the confirmation phrase correctly");
+      return;
+    }
+
+    // Start the deletion process
+    setIsDeleting(true);
+    setError("");
+
+    // Call the delete account function which will:
+    // 1. Call your DELETE /api/users?userId=xxx endpoint
+    // 2. If successful, sign out the user
+    // 3. Return success or error status
+    const result = await deleteAccount(session.user.id);
+
+    // If deletion failed, show error message
+    if (!result.success) {
+      setError(result.message);
+      setIsDeleting(false);
+    }
+    // If successful, user will already be signed out and redirected
+  };
+
+  const handleClose = () => {
+    setShowConfirm(false);
+    setConfirmText("");
+    setError("");
+  };
+
 
 
   const faqItems = [
@@ -248,15 +304,73 @@ export default function HelpPage() {
      {/* DELETE Button. the handle delete func shoulf have a alert(are you syre) */}
          
         <div className="mt-12 flex justify-center">
-          <Button
-            variant="outline"
-            className="px-6 py-3 bg-red-600 text-white border-red-600 active:translate-y-1  font-bold"
-            onClick={handleLogout}
-          >
-          
-            Delete Account
-          </Button>
+          <button
+         variant="outline"
+        onClick={() => setShowConfirm(true)}
+        className="px-6 py-3 rounded-lg bg-red-600 text-white border-red-600 active:translate-y-1  font-bold"
+      >
+        Delete Account
+      </button>
         </div>
+
+
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">
+            Are You Sure You Want to Delete This Account?
+            </h3>
+            
+            <div className="mb-6 space-y-3">
+              <p className="text-gray-700 font-semibold">
+                This action cannot be undone. This will permanently:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1 ml-2">
+                <li>Delete your account</li>
+                <li>Remove all your data</li>
+                <li>Revoke all access to the application</li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Type <span className="font-bold text-red-600">{CONFIRM_PHRASE}</span> to confirm:
+              </label>
+              <input
+                type="text"
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+                placeholder="Type here..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-900"
+                disabled={isDeleting}
+              />
+            </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-4">
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting || confirmText !== CONFIRM_PHRASE}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete My Account"}
+              </button>
+              <button
+                onClick={handleClose}
+                disabled={isDeleting}
+                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md disabled:opacity-50 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       </div>
        <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
