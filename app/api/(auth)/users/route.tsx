@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 
 const Objectid = require("mongoose").Types.objectid
 
-
+const password_ = process.env.PASSWORD;
 
 export const GET = async (request: Request)=>{
    const { data: session, status } = useSession();
@@ -17,7 +17,6 @@ export const GET = async (request: Request)=>{
 
   const body = await request.json();
     const { userId, password } = body;
-    const password_ = "olushola12345"
     const userId_ = "64b8f3f5f1d2c9e6f8a4e2b1" //admin user id for testing
 
     if (userId === userId_ || password === password ) {

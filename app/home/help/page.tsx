@@ -170,10 +170,10 @@ const handleDelete = async () => {
             <ArrowLeft className="w-8 h-8 font-extrabold mr-2" />
           </Link>
           </div>
-          {/* Help & Support and Connection Status - Right Side */}
+          {/*  <p className="text-gray-600 mb-6 text-center">Find answers to common questions or contact our support team</p> Help & Support and Connection Status - Right Side */}
          
 
-        <p className="text-gray-600 mb-6 text-center">Find answers to common questions or contact our support team</p>
+        
 
         {/* FAQ Section */}
         <Card className="mb-6 shadow-lg">
@@ -328,7 +328,7 @@ const handleDelete = async () => {
               <ul className="list-disc list-inside text-gray-600 space-y-1 ml-2">
                 <li>Delete your account</li>
                 <li>Remove all your data</li>
-                <li>Revoke all access to the application</li>
+                <li>Revoke all access to the web application</li>
               </ul>
             </div>
 

@@ -153,12 +153,12 @@ const handleAddAsset = async () => {
         asset.name.trim().toLowerCase() ===
         selectedCoin.name.trim().toLowerCase()
     );
-
+     
+    {/*why localhost rere*/}
     const url = assetExists
-      ? `http://localhost:3000/api/assets/${encodeURIComponent(
-          selectedCoin.name
-        )}?userId=${userId}`
-      : `/api/assets?userId=${userId}`;
+  ? `/api/assets/${encodeURIComponent(selectedCoin.name)}?userId=${userId}`
+  : `/api/assets?userId=${userId}`;
+
 
     const response = await fetch(url, {
       method: assetExists ? "PATCH" : "POST",
@@ -207,11 +207,14 @@ const handleAddAsset = async () => {
 
 const fetchUserProfile = async (userId) => {
   try {
-    const response = await fetch(`/api/users?userId=${userId}`);
+    console.log('fetching profile data')
+    const response = await fetch(`/api/users?userId=${userId}`, {
+    method: "GET",
+  });;
     const data = await response.json();
     
     if (response.ok && data.user) {
-      const avatarIndex = data.user.image ?? 0;
+      const avatarIndex = data.user.profile ?? 2;
       setProfile(avatarIndex);
       setUserAvatar(avatarOptions[avatarIndex]);
       setUserName(data.user.username || data.user.name || 'User');
@@ -489,7 +492,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 >
   {profile !== undefined ? (
     <img 
-      src={`/profile${profile}.jpg`}
+      src={`/profile${profile}.png`}
       alt={userAvatar.label}
       className="w-full h-full object-cover"
     />
@@ -568,7 +571,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 >
   {profile !== undefined ? (
     <img 
-      src={`/profile${profile}.jpg`}
+      src={`/profile${profile}.png`}
       alt={userAvatar.label}
       className="w-full h-full object-cover"
     />

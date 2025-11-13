@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const avatarOptions = [
-  { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
+  { id: 1, emoji: '👤', color: '#c750f7', label: 'Degen' },
   { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
   { id: 3, emoji: '🚀', color: '#4ecdc4', label: 'Explorer' },
   { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
@@ -28,7 +28,7 @@ export default function ProfileModal({
   useEffect(() => {
     if (isOpen) {
       setNewName(currentName ?? '');
-      setSelectedAvatarIndex(currentAvatar ?? 0);
+      setSelectedAvatarIndex(currentAvatar ?? 2);
     }
   }, [isOpen, currentName, currentAvatar]);
 
@@ -60,7 +60,7 @@ export default function ProfileModal({
       });
 
       const data = await response.json();
-
+      console.log(data)
       if (!response.ok) {
         alert(data.message || 'Failed to update profile.');
         // Revert by calling onSave with original values
@@ -112,63 +112,68 @@ export default function ProfileModal({
         </div>
 
         {/* Avatar Selection */}
-        <div className="mb-6">
-          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">
-            Choose Avatar
-          </Label>
-          <div className="grid grid-cols-5 gap-3">
-            {avatarOptions.map((avatar, index) => {
-              const isSelected = selectedAvatarIndex === index;
-              const bgColor = avatar.color + '20';
-              return (
-                <button
-                  key={avatar.id}
-                  onClick={() => setSelectedAvatarIndex(index)}
-                  className="relative w-full aspect-square rounded-full flex items-center justify-center text-2xl transition-all hover:scale-110 focus:outline-none"
-                  style={{
-                    backgroundColor: bgColor,
-                    border: isSelected ? `3px solid ${avatar.color}` : '2px solid transparent',
-                    boxShadow: isSelected ? `0 0 20px ${avatar.color}40` : 'none'
-                  }}
-                  title={avatar.label}
-                  aria-pressed={isSelected}
-                >
-                  <span aria-hidden>{avatar.emoji}</span>
-                  {isSelected && (
-                    <div
-                      className="absolute -top-1 -right-1 rounded-full p-0.5"
-                      style={{ backgroundColor: avatar.color }}
-                    >
-                      <Check className="w-3 h-3 text-white" />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Preview */}
-        <div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
-          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
-          <div className="flex items-center gap-3">
+      <div className="mb-6">
+  <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">
+    Choose Avatar
+  </Label>
+  <div className="grid grid-cols-5 gap-3">
+    {avatarOptions.map((avatar, index) => {
+      const isSelected = selectedAvatarIndex === index;
+      const bgColor = avatar.color + '20';
+      return (
+        <button
+          key={avatar.id}
+          onClick={() => setSelectedAvatarIndex(index)}
+          className="relative w-full aspect-square rounded-full flex items-center justify-center transition-all hover:scale-110 focus:outline-none overflow-hidden"
+          style={{
+            backgroundColor: bgColor,
+            border: isSelected ? `3px solid ${avatar.color}` : '2px solid transparent',
+            boxShadow: isSelected ? `0 0 20px ${avatar.color}40` : 'none'
+          }}
+          title={avatar.label}
+          aria-pressed={isSelected}
+        >
+          <img
+            src={`/profile${index}.png`}
+            alt={avatar.label}
+            className="w-full h-full object-cover"
+          />
+          {isSelected && (
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-xl"
-              style={{ backgroundColor: avatarOptions[selectedAvatarIndex].color }}
+              className="absolute -top-1 -right-1 rounded-full p-0.5 z-10"
+              style={{ backgroundColor: avatar.color }}
             >
-              {avatarOptions[selectedAvatarIndex].emoji}
+              <Check className="w-3 h-3 text-white" />
             </div>
-            <div>
-              <p className="font-semibold text-slate-800 dark:text-white">
-                {newName || 'Your Name'}
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {avatarOptions[selectedAvatarIndex].label}
-              </p>
-            </div>
-          </div>
-        </div>
+          )}
+        </button>
+      );
+    })}
+  </div>
+</div>
+      
 
+       {/* Preview */}
+<div className="mb-6 p-4 rounded-lg bg-purple-50 dark:bg-slate-700">
+  <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
+  <div className="flex items-center gap-3">
+    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+      <img
+        src={`/profile${selectedAvatarIndex}.png`}
+        alt={avatarOptions[selectedAvatarIndex].label}
+        className="w-full h-full object-cover"
+      />
+    </div>
+    <div>
+      <p className="font-semibold text-slate-800 dark:text-white">
+        {newName || 'Your Name'}
+      </p>
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        {avatarOptions[selectedAvatarIndex].label}
+      </p>
+    </div>
+  </div>
+</div>
         {/* Username Input */}
         <div className="mb-6">
           <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
