@@ -10,6 +10,7 @@ import Image from "next/image"
 import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { DarkModeToggle } from "@/components/darkToggle"
 
 import {
   User,
@@ -445,29 +446,38 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="flex items-center gap-2">
-              
-                <Image
-                                    src="/cryptosnooplogo1.png"
-                                    alt="DIVAFlex Logo"
-                                    width={48}
-                                    height={32}
-                                    className="object-contain"
-                                    priority
-                                  />
-              
-              <div className="flex flex-col leading-none">
-                <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>crypto</span>
-                <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
-                  Snoop
-                </span>
-              </div>
-            </div>
-          </div>
+  <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+
+    {/* Left Side: Logo */}
+    <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2">
+
+        <Image
+          src="/cryptosnooplogo1.png"
+          alt="DIVAFlex Logo"
+          width={48}
+          height={32}
+          className="object-contain"
+          priority
+        />
+
+        <div className="flex flex-col leading-none">
+          <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
+            crypto
+          </span>
+          <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
+            Snoop
+          </span>
         </div>
-      </header>
+      </div>
+    </div>
+
+    {/* Right Side: Dark Mode Toggle */}
+    <DarkModeToggle />
+
+  </div>
+</header>
+
 
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
@@ -507,17 +517,17 @@ const handleProfileSave = (newName, newAvatarIndex) => {
       onClick={() => {setShowProfileModal(true); buzzClick();}}
       className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
     >
-      <Settings className="w-4 h-4 text-slate-600 dark:text-slate-400 hover:text-[#c750f7]" />
+      <Settings className="w-4 h-4 dark:text-white text-slate-800 hover:text-[#c750f7]" />
     </button>
   </div>
   <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => setShowBalance(!showBalance)}>
-    <Eye className="w-4 h-4 font-extrabold" />
+    <Eye className="w-4 h-4 font-extrabold dark:text-white" />
   </Button>
 </div>
 
                 {/* Order Value Section */}
                 <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-3">
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total balance</p>
+                  <p className="text-xs text-slate-600 dark:text-white mb-1">Total balance</p>
                   <div className="flex items-baseline justify-between">
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">
                       {showBalance ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
@@ -538,7 +548,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       
-<p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+<p className="text-sm text-slate-600 dark:text-white mb-1">
   Change in 24HR
 </p>
 <p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -550,7 +560,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 
                   </div>
                   <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
+                    <p className="text-xs text-slate-600 dark:text-white mb-1">Total Assets</p>
                     <p className="text-base font-bold ">
                       {showBalance ? `${totalAssets}` : '••••••'}
                     </p>
@@ -590,16 +600,16 @@ const handleProfileSave = (newName, newAvatarIndex) => {
           onClick={() => {setShowProfileModal(true); buzzClick();}}
           className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
         >
-          <Settings className="w-5 h-5 text-slate-600 dark:text-slate-400 hover:text-[#c750f7]" />
+          <Settings className="w-5 h-5 text-slate-600 dark:text-white hover:text-[#c750f7]" />
         </button>
       </div>
-      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBalance(!showBalance)}>
+      <Button variant="ghost" size="icon" className="h-8 w-8 dark:text-white" onClick={() => setShowBalance(!showBalance)}>
         <Eye className="w-4 h-4" />
       </Button>
     </div>
                   
                   <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-4 mb-4">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">Total Balance</p>
+                    <p className="text-sm text-slate-600 dark:text-white mb-2">Total Balance</p>
                     <div className="flex items-baseline justify-between">
                       <p className="text-3xl font-bold text-slate-900 dark:text-white">
                         {showBalance ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
@@ -619,7 +629,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                   <div className="grid grid-cols-2 gap-3">
                     <div className=" dark:bg-slate-800 rounded-lg p-4">
                       
-<p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+<p className="text-sm text-slate-600 dark:text-white mb-1">
   Change in 24HR
 </p>
 <p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -632,7 +642,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 
                     </div>
                     <div className="  dark:bg-slate-800 rounded-lg p-4">
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Assets</p>
+                      <p className="text-sm text-slate-600 dark:text-white mb-1">Total Assets</p>
                       <p className="text-lg font-bold">
                         {showBalance ? `${totalAssets}` : '••••••'}
                       </p>
@@ -645,7 +655,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
         </section>
 
         {/* Tabs Section */}
-        <section className="mb-8">
+        <section className="mb-8 dark:text-white">
           <div className="grid w-full grid-cols-3 mb-2 h-auto p-1 gap-1 rounded-lg">
             <button
   onClick={() => {
@@ -666,7 +676,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   </div>
 
   <span
-    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900 dark:text-white"
   >
     Assets
   </span>
@@ -691,7 +701,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   </div>
 
   <span
-    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900 dark:text-white"
   >
     Accounts
   </span>
@@ -716,7 +726,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   </div>
 
   <span
-    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900"
+    className="text-sm sm:text-base md:text-lg font-medium tracking-wide text-gray-900 dark:text-white"
   >
     Addresses
   </span>
@@ -750,7 +760,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                           )}
                           <div className="min-w-0">
                             <p className="font-semibold text-sm sm:text-base text-slate-800 dark:text-white truncate">{coin.name}</p>
-                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{coin.symbol}</p>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-white">{coin.symbol}</p>
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
@@ -944,13 +954,13 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 
 
 
- <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10">
+ <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center gap-6 mb-6">
-            <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
-            <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-             <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-            <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+            <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
+            <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
+             <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
+            <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">
           <div className="w-12 h-12 flex items-center justify-center">
@@ -963,10 +973,10 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                     priority
                   />
                 </div>
-            <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
+            <h4 className="text-xl font-bold dark:text-white">CryptoSnoop.app</h4>
           </div>
-          <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
-          <p className="text-gray-600">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
+          <p className="text-slate-600 dark:text-white">Track your crypto journey with confidence</p>
+          <p className="text-gray-600 dark:text-white">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
         </div>
       </footer>
     </main>

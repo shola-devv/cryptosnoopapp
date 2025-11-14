@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { DarkModeToggle } from "@/components/darkToggle"
 
 
 export default function CryptoPortfolioPage() {
@@ -29,7 +30,6 @@ export default function CryptoPortfolioPage() {
   const userId = session?.user?.id;
   const name = session?.user?.name;
   
-
   // Calculate totals from portfolio data
   const totalValue = portfolio?.totalValue || 0
   const totalChange = portfolio?.breakdown?.reduce((sum, asset) => {
@@ -877,6 +877,7 @@ const handleCancelEdit = () => {
                 <p className="text-gray-600">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
               </div>
             </footer>
+           
     </div>
   )
 }
