@@ -5,7 +5,7 @@ import "./globals.css";
 import { Providers } from "@/providers/provider";
 import DatabaseWarmer from "@/components/DatabaseWarmer"; // New component
 import { inter } from "./fonts";
-import { useDarkModeInit } from "@/lib/useDarkModeInit";
+import { DarkModeProvider } from "@/components/useDarkModeInit";
 
 
 const geistSans = localFont({
@@ -55,7 +55,6 @@ export default function RootLayout({
 }>) {
 
 
-useDarkModeInit();
 
   return (
     <html lang="en" className={`${inter.variable}`}>
@@ -63,8 +62,9 @@ useDarkModeInit();
         
             <Providers>
             <DatabaseWarmer />
-          {children}
-       
+      <DarkModeProvider>
+           {children}
+       </DarkModeProvider>
             </Providers>
         
       </body>

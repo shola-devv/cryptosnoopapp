@@ -1,8 +1,9 @@
-"use client";
 
-import { useEffect } from "react";
+  'use client';
 
-export function useDarkModeInit() {
+import { useEffect } from 'react';
+
+export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem("darkMode");
 
@@ -16,4 +17,6 @@ export function useDarkModeInit() {
       document.documentElement.classList.remove("dark");
     }
   }, []);
+
+  return <>{children}</>;
 }
