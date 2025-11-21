@@ -102,7 +102,7 @@ const totalChange = portfolio?.portfolioChangePercent ?? 0;
     
   const totalAssets = assets?.length || 0
 
-  const cryptoCoins =
+   const cryptoCoins =
     marketData?.map((coin: any) => ({
       id: coin.id,
       name: coin.name,
@@ -111,7 +111,7 @@ const totalChange = portfolio?.portfolioChangePercent ?? 0;
       change: coin.priceChange1d || 0,
       icon: coin.icon || coin.symbol.charAt(0).toUpperCase()
     })) || []
-
+  
   const handleNavigation = (path: string) => {
     window.location.href = path
   }
@@ -579,15 +579,13 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     backgroundColor: userAvatar.color
   }}
 >
-  {profile !== undefined ? (
-    <img 
-      src={`/profile${profile}.png`}
-      alt={userAvatar.label}
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    userAvatar.emoji
-  )}
+ {profile !== undefined ? (
+                      <img
+                        src={`/profile${profile}.png`}
+                        alt={userAvatar.label}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
 </div>
 
   </div>

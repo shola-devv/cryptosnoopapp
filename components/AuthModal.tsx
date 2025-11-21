@@ -177,7 +177,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-center mb-2">Sign In / Sign Up</h2>
+        <h2 className="text-2xl font-bold text-center mb-2 text-black">Sign In / Sign Up</h2>
 
         {/* Google Sign-in Button */}
         <GoogleSignInButton />
@@ -209,7 +209,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 placeholder="Enter your email"
                 disabled={loading}
                 {...register("email")}
-                className="border-2 border-gray-300 p-3 rounded-lg focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100 w-full"
+                className="border-2 border-gray-300 p-3 rounded-lg text-black  focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100 w-full"
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">
@@ -242,7 +242,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 onKeyPress={(e) => e.key === "Enter" && handleVerifyOtp()}
                 disabled={loading}
                 maxLength={6}
-                className="border-2 border-gray-300 p-3 rounded-lg text-center text-2xl tracking-widest focus:border-[#c750f7] focus:outline-none disabled:bg-gray-100"
+                className="border-2 border-gray-300 p-3 rounded-lg text-center text-2xl tracking-widest focus:border-[#c750f7] focus:outline-none text-black disabled:bg-gray-100"
               />
               <button
                 onClick={handleVerifyOtp}
