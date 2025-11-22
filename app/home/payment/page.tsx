@@ -1,7 +1,10 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Copy, Check } from 'lucide-react';
 import { ethers } from 'ethers';
+import Image from "next/image";
+import { usePortfolio } from "@/hooks/usePortfolio";
 
 // Smart Contract ABI
 const PAYMENT_CONTRACT_ABI = [
@@ -26,11 +29,14 @@ const PAYMENT_CONTRACT_ABI = [
 
 const CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890'; // Your deployed contract
 
-export default function CompleteDashboardPage() {
-  // State management
-  const [showPayment, setShowPayment] = useState(false);
+export default function PaymentPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Get payment details from URL
   const [paymentAmount, setPaymentAmount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'fiat' | null>(null);
+  const [planName, setPlanName] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
@@ -43,6 +49,16 @@ export default function CompleteDashboardPage() {
   const walletAddress = '0x742d35Cc6634C0532925a3b844Bc420e7e4b21f3';
 
   const ethAmount = (paymentAmount / ethPrice).toFixed(6);
+
+  useEffect(() => {
+    // Get payment details from URL params
+    const amount = searchParams.get('amount');
+    const plan = searchParams.get('plan');
+    const name = searchParams.get('name');
+    
+    if (amount) setPaymentAmount(parseFloat(amount));
+    if (name) setPlanName(decodeURIComponent(name));
+  }, [searchParams]);
 
   // ============================================
   // Smart Contract Payment Function
@@ -105,70 +121,10 @@ export default function CompleteDashboardPage() {
         orderId,
         amount: ethAmount
       };
-    } catch (err: any) {
+    } catch (err) {
       const errorMessage = err?.reason || err?.message || 'Payment failed';
       setError(errorMessage);
       console.error('Payment error:', errorMessage);
-      return {
-        success: false,
-        error: errorMessage
-      };
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  // ============================================
-  // Direct ETH Transfer (backup)
-  // ============================================
-  const makeDirectTransfer = async () => {
-    setIsProcessing(true);
-    setError('');
-    setTxHash('');
-
-    try {
-      if (!window.ethereum) {
-        throw new Error('MetaMask is not installed');
-      }
-
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts found');
-      }
-
-      const userAddress = accounts[0];
-      const weiAmount = (parseFloat(ethAmount) * 1e18).toString(16);
-
-      const txParams = {
-        from: userAddress,
-        to: walletAddress,
-        value: weiAmount,
-        gas: '21000',
-        gasPrice: await window.ethereum.request({
-          method: 'eth_gasPrice'
-        })
-      };
-
-      const hash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [txParams]
-      });
-
-      console.log('Direct transfer sent:', hash);
-      setTxHash(hash);
-
-      return {
-        success: true,
-        txHash: hash,
-        amount: ethAmount
-      };
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Transfer failed';
-      setError(errorMessage);
-      console.error('Transfer error:', errorMessage);
       return {
         success: false,
         error: errorMessage
@@ -186,20 +142,9 @@ export default function CompleteDashboardPage() {
     if (result.success) {
       console.log('Payment successful!', result);
       setTimeout(() => {
-        setShowPayment(false);
-        setPaymentMethod(null);
-        setTxHash('');
+        router.push('/subscription');
       }, 3000);
     }
-  };
-
-  // ============================================
-  // Handle Pay Button Click
-  // ============================================
-  const handlePayClick = (amount: number) => {
-    setPaymentAmount(amount);
-    setShowPayment(true);
-    setPaymentMethod(null);
   };
 
   // ============================================
@@ -212,61 +157,16 @@ export default function CompleteDashboardPage() {
   };
 
   const handleBack = () => {
-    setPaymentMethod(null);
-    setError('');
-  };
-
-  const closePayment = () => {
-    setShowPayment(false);
-    setPaymentMethod(null);
-    setError('');
-    setTxHash('');
+    if (paymentMethod) {
+      setPaymentMethod(null);
+      setError('');
+    } else {
+      router.push('/subscription');
+    }
   };
 
   // ============================================
-  // MAIN DASHBOARD
-  // ============================================
-  if (!showPayment) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-          <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-lg" style={{ color: '#c750f7' }}>crypto</span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold text-lg">Snoop</span>
-            </div>
-          </div>
-        </header>
-
-        <div className="container mx-auto px-3 sm:px-6 py-8 sm:py-12">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-8">Dashboard</h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button
-              onClick={() => handlePayClick(90)}
-              disabled={isProcessing}
-              className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-lg border-2 border-purple-100 dark:border-purple-900 hover:border-[#c750f7] hover:shadow-2xl transition-all cursor-pointer disabled:opacity-50"
-            >
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Pay $90</h2>
-              <p className="text-slate-600 dark:text-slate-400">Standard Package</p>
-            </button>
-
-            <button
-              onClick={() => handlePayClick(200)}
-              disabled={isProcessing}
-              className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-lg border-2 border-purple-100 dark:border-purple-900 hover:border-[#c750f7] hover:shadow-2xl transition-all cursor-pointer disabled:opacity-50"
-            >
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Pay $200</h2>
-              <p className="text-slate-600 dark:text-slate-400">Premium Package</p>
-            </button>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  // ============================================
-  // PAYMENT PAGE - MAIN SELECTION
+  // PAYMENT METHOD SELECTION
   // ============================================
   if (!paymentMethod) {
     return (
@@ -274,23 +174,40 @@ export default function CompleteDashboardPage() {
         <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
           <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
             <button
-              onClick={closePayment}
+              onClick={handleBack}
               className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg" style={{ color: '#c750f7' }}>crypto</span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold text-lg">Snoop</span>
+              <Image
+                src="/cryptosnooplogo1.png"
+                alt="CryptoSnoop Logo"
+                width={48}
+                height={32}
+                className="object-contain"
+                priority
+              />
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
+                  crypto
+                </span>
+                <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
+                  Snoop
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
         <div className="container mx-auto px-3 sm:px-6 py-8">
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-8">
+            <p className="text-slate-600 dark:text-slate-400 text-center mb-2">
+              {planName && <span className="font-semibold">{planName}</span>}
+            </p>
             <p className="text-slate-600 dark:text-slate-400 text-center mb-2">Amount Due</p>
             <h1 className="text-4xl font-bold text-center text-slate-900 dark:text-white">
-              ${paymentAmount}
+              ${paymentAmount.toFixed(2)}
             </h1>
           </div>
 
@@ -352,8 +269,22 @@ export default function CompleteDashboardPage() {
               <span className="font-semibold">Back</span>
             </button>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg" style={{ color: '#c750f7' }}>crypto</span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold text-lg">Snoop</span>
+              <Image
+                src="/cryptosnooplogo1.png"
+                alt="CryptoSnoop Logo"
+                width={48}
+                height={32}
+                className="object-contain"
+                priority
+              />
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
+                  crypto
+                </span>
+                <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
+                  Snoop
+                </span>
+              </div>
             </div>
           </div>
         </header>
@@ -361,9 +292,12 @@ export default function CompleteDashboardPage() {
         <div className="container mx-auto px-3 sm:px-6 py-8">
           {/* Amount Card */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-6">
+            <p className="text-slate-600 dark:text-slate-400 text-center mb-2">
+              {planName && <span className="font-semibold">{planName}</span>}
+            </p>
             <p className="text-slate-600 dark:text-slate-400 text-center mb-2">Amount Due</p>
             <h1 className="text-4xl font-bold text-center text-slate-900 dark:text-white mb-4">
-              ${paymentAmount}
+              ${paymentAmount.toFixed(2)}
             </h1>
             <div className="bg-purple-50 dark:bg-slate-800 rounded-xl p-3 text-center">
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Ethereum Amount</p>
@@ -410,6 +344,9 @@ export default function CompleteDashboardPage() {
               <p className="text-sm text-green-600 dark:text-green-400 break-all">
                 Transaction: {txHash}
               </p>
+              <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                Redirecting to dashboard...
+              </p>
             </div>
           )}
 
@@ -451,17 +388,34 @@ export default function CompleteDashboardPage() {
             <span className="font-semibold">Back</span>
           </button>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-lg" style={{ color: '#c750f7' }}>crypto</span>
-            <span className="text-slate-700 dark:text-slate-300 font-bold text-lg">Snoop</span>
+            <Image
+              src="/cryptosnooplogo1.png"
+              alt="CryptoSnoop Logo"
+              width={48}
+              height={32}
+              className="object-contain"
+              priority
+            />
+            <div className="flex flex-col leading-none">
+              <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
+                crypto
+              </span>
+              <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
+                Snoop
+              </span>
+            </div>
           </div>
         </div>
       </header>
 
       <div className="container mx-auto px-3 sm:px-6 py-8">
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-6">
+          <p className="text-slate-600 dark:text-slate-400 text-center mb-2">
+            {planName && <span className="font-semibold">{planName}</span>}
+          </p>
           <p className="text-slate-600 dark:text-slate-400 text-center mb-2">Amount Due</p>
           <h1 className="text-4xl font-bold text-center text-slate-900 dark:text-white">
-            ${paymentAmount}
+            ${paymentAmount.toFixed(2)}
           </h1>
         </div>
 

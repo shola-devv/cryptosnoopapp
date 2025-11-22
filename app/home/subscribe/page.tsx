@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Check,
   Sparkles,
@@ -17,7 +18,7 @@ import Image from "next/image"
 // -------------------
 // Test Modal Component
 // -------------------
-function TestPlanModal({ isOpen, onClose }) {
+function TestPlanModal({ isOpen, onClose, onActivate }) {
   if (!isOpen) return null;
 
   const testFeatures = [
@@ -139,11 +140,7 @@ function TestPlanModal({ isOpen, onClose }) {
               Maybe Later
             </button>
             <button
-              onClick={() => {
-                console.log('Activating test plan...');
-                alert('Test plan activated! Redirecting to dashboard...');
-                onClose();
-              }}
+              onClick={onActivate}
               className="flex-1 py-4 px-6 rounded-xl font-bold text-[#c750f7] border-2 border-[#c750f7] hover:bg-[#c750f7]/10 transition-all"
             >
               Start Test for $3.99 🚀
@@ -159,14 +156,15 @@ function TestPlanModal({ isOpen, onClose }) {
 // Subscription Page
 // -------------------
 export default function SubscriptionPage() {
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const router = useRouter();
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
-
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const plans = [
     {
       id: 'monthly',
       name: 'Monthly',
       price: '$7.99',
+      priceValue: 7.99,
       period: '/month',
       icon: Zap,
       color: '#4ecdc4',
@@ -183,6 +181,7 @@ export default function SubscriptionPage() {
       id: 'yearly',
       name: 'Yearly',
       price: '$79.99',
+      priceValue: 79.99,
       period: '/year',
       savings: 'Save $16',
       icon: Sparkles,
@@ -201,6 +200,7 @@ export default function SubscriptionPage() {
       id: 'lifetime',
       name: 'Lifetime',
       price: '$249',
+      priceValue: 249,
       period: 'one-time',
       savings: 'Best Value',
       icon: Crown,
@@ -218,9 +218,15 @@ export default function SubscriptionPage() {
     }
   ];
 
-  const handleSelectPlan = (planId) => {
-    setSelectedPlan(planId);
-    console.log('Selected plan:', planId);
+  const handleSelectPlan = (plan) => {
+    // Navigate immediately to payment page with amount
+    router.push(`/home/payment?amount=${plan.priceValue}&plan=${plan.id}&name=${encodeURIComponent(plan.name)}`);
+  };
+
+  const handleTestPlanActivate = () => {
+    setIsTestModalOpen(false);
+    // Navigate to payment page with test plan amount
+    router.push('/home/payment?amount=3.99&plan=test&name=Test%20Plan');
   };
 
   return (
@@ -228,6 +234,7 @@ export default function SubscriptionPage() {
       <TestPlanModal
         isOpen={isTestModalOpen}
         onClose={() => setIsTestModalOpen(false)}
+        onActivate={handleTestPlanActivate}
       />
 
       <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
@@ -285,7 +292,7 @@ export default function SubscriptionPage() {
                     key={plan.id}
                     className={`relative rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:scale-105 backdrop-blur-xl border bg-white/10 ${
                       plan.popular ? 'ring-4 ring-purple-500 ring-opacity-50 border-white/30' : 'border-white/20'
-                    } ${isSelected ? 'ring-4 ring-green-500' : ''}`}
+                    }`}
                     style={{
                       boxShadow: plan.popular
                         ? `0 20px 60px -10px ${plan.color}60`
@@ -335,18 +342,14 @@ export default function SubscriptionPage() {
                       </ul>
 
                       <button
-                        onClick={() => handleSelectPlan(plan.id)}
-                        className={`w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 border-2 ${
-                          isSelected
-                            ? 'bg-green-500/10 border-green-500 text-green-600 dark:text-green-400'
-                            : 'hover:shadow-lg hover:scale-105 backdrop-blur-sm'
-                        }`}
+                        onClick={() => handleSelectPlan(plan)}
+                        className="w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 border-2 hover:shadow-lg hover:scale-105 backdrop-blur-sm"
                         style={{
-                          borderColor: isSelected ? undefined : plan.color,
-                          color: isSelected ? undefined : plan.color
+                          borderColor: plan.color,
+                          color: plan.color
                         }}
                       >
-                        {isSelected ? '✓ Selected' : 'Get Started'}
+                        Get Started
                       </button>
                     </div>
                   </div>
@@ -376,7 +379,7 @@ export default function SubscriptionPage() {
                     <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
                     <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
                      <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
-                    <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
+                    <a className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
                   </div>
                   <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="w-12 h-12 flex items-center justify-center">
