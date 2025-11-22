@@ -307,6 +307,9 @@ export default function CompleteDashboardPage() {
               <p className="text-slate-600 dark:text-slate-400 mb-4">
                 Send {ethAmount} ETH to our wallet
               </p>
+               <p className="text-slate-600 dark:text-slate-400 mb-4">
+                Metamask app/extension has to be installed.
+              </p>
               <div className="inline-block px-4 py-2 bg-[#c750f7]/10 text-[#c750f7] rounded-lg text-sm font-semibold">
                 Continue →
               </div>
