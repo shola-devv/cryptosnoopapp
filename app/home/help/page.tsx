@@ -24,7 +24,7 @@ import { deleteAccount } from "@/components/deleteAccount";
 
 // import { usePrivy } from '@privy-io/react-auth'
 
-export default function HelpPage() {
+  export default function HelpPage() {
   
   const [isWalletConnected, setIsWalletConnected] = useState(true)
   const [networkName, setNetworkName] = useState("Base")
@@ -41,14 +41,7 @@ export default function HelpPage() {
 
   const CONFIRM_PHRASE = "DELETE MY ACCOUNT";
 
-
-
-
-
-
-
-
-
+ 
 
 
 const handleDelete = async () => {
@@ -94,52 +87,52 @@ const handleDelete = async () => {
   {
     question: "What is CryptoSnoop?",
     answer:
-      "CryptoSnoop is a crypto tracking platform that helps you monitor wallet addresses, portfolio performance, and smart money movements across multiple chains in real time.",
+      "CryptoSnoop is a crypto tracking platform that helps you monitor wallets, track wallet addresses, analyze portfolio performance, and access real-time crypto analytics.",
   },
   {
     question: "Do I need to connect my wallet?",
     answer:
-      "No, you don’t have to connect your wallet to start tracking. Simply paste any wallet address to view its portfolio, token holdings, and recent transactions instantly.",
+      "Not necessarily. You don’t need to connect your wallet to start tracking. Simply paste any wallet address, choose the blockchain, and view its portfolio and token holdings instantly.",
   },
   {
     question: "Which blockchains are supported?",
     answer:
-      "CryptoSnoop supports major blockchains like Ethereum, Base, Arbitrum, Polygon, and Binance Smart Chain — with more networks being added over time.",
+      "CryptoSnoop supports major blockchains including Ethereum, Solana, Base, Arbitrum, Polygon, and Binance Smart Chain (BSC). We’re adding more networks over time to ensure broad coverage.",
   },
   {
     question: "Can I track multiple wallets?",
     answer:
-      "Yes, you can add and label as many wallets as you want. CryptoSnoop keeps your watchlist organized so you can monitor different portfolios in one dashboard.",
+      "Yes! You can add and track as many wallets as you want. An advanced watchlist feature is coming soon to help you stay organized while monitoring multiple addresses effortlessly.",
   },
   {
     question: "Is my data secure?",
     answer:
-      "Absolutely. Your wallet data is never stored on our servers. We use read-only blockchain access and advanced encryption to ensure your information stays private and secure.",
+      "Absolutely. Your wallet data is never stored on our servers. We use read-only blockchain access and advanced encryption to keep your information private and secure.",
+  },
+  {
+    question: "Can I label multiple wallets?",
+    answer:
+      "Yes. On the free plan, you can add and label up to 15 active addresses. On the upgraded CryptoSnoop plan, you can manage and label up to 50 addresses.",
   },
   {
     question: "How often is data updated?",
     answer:
-      "Portfolio data, balances, and token prices are updated in real time using reliable blockchain APIs and market feeds to ensure accurate insights every second.",
-  },
-  {
-    question: "Can I see what smart money is doing?",
-    answer:
-      "Yes! CryptoSnoop lets you track smart wallets, see where large traders are moving funds, and discover trending tokens based on live on-chain activity.",
+      "Portfolio balances, token prices, and wallet data are updated in real time using reliable blockchain APIs and market feeds, ensuring accurate insights every second.",
   },
   {
     question: "Is CryptoSnoop free to use?",
     answer:
-      "Yes, basic tracking features are free. Premium plans with deeper analytics, alerts, and early-access features will be available soon.",
+      "Yes! Basic tracking features are free. Premium features—such as advanced wallet tracking across all chains, deeper analytics, more wallet label slots, dark mode, and early-access features—are available when you upgrade.",
   },
   {
     question: "Can I export my portfolio data?",
     answer:
-      "No. You can export wallet data and transaction history in CSV format for personal analysis or accounting purposes.",
+      "Not yet. Exporting wallet data or transaction history in CSV format for personal analysis or accounting is coming soon in a future update.",
   },
   {
     question: "How do I get help or report a bug?",
     answer:
-      "If you experience any issues or have suggestions, reach out via the 'Contact Support' button in the app or email us directly at support@cryptosnoop.com.",
+      "If you encounter any issues or have suggestions, reach out via the 'Contact Support' button in the web app or email us directly. We’re always here to help!",
   },
 ];
 
@@ -160,8 +153,8 @@ const handleDelete = async () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-200 text-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header with Back Button and Connection Status */}
+        
+       {/* Header with Back Button and Connection Status */}
         <div className="mb-6 flex items-center justify-between">
           <Link 
             href="/home" 
@@ -170,6 +163,7 @@ const handleDelete = async () => {
             <ArrowLeft className="w-8 h-8 font-extrabold mr-2" />
           </Link>
           </div>
+          
           {/*  <p className="text-gray-600 mb-6 text-center">Find answers to common questions or contact our support team</p> Help & Support and Connection Status - Right Side */}
          
 
@@ -214,7 +208,7 @@ const handleDelete = async () => {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link 
-                href="/betPage/profile"
+                href="/home"
                 className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Your Profile</h3>
@@ -258,7 +252,7 @@ const handleDelete = async () => {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-4">
-              Need personalized assistance? Our support team is here to help you with any questions or issues.
+              Need personalized assistance? Our su pport team is here to help you with any questions or issues.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Button
@@ -372,7 +366,7 @@ const handleDelete = async () => {
         </div>
       )}
 
-      </div>
+    
        <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                  <div className="flex items-center justify-center gap-6 mb-6">

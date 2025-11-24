@@ -41,9 +41,18 @@ export default function PaymentPage() {
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
   const [copied, setCopied] = useState(false);
+  const {marketData} = usePortfolio();
+
+  // Extract ETH price from market data
+const realEthPrice = marketData?.find((coin: any) => 
+  coin.symbol.toLowerCase() === 'eth' || coin.id.toLowerCase() === 'ethereum'
+)?.price;
+ 
+console.log('Real ETH Price:', realEthPrice);
+const ethPrice = realEthPrice || 2500;
 
   // Mock market data (replace with your usePortfolio hook)
-  const ethPrice = 2500; // Mock ETH price
+   
 
   // Mock wallet address
   const walletAddress = '0x742d35Cc6634C0532925a3b844Bc420e7e4b21f3';
@@ -142,7 +151,7 @@ export default function PaymentPage() {
     if (result.success) {
       console.log('Payment successful!', result);
       setTimeout(() => {
-        router.push('/subscription');
+        router.push('/home/subscribe');
       }, 3000);
     }
   };
@@ -161,7 +170,7 @@ export default function PaymentPage() {
       setPaymentMethod(null);
       setError('');
     } else {
-      router.push('/subscription');
+      router.push('/home/subscribe');
     }
   };
 
@@ -171,34 +180,43 @@ export default function PaymentPage() {
   if (!paymentMethod) {
     return (
       <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-          <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+      
+          {/* Left Side: Logo */}
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2">
+      
               <Image
                 src="/cryptosnooplogo1.png"
-                alt="CryptoSnoop Logo"
+                alt="DIVAFlex Logo"
                 width={48}
                 height={32}
                 className="object-contain"
                 priority
               />
+      
               <div className="flex flex-col leading-none">
-                <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
+                <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
                   crypto
                 </span>
-                <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
+                <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
                   Snoop
                 </span>
               </div>
             </div>
           </div>
-        </header>
+      
+          {/* Right Side: back button */}
+          <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+      
+        </div>
+      </header>
 
         <div className="container mx-auto px-3 sm:px-6 py-8">
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-8">
@@ -259,35 +277,43 @@ export default function PaymentPage() {
   if (paymentMethod === 'crypto') {
     return (
       <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-          <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-semibold">Back</span>
-            </button>
+  <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+      
+          {/* Left Side: Logo */}
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2">
+      
               <Image
                 src="/cryptosnooplogo1.png"
-                alt="CryptoSnoop Logo"
+                alt="DIVAFlex Logo"
                 width={48}
                 height={32}
                 className="object-contain"
                 priority
               />
+      
               <div className="flex flex-col leading-none">
-                <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
+                <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
                   crypto
                 </span>
-                <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
+                <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
                   Snoop
                 </span>
               </div>
             </div>
           </div>
-        </header>
+      
+          {/* Right Side: back button */}
+          <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+      
+        </div>
+      </header>
 
         <div className="container mx-auto px-3 sm:px-6 py-8">
           {/* Amount Card */}
@@ -378,33 +404,41 @@ export default function PaymentPage() {
   // ============================================
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-          <button
-            onClick={handleBack}
-            className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back</span>
-          </button>
-          <div className="flex items-center gap-2">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={48}
-              height={32}
-              className="object-contain"
-              priority
-            />
-            <div className="flex flex-col leading-none">
-              <span className="font-bold text-lg leading-tight" style={{ color: '#c750f7' }}>
-                crypto
-              </span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold text-lg leading-tight -mt-1">
-                Snoop
-              </span>
+      
+          {/* Left Side: Logo */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2">
+      
+              <Image
+                src="/cryptosnooplogo1.png"
+                alt="DIVAFlex Logo"
+                width={48}
+                height={32}
+                className="object-contain"
+                priority
+              />
+      
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
+                  crypto
+                </span>
+                <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
+                  Snoop
+                </span>
+              </div>
             </div>
           </div>
+      
+          {/* Right Side: back button */}
+          <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+      
         </div>
       </header>
 

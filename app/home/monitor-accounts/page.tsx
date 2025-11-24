@@ -66,6 +66,12 @@ interface CachedWallet {
   selectedChain: string;
   timestamp: number;
 }
+ 
+const router = useRouter()
+//back functions
+const handleBack = () => {
+  router.push('/home')
+}
 
 // localStorage utility functions
 const walletStorage = {
@@ -103,7 +109,7 @@ export default function MonitorWalletsPage() {
   const [isLoadingWallet, setIsLoadingWallet] = useState(false)
   const [walletError, setWalletError] = useState("")
   const { data: session, status } = useSession();
-  const router = useRouter();
+  
   const userId = session?.user?.id;
   const [selectedChain, setSelectedChain] = useState('ethereum')
   const [showChainDropdown, setShowChainDropdown] = useState(false)
@@ -258,73 +264,136 @@ const componentOpen = isOpen;
   // Loading state
   if (isLoading || !isHydrated) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-          <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/cryptosnooplogo1.png"
-                  alt="CryptoSnoop Logo"
-                  width={48}
-                  height={32}
-                  className="object-contain"
-                  priority
-                />
-                <div className="flex flex-col leading-none">
-                  <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: "#c750f7" }}>
-                    crypto
-                  </span>
-                  <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
-                    Snoop
-                  </span>
+          <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
+            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+              <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/cryptosnooplogo1.png"
+                      alt="DIVAFlex Logo"
+                      width={48}
+                      height={32}
+                      className="object-contain"
+                      priority
+                    />
+                    <div className="flex flex-col leading-none">
+                      <span
+                        className="font-bold text-sm sm:text-lg leading-tight"
+                        style={{ color: "#c750f7" }}
+                      >
+                        crypto
+                      </span>
+                      <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
+                        Snoop
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </header>
+    
+            <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
+              <div className="w-16 h-16 border-4 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
             </div>
-          </div>
-        </header>
-
-        <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
-          <div className="w-16 h-16 border-4 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
-        </div>
-
-        <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
-          </div>
-        </footer>
-      </main>
-    )
+    
+            <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div className="flex items-center justify-center gap-6 mb-6">
+                  <a
+                    href="/home/privacy"
+                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
+                  >
+                    privacy policy
+                  </a>
+                  <a
+                    href="/home/help"
+                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
+                  >
+                    Help
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
+                  >
+                    our socials
+                  </a>
+                  <a
+                    href="#logout"
+                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
+                  >
+                    Logout
+                  </a>
+                </div>
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    <Image
+                      src="/cryptosnooplogo1.png"
+                      alt="DIVAFlex Logo"
+                      width={48}
+                      height={32}
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                  <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 mb-2">
+                  Track your crypto journey with confidence
+                </p>
+                <p className="text-gray-600">
+                  © 2025 CryptoSnoop. All rights reserved.
+                </p>
+              </div>
+            </footer>
+          </main>
+        )
   }
 
   // Loaded state
   return (
   <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-      <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 sm:gap-4">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={48}
-              height={32}
-              className="object-contain"
-              priority
-            />
-            <div className="flex flex-col leading-none">
-              <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: "#c750f7" }}>
-                crypto
-              </span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
-                Snoop
-              </span>
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+            <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          
+              {/* Left Side: Logo */}
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2">
+          
+                  <Image
+                    src="/cryptosnooplogo1.png"
+                    alt="DIVAFlex Logo"
+                    width={48}
+                    height={32}
+                    className="object-contain"
+                    priority
+                  />
+          
+                  <div className="flex flex-col leading-none">
+                    <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
+                      crypto
+                    </span>
+                    <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
+                      Snoop
+                    </span>
+                  </div>
+                </div>
+              </div>
+          
+              {/* Right Side: back button */}
+              <button
+                  onClick={handleBack}
+                  className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+          
             </div>
-          </div>
-        </div>
-      </div>
-    </header>
+          </header>
 
+          
     <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
       {/* Back Button */}
       <a href="/home">
@@ -785,22 +854,9 @@ const componentOpen = isOpen;
 
  
 
+
 }
 
 
-
- {/* Cache Status Badge - {monitoredWallet && (
-            <div className="mt-4 flex items-center justify-between px-3 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800">
-              <span className="text-xs text-blue-700 dark:text-blue-300">
-                ✓ Data cached locally • Tap Refresh to update from blockchain
-              </span>
-              <button 
-                onClick={handleClearCache}
-                className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
-              >
-                Clear cache
-              </button>
-            </div>
-          )}
-        </div>- */}
+ 
           
