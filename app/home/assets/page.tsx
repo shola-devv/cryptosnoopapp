@@ -12,7 +12,7 @@ import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from "@/components/darkToggle"
-import { SlotInfo } from "@/components/slotInfo";
+
 
 export default function CryptoPortfolioPage() {
   const { portfolio, assets, marketData, refreshAssets, refreshAll, isLoading, error } = usePortfolio()
@@ -140,12 +140,7 @@ const handleCancelEdit = () => {
     if (!quantity || parseFloat(quantity) <= 0) return
     if (!selectedCoin || !userId) return
 
-if (assets.length >= maxAssets) {
-    setMessage(`You have reached your limit of ${maxAssets} asset slots.`);
-    setMessageType("error");
-    alert(`Maximum asset limit reached. Upgrade to add more.`);
-    return;
-  }
+
 
     setMessage("")
     setMessageType("")

@@ -13,12 +13,15 @@ import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"
+import { SlotInfo } from "@/components/slotInfo";
 
 export default function AccountsPage() {
  const { data: session, status } = useSession();
   const router = useRouter();
   const userId = session?.user?.id;
   const name = session?.user?.name;
+  const userPlan = session?.user?.subscription?.plan || "free";
+  const maxAssets = userPlan === "free" ? 10 : 50;
 
    useEffect(() => {
     if (status === 'unauthenticated') {
@@ -66,9 +69,28 @@ export default function AccountsPage() {
     })
   }
 
+//fetch sub data
+useEffect(() => {
+  if (!userId) return;
+
+  fetch(`/api/user/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      setUserPlan(data?.subscription?.plan || "free");
+    })
+    .catch(() => {});
+}, [userId]);
+
   // Function to add new account address
   const addNewAddress = async () => {
     if (!newAddress.trim() || !newLabel.trim()) return
+
+if (assets.length >= maxAssets) {
+    setMessage(`You have reached your limit of ${maxAssets} asset slots.`);
+    setMessageType("error");
+    alert(`Maximum asset limit reached. Upgrade to add more.`);
+    return;
+  }
 
     setMessage("")
     setMessageType("")
@@ -429,6 +451,12 @@ export default function AccountsPage() {
           </p>
         </div>
 
+ <SlotInfo
+      used={assets.length}
+      max={maxAssets}
+      isFree={userPlan === "free"}
+      onUpgrade={() => router.push("/upgrade")}
+    />
         {/* Success/Error Message */}
         {message && (
           <div
