@@ -12,7 +12,7 @@ import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from "@/components/darkToggle"
-
+import { SlotInfo } from "@/components/slotInfo";
 
 export default function CryptoPortfolioPage() {
   const { portfolio, assets, marketData, refreshAssets, refreshAll, isLoading, error } = usePortfolio()
@@ -29,7 +29,24 @@ export default function CryptoPortfolioPage() {
   const router = useRouter();
   const userId = session?.user?.id;
   const name = session?.user?.name;
+  const userPlan = session?.user?.subscription?.plan || "free";
+const maxAssets = userPlan === "free" ? 10 : 50;
+
+
   
+//fetch sub data
+useEffect(() => {
+  if (!userId) return;
+
+  fetch(`/api/user/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      setUserPlan(data?.subscription?.plan || "free");
+    })
+    .catch(() => {});
+}, [userId]);
+
+
   // Calculate totals from portfolio data
   const totalValue = portfolio?.totalValue || 0
   const totalChange = portfolio?.breakdown?.reduce((sum, asset) => {
@@ -122,6 +139,13 @@ const handleCancelEdit = () => {
   const handleAddAsset = async () => {
     if (!quantity || parseFloat(quantity) <= 0) return
     if (!selectedCoin || !userId) return
+
+if (assets.length >= maxAssets) {
+    setMessage(`You have reached your limit of ${maxAssets} asset slots.`);
+    setMessageType("error");
+    alert(`Maximum asset limit reached. Upgrade to add more.`);
+    return;
+  }
 
     setMessage("")
     setMessageType("")

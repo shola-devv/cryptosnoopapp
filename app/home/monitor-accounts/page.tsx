@@ -67,11 +67,6 @@ interface CachedWallet {
   timestamp: number;
 }
  
-const router = useRouter()
-//back functions
-const handleBack = () => {
-  router.push('/home')
-}
 
 // localStorage utility functions
 const walletStorage = {
@@ -127,6 +122,12 @@ export default function MonitorWalletsPage() {
 useEffect(() => {
   setIsOpen(!monitoredWallet);
 }, [monitoredWallet]);
+
+const router = useRouter()
+//back functions
+const handleBack = () => {
+  router.push('/home')
+}
 
 // Use isOpen directly in your JSX
 const componentOpen = isOpen;
