@@ -21,7 +21,7 @@ export default function AccountsPage() {
   const userId = session?.user?.id;
   const name = session?.user?.name;
   const userPlan = session?.user?.subscription?.plan || "free";
-  const maxAssets = userPlan === "free" ? 10 : 50;
+  const maxAddresses = userPlan === "free" ? 10 : 50;
 
   const { addresses, refreshAddresses, refreshAll, isLoading, error } = usePortfolio()
   
@@ -467,7 +467,7 @@ if (addresses.length >= maxAddresses) {
       used={addresses.length}
       max={maxAddresses}
       isFree={userPlan === "free"}
-      onUpgrade={() => router.push("/home/upgrade")}
+      onUpgrade={() => router.push("/home/subscribe")}
     />
         {/* Success/Error Message */}
         {message && (

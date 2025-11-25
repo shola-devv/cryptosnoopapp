@@ -10,7 +10,7 @@ interface SlotInfoProps {
 
 export function SlotInfo({ used, max, isFree, onUpgrade }: SlotInfoProps) {
   return (
-    <div className="text-sm">
+    <div className="text-sm m-2">
       {isFree ? (
         <span>
           You have used {used}/{max} address slots{" "}
