@@ -23,17 +23,8 @@ export default function AccountsPage() {
   const userPlan = session?.user?.subscription?.plan || "free";
   const maxAssets = userPlan === "free" ? 10 : 50;
 
-   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status, router]);
-
-
   const { addresses, refreshAddresses, refreshAll, isLoading, error } = usePortfolio()
   
-  
-
   // State for new account form
   const [newAddress, setNewAddress] = useState("")
   const [newLabel, setNewLabel] = useState("")
@@ -54,6 +45,27 @@ export default function AccountsPage() {
   // Ref for the new row
   const newAddressRef = useRef(null)
 
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
+
+
+  //fetch subscription data, maybe work with addresses refresh
+  useEffect(() => {
+    if (!userId) return;
+  
+    fetch(`/api/user/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setUserPlan(data?.subscription?.plan || "free");
+      })
+      .catch(() => {});
+  }, [userId]);
+
+
+  
   const buzzClick = () => {
     if(navigator.vibrate) {
       navigator.vibrate(100)
@@ -85,8 +97,8 @@ useEffect(() => {
   const addNewAddress = async () => {
     if (!newAddress.trim() || !newLabel.trim()) return
 
-if (assets.length >= maxAssets) {
-    setMessage(`You have reached your limit of ${maxAssets} asset slots.`);
+if (addresses.length >= maxAddresses) {
+    setMessage(`You have reached your limit of ${maxAddresses} address slots.`);
     setMessageType("error");
     alert(`Maximum asset limit reached. Upgrade to add more.`);
     return;
@@ -452,10 +464,10 @@ if (assets.length >= maxAssets) {
         </div>
 
  <SlotInfo
-      used={assets.length}
-      max={maxAssets}
+      used={addresses.length}
+      max={maxAddresses}
       isFree={userPlan === "free"}
-      onUpgrade={() => router.push("/upgrade")}
+      onUpgrade={() => router.push("/home/upgrade")}
     />
         {/* Success/Error Message */}
         {message && (
