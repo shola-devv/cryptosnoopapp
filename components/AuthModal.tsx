@@ -282,6 +282,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       .padStart(2, "0")}`
                   : "Resend OTP"}
               </button>
+             <button onClick={()=>setOtpSent(false)} className="text-sm text-gray-600 hover:text-gray-800 underline disabled:opacity-50 disabled:no-underline">Change email</button>
             </>
           )}
         </div>
@@ -289,25 +290,3 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     </div>
   );
 }
-
-/* auth code automation 
-Replace your otp input onChange handler
-
-Current code (manual only):
-
-onChange={(e) =>
-  setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-}
-onKeyPress={(e) => e.key === "Enter" && handleVerifyOtp()}
-
-
-Replace with this:
-
-onChange={(e) => {
-  const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-  setOtp(value);
-  if (value.length === 6) {
-    handleVerifyOtp(); // Automatically verify when user finishes typing 6 digits
-  }
-}} 
-  */

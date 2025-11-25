@@ -207,3 +207,13 @@ export function BulkImportForm() {
 
   return <form onSubmit={handleSubmit}>{/* form fields */}</form>;
 }
+
+
+code snippets 
+ onChange={(e) => {
+  const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+  setOtp(value);
+  if (value.length === 6) {
+    handleVerifyOtp(); // Automatically verify when user finishes typing 6 digits
+  }
+}} 
