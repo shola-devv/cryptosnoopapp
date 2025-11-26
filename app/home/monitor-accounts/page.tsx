@@ -15,6 +15,7 @@ import { usePortfolio } from "@/hooks/usePortfolio"
 import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import PlanGuard from "@/components/PlanGuard";
 
 const SUPPORTED_CHAINS = [
   { id: 'ethereum', name: 'Ethereum', icon: '⟠', color: '#627EEA' },
@@ -355,6 +356,7 @@ const componentOpen = isOpen;
 
   // Loaded state
   return (
+    <PlanGuard>
   <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
             <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -849,6 +851,7 @@ const componentOpen = isOpen;
       </div>
     </footer>
   </main>
+  </PlanGuard>
 );
 
 
