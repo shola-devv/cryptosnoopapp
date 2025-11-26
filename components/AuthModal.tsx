@@ -26,6 +26,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [error, setError] = useState("");
   const [resendTimer, setResendTimer] = useState(0);
 
+
+//maskemail
+function maskEmail(email: string) {
+  const [name, domain] = email.split("@");
+
+  if (name.length <= 3) {
+    return `${name[0]}***@${domain}`;
+  }
+
+  return `${name.slice(0, 3)}***@${domain}`;
+}
+
+
   const LoginSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
   });
@@ -229,7 +242,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <>
               <div className="text-center mb-2">
                 <p className="text-sm text-gray-600">We've sent a 6-digit code to</p>
-                <p className="font-medium text-gray-800">{email}</p>
+                <p className="font-medium text-gray-800">{maskEmail(email)}</p>
                 <p className="text-sm text-gray-600">Don't see it? check spam.</p>
               </div>
               <input
