@@ -31,12 +31,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 function maskEmail(email: string) {
   const [name, domain] = email.split("@");
 
-  if (name.length <= 3) {
-    return `${name[0]}***@${domain}`;
+  if (name.length <= 4) {
+    // If too short, show first char + last char
+    return `${name[0]}***${name[name.length - 1]}@${domain}`;
   }
 
-  return `${name.slice(0, 3)}***@${domain}`;
+  const first3 = name.slice(0, 3);
+  const last1 = name.slice(-1);
+
+  return `${first3}***${last1}@${domain}`;
 }
+
 
 
   const LoginSchema = Yup.object({
