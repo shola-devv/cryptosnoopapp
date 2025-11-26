@@ -367,29 +367,29 @@ const handleDelete = async () => {
       )}
 
     
-       <footer className="mt-32 bg-white text-gray-900 py-12 relative z-10">
+       <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                  <div className="flex items-center justify-center gap-6 mb-6">
-                   <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">privacy policy</a>
-                   <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Help</a>
-                   <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline" >our socials</a>
-                   <a onClick={() => signOut({ callbackUrl: "/auth/signin" })} className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline">Logout</a>
+                   <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
+                   <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
+                    <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
+                   <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
                  </div>
                  <div className="flex items-center justify-center gap-3 mb-4">
                  <div className="w-12 h-12 flex items-center justify-center">
                          <Image
                            src="/cryptosnooplogo1.png"
-                           alt="cryptosnoop Logo"
+                           alt="cryptosnooplogo Logo"
                            width={48}
                            height={32}
                            className="object-contain"
                            priority
                          />
                        </div>
-                   <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
+                   <h4 className="text-xl font-bold dark:text-white">CryptoSnoop.app</h4>
                  </div>
-                 <p className="text-slate-600 dark:text-slate-400 mb-2">Track your crypto journey with confidence</p>
-                 <p className="text-gray-600">© 2025 CryptoSnoop. All rights reserved.</p>
+                 <p className="text-slate-600 dark:text-white">Track your crypto journey with confidence</p>
+                 <p className="text-gray-600 dark:text-white">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
                </div>
              </footer>
     </div>

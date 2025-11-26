@@ -251,43 +251,45 @@ export default function SubscriptionPage() {
 
       <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
         {/* Header */}
+      
+       
         <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-              <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-            
-                {/* Left Side: Logo */}
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="flex items-center gap-2">
-            
-                    <Image
-                      src="/cryptosnooplogo1.png"
-                      alt="DIVAFlex Logo"
-                      width={48}
-                      height={32}
-                      className="object-contain"
-                      priority
-                    />
-            
-                    <div className="flex flex-col leading-none">
-                      <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
-                        crypto
-                      </span>
-                      <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
-                        Snoop
-                      </span>
-                    </div>
-                  </div>
-                </div>
-            
-                {/* Right Side: back button  onclick={handleBack}*/}
-                <button
+         <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+       
+           {/* Left Side: Logo */}
+           <div className="flex items-center gap-2 sm:gap-4">
+             <div className="flex items-center gap-2">
+       
+               <Image
+                 src="/cryptosnooplogo1.png"
+                 alt="DIVAFlex Logo"
+                 width={48}
+                 height={32}
+                 className="object-contain"
+                 priority
+               />
+       
+               <div className="flex flex-col leading-none">
+                 <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
+                   crypto
+                 </span>
+                 <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
+                   Snoop
+                 </span>
+               </div>
+             </div>
+           </div>
+       
+           {/* Right Side: Dark Mode Toggle */}
+            <button
               
                     className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
                   >
                     <ArrowLeft className="w-5 h-5" />
                   </button>
-            
-              </div>
-            </header>
+           
+         </div>
+       </header>
        
 
         {/* Content */}
@@ -401,7 +403,7 @@ export default function SubscriptionPage() {
                     <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
                     <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
                      <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
-                    <a className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
+                    <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
                   </div>
                   <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="w-12 h-12 flex items-center justify-center">

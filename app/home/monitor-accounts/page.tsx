@@ -267,90 +267,64 @@ const componentOpen = isOpen;
   if (isLoading || !isHydrated) {
     return (
           <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
-            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-              <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/cryptosnooplogo1.png"
-                      alt="DIVAFlex Logo"
-                      width={48}
-                      height={32}
-                      className="object-contain"
-                      priority
-                    />
-                    <div className="flex flex-col leading-none">
-                      <span
-                        className="font-bold text-sm sm:text-lg leading-tight"
-                        style={{ color: "#c750f7" }}
-                      >
-                        crypto
-                      </span>
-                      <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
-                        Snoop
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </header>
-    
-            <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
-              <div className="w-16 h-16 border-4 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-    
-            <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div className="flex items-center justify-center gap-6 mb-6">
-                  <a
-                    href="/home/privacy"
-                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-                  >
-                    privacy policy
-                  </a>
-                  <a
-                    href="/home/help"
-                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-                  >
-                    Help
-                  </a>
-                  <a
-                    href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-                  >
-                    our socials
-                  </a>
-                  <a
-                    href="#logout"
-                    className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-                  >
-                    Logout
-                  </a>
-                </div>
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-12 h-12 flex items-center justify-center">
-                    <Image
-                      src="/cryptosnooplogo1.png"
-                      alt="DIVAFlex Logo"
-                      width={48}
-                      height={32}
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
-                  <h4 className="text-xl font-bold">CryptoSnoop.app</h4>
-                </div>
-                <p className="text-slate-600 dark:text-slate-400 mb-2">
-                  Track your crypto journey with confidence
-                </p>
-                <p className="text-gray-600">
-                  © 2025 CryptoSnoop. All rights reserved.
-                </p>
-              </div>
-            </footer>
-          </main>
+                 <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+                   <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                     <div className="flex items-center gap-2 sm:gap-4">
+                       <div className="flex items-center gap-2">
+                         <Image
+                           src="/cryptosnooplogo1.png"
+                           alt=" Cryptosnoop logo Logo"
+                           width={48}
+                           height={32}
+                           className="object-contain"
+                           priority
+                         />
+                         <div className="flex flex-col leading-none">
+                           <span
+                             className="font-bold text-sm sm:text-lg leading-tight"
+                             style={{ color: "#c750f7" }}
+                           >
+                             crypto
+                           </span>
+                           <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
+                             Snoop
+                           </span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </header>
+         
+                 <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
+                   <div className="w-16 h-16 border-4 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
+                 </div>
+         
+                 <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
+                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                   <div className="flex items-center justify-center gap-6 mb-6">
+                     <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
+                     <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
+                      <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
+                     <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
+                   </div>
+                   <div className="flex items-center justify-center gap-3 mb-4">
+                   <div className="w-12 h-12 flex items-center justify-center">
+                           <Image
+                             src="/cryptosnooplogo1.png"
+                             alt="cryptosnooplogo Logo"
+                             width={48}
+                             height={32}
+                             className="object-contain"
+                             priority
+                           />
+                         </div>
+                     <h4 className="text-xl font-bold dark:text-white">CryptoSnoop.app</h4>
+                   </div>
+                   <p className="text-slate-600 dark:text-white">Track your crypto journey with confidence</p>
+                   <p className="text-gray-600 dark:text-white">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
+                 </div>
+               </footer>
+               </main>
         )
   }
 
@@ -830,26 +804,31 @@ const componentOpen = isOpen;
       )}
     </div>
 
-    <footer className="mt-12 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="flex items-center justify-center gap-6 mb-6">
-          <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white cursor-pointer">
-            privacy policy
-          </a>
-          <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white cursor-pointer">
-            Help
-          </a>
-          <a href={`https://twitter.com/intent/follow?screen_name=cryptosnoop_app`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white cursor-pointer">
-            our socials
-          </a>
-          <a onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
-            Logout
-          </a>
-        </div>
-        <p className="text-slate-600 dark:text-white">Track your crypto journey with confidence</p>
-        <p className="text-gray-600 dark:text-white">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
-      </div>
-    </footer>
+    <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <div className="flex items-center justify-center gap-6 mb-6">
+                <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">privacy policy</a>
+                <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Help</a>
+                 <a href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} target="_blank" rel="noopener noreferrer dark:text-white" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white" >our socials</a>
+                <a  onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">Logout</a>
+              </div>
+              <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 flex items-center justify-center">
+                      <Image
+                        src="/cryptosnooplogo1.png"
+                        alt="cryptosnooplogo Logo"
+                        width={48}
+                        height={32}
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
+                <h4 className="text-xl font-bold dark:text-white">CryptoSnoop.app</h4>
+              </div>
+              <p className="text-slate-600 dark:text-white">Track your crypto journey with confidence</p>
+              <p className="text-gray-600 dark:text-white">© {new Date().getFullYear()} CryptoSnoop. All rights reserved.</p>
+            </div>
+          </footer>
   </main>
   </PlanGuard>
 );
