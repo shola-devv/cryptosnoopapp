@@ -166,7 +166,7 @@ const handleDelete = async () => {
                    
                            <Image
                              src="/cryptosnooplogo1.png"
-                             alt="DIVAFlex Logo"
+                             alt="Cryptosnoop Logo"
                              width={48}
                              height={32}
                              className="object-contain"
@@ -245,7 +245,7 @@ const handleDelete = async () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link 
                 href="/home"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Your Profile</h3>
                 <p className="text-sm text-gray-600 dark:text-white">Manage your account and view balance</p>
@@ -253,7 +253,7 @@ const handleDelete = async () => {
               
               <Link 
                 href="/home/assets"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Your assets</h3>
                 <p className="text-sm text-gray-600 dark:text-white">View your added assets</p>
@@ -261,7 +261,7 @@ const handleDelete = async () => {
               
               <Link 
                 href="/home/addresses"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">your Adresses</h3>
                 <p className="text-sm text-gray-600 dark:text-white">view saved and labelled adresses</p>
@@ -269,7 +269,7 @@ const handleDelete = async () => {
               
               <Link 
                 href="/home/monitor-accounts"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Monitor Account</h3>
                 <p className="text-sm text-gray-600 dark:text-white">Monitor remote account</p>
@@ -277,10 +277,10 @@ const handleDelete = async () => {
 
               <Link 
                 href="/home/subscribe"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Upgrade plan</h3>
-                <p className="text-sm text-gray-600 dark:text-white">Upgrade plan from free to premium to unlock more features</p>
+                <p className="text-sm text-gray-600 dark:text-white">Upgrade plan to premium to unlock more features</p>
               </Link>
             </div>
           </CardContent>

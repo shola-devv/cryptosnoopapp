@@ -15,6 +15,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import Image from "next/image"
+import Link from 'next/Link'
 
 // -------------------
 // Test Modal Component
@@ -53,110 +54,113 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
   ];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+   <div
+  className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm dark:bg-black/70"
+  style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+  onClick={onClose}
+>
+  <div
+    className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative"
+    style={{
+      boxShadow: '0 25px 70px -10px rgba(199, 80, 247, 0.6)'
+    }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    {/* Close Button */}
+    <button
       onClick={onClose}
+      className="absolute top-6 right-6 text-slate-400 dark:text-slate-500 hover:text-[#c750f7] transition-colors z-10"
     >
-      <div
-        className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative"
-        style={{ 
-          boxShadow: '0 25px 70px -10px rgba(199, 80, 247, 0.6)'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-[#c750f7] transition-colors z-10"
-        >
-          <X className="w-7 h-7" />
-        </button>
+      <X className="w-7 h-7" />
+    </button>
 
-        {/* Header */}
-        <div className="p-8">
-          <Sparkles className="w-12 h-12 mb-4 text-[#c750f7]" />
-          <h2 className="text-3xl font-bold mb-2 text-slate-900">Test Our Premium Features</h2>
-          <p className="text-slate-600">
-            Experience what it's like to have full access to CryptoSnoop Pro
-          </p>
-        </div>
+    {/* Header */}
+    <div className="p-8">
+      <Sparkles className="w-12 h-12 mb-4 text-[#c750f7]" />
+      <h2 className="text-3xl font-bold mb-2 text-slate-900 dark:text-white">
+        Test Our Premium Features
+      </h2>
+      <p className="text-slate-600 dark:text-slate-300">
+        Experience what it's like to have full access to CryptoSnoop Pro
+      </p>
+    </div>
 
-        {/* Features */}
-        <div className="p-8 pt-0">
-          <div className="grid gap-6 mb-8">
-            {testFeatures.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div key={index} className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-[#c750f7]" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-slate-900 mb-1">
-                      {feature.title}
-                    </h3>
-                    <p className="text-slate-600">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Test Plan Details */}
-          <div className="bg-purple-50 rounded-2xl p-6 mb-6">
-            <div className="flex items-baseline justify-between mb-3">
-              <h3 className="font-bold text-lg text-slate-900">
-                🧪 7-Day Test Plan
-              </h3>
-              <div className="text-right">
-                <span className="text-3xl font-bold text-[#c750f7]">$3.99</span>
-                <span className="text-slate-600 text-sm ml-1">
-                  for 7 days
-                </span>
+    {/* Features */}
+    <div className="p-8 pt-0">
+      <div className="grid gap-6 mb-8">
+        {testFeatures.map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <div key={index} className="flex gap-4">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center">
+                <Icon className="w-6 h-6 text-[#c750f7]" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300">
+                  {feature.description}
+                </p>
               </div>
             </div>
+          );
+        })}
+      </div>
 
-            <ul className="space-y-2 text-slate-700">
-              <li className="flex items-start">
-                <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
-                Full access to all premium features
-              </li>
-              <li className="flex items-start">
-                <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
-                One-time payment, no recurring charges
-              </li>
-              <li className="flex items-start">
-                <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
-                Try before committing to monthly/yearly plans
-              </li>
-              <li className="flex items-start">
-                <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
-                Automatic downgrade after 7 days
-              </li>
-            </ul>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={onClose}
-              className="flex-1 py-4 px-6 rounded-xl font-bold border-2 border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
-            >
-              Maybe Later
-            </button>
-            <button
-              onClick={onActivate}
-              className="flex-1 py-4 px-6 rounded-xl font-bold text-[#c750f7] border-2 border-[#c750f7] hover:bg-[#c750f7]/10 transition-all"
-            >
-              Start Test for $3.99 🚀
-            </button>
+      {/* Test Plan Details */}
+      <div className="bg-purple-50 dark:bg-purple-900/30 rounded-2xl p-6 mb-6">
+        <div className="flex items-baseline justify-between mb-3">
+          <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+            🧪 7-Day Test Plan
+          </h3>
+          <div className="text-right">
+            <span className="text-3xl font-bold text-[#c750f7]">$3.99</span>
+            <span className="text-slate-600 dark:text-slate-300 text-sm ml-1">
+              for 7 days
+            </span>
           </div>
         </div>
+
+        <ul className="space-y-2 text-slate-700 dark:text-slate-300">
+          <li className="flex items-start">
+            <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
+            Full access to all premium features
+          </li>
+          <li className="flex items-start">
+            <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
+            One-time payment, no recurring charges
+          </li>
+          <li className="flex items-start">
+            <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
+            Try before committing to monthly/yearly plans
+          </li>
+          <li className="flex items-start">
+            <Check className="w-5 h-5 mr-2 text-[#c750f7] flex-shrink-0 mt-0.5" />
+            Automatic downgrade after 7 days
+          </li>
+        </ul>
+      </div>
+
+      {/* CTA Buttons */}
+      <div className="flex gap-4">
+        <button
+          onClick={onClose}
+          className="flex-1 py-4 px-6 rounded-xl font-bold border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+        >
+          Maybe Later
+        </button>
+        <button
+          onClick={onActivate}
+          className="flex-1 py-4 px-6 rounded-xl font-bold text-[#c750f7] border-2 border-[#c750f7] hover:bg-[#c750f7]/10 dark:hover:bg-[#c750f7]/20 transition-all"
+        >
+          Start Test for $3.99 🚀
+        </button>
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
 
@@ -281,12 +285,12 @@ export default function SubscriptionPage() {
            </div>
        
            {/* Right Side: Dark Mode Toggle */}
-            <button
+            <Link href="/home"
               
                     className="flex items-center gap-2 text-[#c750f7] hover:opacity-80 cursor-pointer"
                   >
                     <ArrowLeft className="w-5 h-5" />
-                  </button>
+                 </Link>
            
          </div>
        </header>
