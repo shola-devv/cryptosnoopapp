@@ -14,6 +14,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import { SlotInfo } from "@/components/slotInfo";
+import { validateBlockchainAddress } from "@/lib/ValidateAddress"; // <-- your validator
+
+
 
 export default function AccountsPage() {
  const { data: session, status } = useSession();
@@ -22,6 +25,11 @@ export default function AccountsPage() {
   const name = session?.user?.name;
   const userPlan = session?.user?.subscription?.plan || "free";
   const maxAddresses = userPlan === "free" ? 10 : 50;
+  const [addressValidation, setAddressValidation] = useState<{
+  isValid: boolean;
+  chain: string | null;
+  error: string | null;
+} | null>(null);
 
   const { addresses, refreshAddresses, refreshAll, isLoading, error } = usePortfolio()
   
@@ -482,83 +490,109 @@ if (addresses.length >= maxAddresses) {
           </div>
         )}
 
-        {/* Add New Account Form */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#c750f7] rounded-xl flex items-center justify-center">
-              <Plus className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add New Address</h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <div className="md:col-span-5">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                Account Address
-              </label>
-              <input
-                ref={newAddressRef}
-                type="text"
-                value={newAddress}
-                onChange={(e) => setNewAddress(e.target.value)}
-                placeholder="0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
-                disabled={isSending}
-              />
-            </div>
 
-            <div className="md:col-span-4">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                Label / Description
-              </label>
-              <input
-                type="text"
-                value={newLabel}
-                onChange={(e) => setNewLabel(e.target.value)}
-                placeholder="Main Trading Wallet"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
-                disabled={isSending}
-                maxLength={40}
-              />
-            </div>
+{/* Add New Address Form */}
+<div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
+  <div className="flex items-center gap-3 mb-6">
+    <div className="w-10 h-10 bg-[#c750f7] rounded-xl flex items-center justify-center">
+      <Plus className="w-5 h-5 text-white" />
+    </div>
+    <h2 className="text-xl font-bold text-slate-900 dark:text-white">Add New Address</h2>
+  </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                Category
-              </label>
-              <select
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
-                disabled={isSending}
-              >
-                <option value="Wallet">Wallet</option>
-                <option value="Exchange">Exchange</option>
-                <option value="Contract">Contract</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
+  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+    
+    {/* ADDRESS FIELD */}
+    <div className="md:col-span-5">
+      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        Account Address
+      </label>
 
-            <div className="md:col-span-1">
-              <label className="block text-sm font-semibold text-transparent mb-2">Add</label>
-              <button
-                onClick={addNewAddress}
-                disabled={!newAddress.trim() || !newLabel.trim() || isSending}
-                className="w-full h-12 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSending ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <Plus className="w-5 h-5" />
-                    Add
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
+      <input
+        ref={newAddressRef}
+        type="text"
+        value={newAddress}
+        onChange={(e) => setNewAddress(e.target.value)}
+        placeholder="0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        onBlur={() => {
+          const chk = validateBlockchainAddress(newAddress);
+          setAddressValidation(chk); // <-- you hold the result in state
+        }}
+        className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
+        disabled={isSending}
+      />
 
+      {/* ERROR MESSAGE */}
+      {addressValidation && !addressValidation.isValid && (
+        <p className="text-red-500 text-xs mt-1">
+          {addressValidation.error || "Invalid address format"}
+        </p>
+      )}
+    </div>
+
+    {/* LABEL FIELD */}
+    <div className="md:col-span-4">
+      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        Label / Description
+      </label>
+      <input
+        type="text"
+        value={newLabel}
+        onChange={(e) => setNewLabel(e.target.value)}
+        placeholder="Main Trading Wallet"
+        className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
+        disabled={isSending}
+        maxLength={40}
+      />
+    </div>
+
+    {/* CATEGORY FIELD */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        Category
+      </label>
+      <select
+        value={newCategory}
+        onChange={(e) => setNewCategory(e.target.value)}
+        className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
+        disabled={isSending}
+      >
+        <option value="Wallet">Wallet</option>
+        <option value="Exchange">Exchange</option>
+        <option value="Contract">Contract</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    {/* ADD BUTTON */}
+    <div className="md:col-span-1">
+      <label className="block text-sm font-semibold text-transparent mb-2">Add</label>
+      <button
+        onClick={addNewAddress}
+        disabled={
+          !newAddress.trim() ||
+          !newLabel.trim() ||
+          isSending ||
+          (addressValidation && !addressValidation.isValid)
+        }
+        className="w-full h-12 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        {isSending ? (
+          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        ) : (
+          <>
+            <Plus className="w-5 h-5" />
+            Add
+          </>
+        )}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+        
         {/* Accounts List */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-purple-100 dark:border-purple-900 overflow-hidden">
           <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800">

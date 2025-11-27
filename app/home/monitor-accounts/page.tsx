@@ -16,6 +16,8 @@ import { signOut } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PlanGuard from "@/components/PlanGuard";
+import { validateBlockchainAddress } from "@/lib/ValidateAddress";
+
 
 const SUPPORTED_CHAINS = [
   { id: 'ethereum', name: 'Ethereum', icon: '⟠', color: '#627EEA' },
@@ -118,7 +120,10 @@ export default function MonitorWalletsPage() {
   const { isLoading, error, refreshAll } = usePortfolio()
 
   const [isOpen, setIsOpen] = useState(true);
+  const [addressValidation, setAddressValidation] = useState(null);
+  const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
 
+  
 // ensure isOpen follows monitoredWallet changes so the arrow + open state never get out of sync
 useEffect(() => {
   setIsOpen(!monitoredWallet);
@@ -143,7 +148,7 @@ const componentOpen = isOpen;
       const data = await response.json();
       
       if (response.ok && data.user) {
-        const avatarIndex = data.user.profile ?? 1;
+        const avatarIndex = data.user.profile ?? 2;
         setProfile(avatarIndex);
         setUserAvatar(avatarOptions[avatarIndex]);
         setUserName(data.user.username || data.user.name || 'User');
@@ -152,6 +157,14 @@ const componentOpen = isOpen;
       console.error('Error fetching user profile:', error);
     }
   }
+
+  // Load profile on mount
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchUserProfile(session.user.id);
+    }
+  }, [session?.user?.id]);
+
 
   // Load cached wallet data on component mount
   useEffect(() => {
@@ -164,13 +177,9 @@ const componentOpen = isOpen;
     setIsHydrated(true);
   }, []);
 
-  // Load profile on mount
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchUserProfile(session.user.id);
-    }
-  }, [session?.user?.id]);
 
+  
+  //buzz click
   const buzzClick = () => {
     if(navigator.vibrate) {
       navigator.vibrate(100)
@@ -446,120 +455,141 @@ const componentOpen = isOpen;
               Track wallet balances across all chains
             </p>
 
-            {/* Chain Selector */}
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                Select Blockchain
-              </label>
-              <div className="relative">
-                <button
-                  onClick={() => setShowChainDropdown(!showChainDropdown)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-left flex items-center justify-between hover:border-[#c750f7] transition-all cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{selectedChainData?.icon}</span>
-                    <span className="font-semibold">{selectedChainData?.name}</span>
-                  </div>
-
-                  <svg
-                    className={`w-5 h-5 transition-transform ${
-                      showChainDropdown ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {showChainDropdown && (
-                  <div className="absolute z-20 w-full mt-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
-                    {SUPPORTED_CHAINS.map((chain) => (
-                      <button
-                        key={chain.id}
-                        onClick={() => {
-                          setSelectedChain(chain.id);
-                          setShowChainDropdown(false);
-                        }}
-                        className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-50 dark:hover:bg-slate-700 transition-colors cursor-pointer ${
-                          selectedChain === chain.id ? "bg-purple-50 dark:bg-slate-700" : ""
-                        }`}
-                      >
-                        <span className="text-2xl">{chain.icon}</span>
-                        <div className="flex-1 text-left">
-                          <p className="font-semibold text-slate-900 dark:text-white">{chain.name}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {chain.id === "ethereum" && "The original smart contract platform"}
-                            {chain.id === "solana" && "High-performance blockchain"}
-                            {chain.id === "polygon" && "Layer 2 scaling solution"}
-                            {chain.id === "bsc" && "Binance Smart Chain"}
-                            {chain.id === "arbitrum" && "Optimistic rollup L2"}
-                            {chain.id === "optimism" && "Optimistic Ethereum L2"}
-                            {chain.id === "avalanche" && "High-throughput blockchain"}
-                          </p>
-                        </div>
-                        {selectedChain === chain.id && (
-                          <div className="w-2 h-2 rounded-full bg-[#c750f7]"></div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Wallet Address Input */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Input
-                type="text"
-                value={walletAddress}
-                onChange={(e) => setWalletAddress(e.target.value)}
-                placeholder={
-                  selectedChain === "solana"
-                    ? "Enter Solana address..."
-                    : "Enter wallet address (0x...)"
-                }
-                className="flex-1 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
-                disabled={isLoadingWallet}
-              />
-
-              <Button
-                onClick={handleAddWallet}
-                disabled={!walletAddress.trim() || isLoadingWallet}
-                className="px-6 py-3 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border-4 border-[#d575fc] cursor-pointer"
-              >
-                {isLoadingWallet ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Plus className="w-5 h-5" />
-                    <span>Track</span>
-                  </div>
-                )}
-              </Button>
-            </div>
-
-            {/* Selected Chain Badge */}
-            <div className="mt-4 flex items-center gap-2 text-sm">
-              <span className="text-slate-600 dark:text-slate-400">Monitoring on:</span>
-              <div
-                className="px-3 py-1 rounded-full font-semibold text-white flex items-center gap-2"
-                style={{ backgroundColor: selectedChainData?.color }}
-              >
-                <span>{selectedChainData?.icon}</span>
-                <span>{selectedChainData?.name}</span>
-              </div>
-            </div>
-
-            {walletError && (
-              <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
-                {walletError}
-              </div>
-            )}
-          </>
-        )}
+                {/* Chain Selector */}
+<div className="mb-4">
+  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+    Select Blockchain
+  </label>
+  <div className="relative">
+    <button
+      onClick={() => setShowChainDropdown(!showChainDropdown)}
+      className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-left flex items-center justify-between hover:border-[#c750f7] transition-all cursor-pointer"
+    >
+      <div className="flex items-center gap-3">
+        <span className="text-2xl">{selectedChainData?.icon}</span>
+        <span className="font-semibold">{selectedChainData?.name}</span>
       </div>
+
+      <svg
+        className={`w-5 h-5 transition-transform ${
+          showChainDropdown ? "rotate-180" : ""
+        }`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    {showChainDropdown && (
+      <div className="absolute z-20 w-full mt-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
+        {SUPPORTED_CHAINS.map((chain) => (
+          <button
+            key={chain.id}
+            onClick={() => {
+              setSelectedChain(chain.id);
+              setShowChainDropdown(false);
+              setUserManuallySelectedChain(true); // mark manual selection
+            }}
+            className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-50 dark:hover:bg-slate-700 transition-colors cursor-pointer ${
+              selectedChain === chain.id ? "bg-purple-50 dark:bg-slate-700" : ""
+            }`}
+          >
+            <span className="text-2xl">{chain.icon}</span>
+            <div className="flex-1 text-left">
+              <p className="font-semibold text-slate-900 dark:text-white">{chain.name}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {chain.id === "ethereum" && "The original smart contract platform"}
+                {chain.id === "solana" && "High-performance blockchain"}
+                {chain.id === "polygon" && "Layer 2 scaling solution"}
+                {chain.id === "bsc" && "Binance Smart Chain"}
+                {chain.id === "arbitrum" && "Optimistic rollup L2"}
+                {chain.id === "optimism" && "Optimistic Ethereum L2"}
+                {chain.id === "avalanche" && "High-throughput blockchain"}
+              </p>
+            </div>
+            {selectedChain === chain.id && (
+              <div className="w-2 h-2 rounded-full bg-[#c750f7]"></div>
+            )}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+{/* Wallet Address Input */}
+<div className="flex flex-col sm:flex-row gap-4">
+  <Input
+    type="text"
+    value={walletAddress}
+    onChange={(e) => {
+      const value = e.target.value;
+      setWalletAddress(value);
+
+      const result = validateBlockchainAddress(value); // <-- validate address
+      setAddressValidation(result);
+
+      // Auto-select chain if valid and user hasn't manually chosen one
+      if (result?.isValid && result.chain && !userManuallySelectedChain) {
+        const found = SUPPORTED_CHAINS.find(
+          (c) => c.name.toLowerCase() === result.chain.toLowerCase()
+        );
+        if (found) setSelectedChain(found.id);
+      }
+    }}
+    placeholder={
+      selectedChain === "solana"
+        ? "Enter Solana address..."
+        : "Enter wallet address (0x...)"
+    }
+    className="flex-1 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
+    disabled={isLoadingWallet}
+  />
+
+  <Button
+    onClick={handleAddWallet}
+    disabled={
+      !walletAddress.trim() ||
+      isLoadingWallet ||
+      (addressValidation && !addressValidation.isValid)
+    }
+    className="px-6 py-3 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border-4 border-[#d575fc] cursor-pointer"
+  >
+    {isLoadingWallet ? (
+      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+    ) : (
+      <div className="flex items-center gap-2">
+        <Plus className="w-5 h-5" />
+        <span>Track</span>
+      </div>
+    )}
+  </Button>
+</div>
+
+{/* Selected Chain Badge */}
+<div className="mt-4 flex items-center gap-2 text-sm">
+  <span className="text-slate-600 dark:text-slate-400">Monitoring on:</span>
+  <div
+    className="px-3 py-1 rounded-full font-semibold text-white flex items-center gap-2"
+    style={{ backgroundColor: selectedChainData?.color }}
+  >
+    <span>{selectedChainData?.icon}</span>
+    <span>{selectedChainData?.name}</span>
+  </div>
+</div>
+
+{/* Validation Error */}
+{addressValidation && !addressValidation.isValid && (
+  <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
+    {addressValidation.error || "Invalid blockchain address"}
+  </div>
+  {walletError && ( <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"> {walletError} </div> )}
+ 
+  </>
+)}
+   </div>
 
       {/* Wallet Summary Cards */}
       {monitoredWallet && (

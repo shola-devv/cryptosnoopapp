@@ -204,8 +204,10 @@ const handleAddAsset = async () => {
 };
 
 
-//profile handler
 
+  
+
+//profile handler
 const fetchUserProfile = async (userId) => {
   try {
     console.log('fetching profile data')
@@ -501,14 +503,12 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   }}
 >
   {profile !== undefined ? (
-    <img 
-      src={`/profile${profile}.png`}
-      alt={userAvatar.label}
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    userAvatar.emoji
-  )}
+                      <img
+                        src={`/profile${profile}.png`}
+                        alt={userAvatar.label}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
 </div>
   </div>
   <div className="flex-1 flex items-center gap-2">
