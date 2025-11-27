@@ -152,17 +152,53 @@ const handleDelete = async () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-200 text-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-200 text-gray-900 dark:from-slate-900 dark:to-slate-800">
         
        {/* Header with Back Button and Connection Status */}
-        <div className="mb-6 flex items-center justify-between">
-          <Link 
+              {/* Header */}
+            
+                    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+                     <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                   
+                       {/* Left Side: Logo */}
+                       <div className="flex items-center gap-2 sm:gap-4">
+                         <div className="flex items-center gap-2">
+                   
+                           <Image
+                             src="/cryptosnooplogo1.png"
+                             alt="DIVAFlex Logo"
+                             width={48}
+                             height={32}
+                             className="object-contain"
+                             priority
+                           />
+                   
+                           <div className="flex flex-col leading-none">
+                             <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
+                               crypto
+                             </span>
+                             <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1 dark:text-white">
+                               Snoop
+                             </span>
+                           </div>
+                         </div>
+                       </div>
+                   
+                       {/* Right Side: Dark Mode Toggle */}
+                       
+                       <Link 
             href="/home" 
-            className="inline-flex items-center text-[#c750f7] hover:text-[#c750f7] transition-colors font-semibold"
-          >
-            <ArrowLeft className="w-8 h-8 font-extrabold mr-2" />
-          </Link>
-          </div>
+            className="inline-flex items-center text-[#c750f7] hover:text-[#c750f7] transition-colors font-semibold">
+            
+                        
+                               
+                              
+                                <ArrowLeft className="w-5 h-5" />
+                             </Link>
+                       
+                     </div>
+                   </header>
+        
           
           {/*  <p className="text-gray-600 mb-6 text-center">Find answers to common questions or contact our support team</p> Help & Support and Connection Status - Right Side */}
          
@@ -177,9 +213,9 @@ const handleDelete = async () => {
           <CardContent>
             <div className="space-y-3">
               {faqItems.map((item, index) => (
-                <div key={index} className="border text-[#c750f7] rounded-lg overflow-hidden">
+                <div key={index} className="border text-[#c750f7] rounded-lg overflow-hidden dark:bg-slate-900/60">
                   <button
-                    className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
+                    className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 dark:bg-slate-900/60 transition-colors"
                     onClick={() => toggleFaq(index)}
                   >
                     <span className="font-semibold text-left">{item.question}</span>
@@ -190,8 +226,8 @@ const handleDelete = async () => {
                     )}
                   </button>
                   {expandedFaq === index && (
-                    <div className="px-4 py-3 bg-purple-50 border-t border-gray-200">
-                      <p className="text-gray-700">{item.answer}</p>
+                    <div className="px-4 py-3 bg-purple-50 border-t dark:bg-slate-900/60 border-gray-200 ">
+                      <p className="text-gray-700 dark:text-white">{item.answer}</p>
                     </div>
                   )}
                 </div>
@@ -209,34 +245,42 @@ const handleDelete = async () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link 
                 href="/home"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Your Profile</h3>
-                <p className="text-sm text-gray-600">Manage your account and view balance</p>
+                <p className="text-sm text-gray-600 dark:text-white">Manage your account and view balance</p>
               </Link>
               
               <Link 
                 href="/home/assets"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Your assets</h3>
-                <p className="text-sm text-gray-600">View your added assets</p>
+                <p className="text-sm text-gray-600 dark:text-white">View your added assets</p>
               </Link>
               
               <Link 
                 href="/home/addresses"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">your Adresses</h3>
-                <p className="text-sm text-gray-600">view saved and labelled adresses</p>
+                <p className="text-sm text-gray-600 dark:text-white">view saved and labelled adresses</p>
               </Link>
               
               <Link 
                 href="/home/monitor-accounts"
-                className="p-4 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
               >
                 <h3 className="font-bold text-purple-600 mb-1">Monitor Account</h3>
-                <p className="text-sm text-gray-600">Monitor remote account</p>
+                <p className="text-sm text-gray-600 dark:text-white">Monitor remote account</p>
+              </Link>
+
+              <Link 
+                href="/home/subscribe"
+                className="p-4 border border-purple-200 rounded-lg hover:bg-slate-900/60 transition-colors"
+              >
+                <h3 className="font-bold text-purple-600 mb-1">Upgrade plan</h3>
+                <p className="text-sm text-gray-600 dark:text-white">Upgrade plan from free to premium to unlock more features</p>
               </Link>
             </div>
           </CardContent>
@@ -251,12 +295,12 @@ const handleDelete = async () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">
-              Need personalized assistance? Our su pport team is here to help you with any questions or issues.
+            <p className="text-gray-600 mb-4 dark:text-white">
+              Need personalized assistance? Our support team is here to help you with any questions or issues.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Button
-                className="h-12bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden hover:  font-bold text-white "
+                className="h-12 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden hover: font-bold text-white "
                 onClick={() => {
                   window.location.href = 'mailto:cryptosnoopapp.com?subject=Support Request&body=Hello Cryptosnoop Support Team,%0D%0A%0D%0APlease describe your issue here...';
                 }}
@@ -267,7 +311,7 @@ const handleDelete = async () => {
               
               <Button
                 variant="outline"
-                className="h-12  text-[#c750f7] border-[#c750f7] hover:bg-purple-50 active:translate-y-1 font-bold  shadow-lg"
+                className="h-12  text-[#c750f7] border-[#c750f7] hover:bg-slate-900/60 active:translate-y-1 font-bold  shadow-lg"
                 onClick={() => {
                   window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }}
@@ -276,7 +320,7 @@ const handleDelete = async () => {
                 Send Feedback
               </Button>
             </div>
-            <div className="mt-4 text-sm text-gray-600">
+            <div className="mt-4 text-sm text-gray-600 dark:text-white">
               <p><strong>Response Time:</strong> Within 24 hours</p>
             </div>
           </CardContent>
