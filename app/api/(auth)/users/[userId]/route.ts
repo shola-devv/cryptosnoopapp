@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Your NextAuth config
 import { z } from "zod"; // For validation
+import { ratelimit } from '@/lib/rate-limit';
 
 // Security headers middleware
 const securityHeaders = {
@@ -93,6 +94,7 @@ export const GET = async (request: Request) => {
           username: user.username,
           email: user.email,
           profile: user.profile,
+          subscription: user.subscription,
         },
       }),
       { status: 200, headers: securityHeaders }
@@ -236,7 +238,7 @@ export const DELETE = async (request: Request) => {
       );
     }
 
-    await connect();
+    await connect(); 
 
     const deletedUser = await User.findByIdAndDelete(
       new Types.ObjectId(userId)

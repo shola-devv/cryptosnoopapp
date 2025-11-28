@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserPlan } from "@/hooks/UserPlan";
+import { useUserProfile } from "@/hooks/UserProfile";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

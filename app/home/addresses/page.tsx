@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import { SlotInfo } from "@/components/slotInfo";
 import { validateBlockchainAddress } from "@/lib/ValidateAddress"; // <-- your validator
+import { useUserPlan } from "@/hooks/UserProfile";
 
 
 
@@ -23,7 +24,11 @@ export default function AccountsPage() {
   const router = useRouter();
   const userId = session?.user?.id;
   const name = session?.user?.name;
-  const userPlan = session?.user?.subscription?.plan || "free";
+
+
+  ///here
+  const userPlan = useUserPlan()
+   
   const maxAddresses = userPlan === "free" ? 10 : 50;
   const [addressValidation, setAddressValidation] = useState<{
   isValid: boolean;
@@ -60,18 +65,7 @@ export default function AccountsPage() {
   }, [status, router]);
 
 
-  //fetch subscription data, maybe work with addresses refresh
-  useEffect(() => {
-    if (!userId) return;
   
-    fetch(`/api/user/${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        setUserPlan(data?.subscription?.plan || "free");
-      })
-      .catch(() => {});
-  }, [userId]);
-
 
   
   const buzzClick = () => {
@@ -90,16 +84,6 @@ export default function AccountsPage() {
   }
 
 //fetch sub data
-useEffect(() => {
-  if (!userId) return;
-
-  fetch(`/api/user/${userId}`)
-    .then(res => res.json())
-    .then(data => {
-      setUserPlan(data?.subscription?.plan || "free");
-    })
-    .catch(() => {});
-}, [userId]);
 
   // Function to add new account address
   const addNewAddress = async () => {

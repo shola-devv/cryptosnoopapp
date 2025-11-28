@@ -35,6 +35,9 @@ import { usePortfolio } from "@/hooks/usePortfolio"
 import {useEffect} from 'react'
 import { Settings, Check } from 'lucide-react';
 import ProfileModal from '@/components/profileModal'
+import { useUserProfile } from "@/hooks/UserProfile";
+
+
 
 
 export default function UserProfile() {
@@ -50,7 +53,9 @@ export default function UserProfile() {
   const [profile, setProfile] = useState(undefined); // profile index 0-4 or undefined
   const [userName, setUserName] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
-  
+  const profileData = useUserProfile();
+  const userPlan = profileData || 'free'
+
   const avatarOptions = [
   { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
   { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
@@ -72,6 +77,7 @@ export default function UserProfile() {
   }, [status, router]);
 
    const userId = session?.user?.id;
+
    const name = session?.user?.name;
    
   
@@ -475,8 +481,9 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     </div>
 
     {/* Right Side: Dark Mode Toggle */}
-    <DarkModeToggle />
-
+    {userPlan === 'free' ? (<></>):
+    (<DarkModeToggle />)
+    }
   </div>
 </header>
 
