@@ -122,7 +122,7 @@ export default function MonitorWalletsPage() {
   const [isOpen, setIsOpen] = useState(true);
   const [addressValidation, setAddressValidation] = useState(null);
   const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
-
+  
   
 // ensure isOpen follows monitoredWallet changes so the arrow + open state never get out of sync
 useEffect(() => {
@@ -366,7 +366,6 @@ const componentOpen = isOpen;
 
   // Loaded state
   return (
-    <>
       <PlanGuard>
   <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
@@ -419,7 +418,9 @@ const componentOpen = isOpen;
       {/* Page Title */}
 
       {/* Wallet Address Input with Chain Selector */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
+
+
+<div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
         {/* HEADER: always visible */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -595,9 +596,12 @@ const componentOpen = isOpen;
     )}
   </>
 )}
+</>
+        )}
+      </div>
 
-  
-      {/* Wallet Summary Cards */}
+   
+{/* Wallet Summary Cards */}
       {monitoredWallet && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-2">
           {/* Fused Wallet Address & Balance Card */}
@@ -701,6 +705,8 @@ const componentOpen = isOpen;
                 </div>
               </div>
 
+
+      
               {/* DESKTOP 24h Change Footer */}
               <div className="hidden md:flex mt-4 items-center gap-2 pt-4 border-t border-slate-200 dark:border-slate-700">
                 <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -893,6 +899,7 @@ const componentOpen = isOpen;
           </footer>
   </main>
   </PlanGuard>
-  </>
+  
 )
+
 }
