@@ -1,13 +1,14 @@
-import connect  from "@/lib/db"
-import User from "@/lib/models/user"
+
+import connect from "@/lib/db";
+import User from "@/lib/models/user";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Your NextAuth config
-import { z } from "zod"; // For validation
-import { ratelimit } from '@/lib/rate-limit';
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { z } from "zod";
+import { ratelimit } from "@/lib/rate-limit";
 
-// Security headers middleware
+// --- Security headers (good practice)
 const securityHeaders = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -15,9 +16,16 @@ const securityHeaders = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
 };
 
+// --- Zod validation schema for query params
+const QuerySchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
+
 export const GET = async (request: Request) => {
   try {
+    // 1) AUTH CHECK
     const session = await getServerSession(authOptions);
+
     if (!session || !session.user) {
       return new NextResponse(
         JSON.stringify({ message: "Unauthorized" }),
@@ -25,57 +33,68 @@ export const GET = async (request: Request) => {
       );
     }
 
-    // Rate limiting
-     const identifier = session.user.id;
-    const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
+    // 2) RATE LIMITING
+    const identifier = session.user.id; 
+    const rate = await ratelimit.limit(identifier);
 
-    if (!success) {
+    if (!rate.success) {
       return new NextResponse(
-        JSON.stringify({ 
-          message: "Too many requests. Please try again later.",
-          limit,
-          remaining,
-          reset
+        JSON.stringify({
+          message: "Rate limit exceeded. Try again later.",
+          limit: rate.limit,
+          remaining: rate.remaining,
+          reset: rate.reset,
         }),
-        { 
-          status: 429, 
+        {
+          status: 429,
           headers: {
             ...securityHeaders,
-            "X-RateLimit-Limit": limit.toString(),
-            "X-RateLimit-Remaining": remaining.toString(),
-            "X-RateLimit-Reset": reset.toString(),
-          }
+            "X-RateLimit-Limit": rate.limit.toString(),
+            "X-RateLimit-Remaining": rate.remaining.toString(),
+            "X-RateLimit-Reset": rate.reset.toString(),
+          },
         }
       );
     }
 
+    // 3) VALIDATE QUERY PARAMS WITH ZOD
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
 
-    if (!userId) {
+    const query = QuerySchema.safeParse({
+      userId: searchParams.get("userId"),
+    });
+
+    if (!query.success) {
       return new NextResponse(
-        JSON.stringify({ message: "User ID not found" }),
+        JSON.stringify({ message: query.error.errors[0].message }),
         { status: 400, headers: securityHeaders }
       );
     }
 
+    const userId = query.data.userId;
+
+    // 4) VALIDATE OBJECTID FORMAT
     if (!Types.ObjectId.isValid(userId)) {
       return new NextResponse(
-        JSON.stringify({ message: "Invalid user id" }),
+        JSON.stringify({ message: "Invalid user ID format" }),
         { status: 400, headers: securityHeaders }
       );
     }
 
+    // 5) PREVENT USERS FROM READING OTHER USERS
     if (userId !== session.user.id) {
       return new NextResponse(
-        JSON.stringify({ message: "Forbidden: You can only access your own data" }),
+        JSON.stringify({
+          message: "Forbidden: You can only access your own data",
+        }),
         { status: 403, headers: securityHeaders }
       );
     }
 
+    // 6) CONNECT DB + QUERY
     await connect();
 
-    const user = await User.findById(new Types.ObjectId(userId))
+    const user = await User.findById(userId)
       .select("-password -__v")
       .lean();
 
@@ -86,6 +105,7 @@ export const GET = async (request: Request) => {
       );
     }
 
+    // 7) SUCCESS RESPONSE
     return new NextResponse(
       JSON.stringify({
         message: "User fetched successfully",
@@ -107,6 +127,7 @@ export const GET = async (request: Request) => {
     );
   }
 };
+
 
 export const PATCH = async (request: Request) => {
   try {

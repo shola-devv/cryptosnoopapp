@@ -275,6 +275,7 @@ const componentOpen = isOpen;
   // Loading state
   if (isLoading || !isHydrated) {
     return (
+      
           <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
                  <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
                    <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -365,7 +366,8 @@ const componentOpen = isOpen;
 
   // Loaded state
   return (
-    <PlanGuard>
+    <>
+      <PlanGuard>
   <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
             <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -376,7 +378,7 @@ const componentOpen = isOpen;
           
                   <Image
                     src="/cryptosnooplogo1.png"
-                    alt="DIVAFlex Logo"
+                    alt="cryptosnoop Logo"
                     width={48}
                     height={32}
                     className="object-contain"
@@ -582,15 +584,19 @@ const componentOpen = isOpen;
 
 {/* Validation Error */}
 {addressValidation && !addressValidation.isValid && (
-  <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
-    {addressValidation.error || "Invalid blockchain address"}
-  </div>
-  {walletError && ( <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"> {walletError} </div> )}
- 
+  <>
+    <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
+      {addressValidation.error || "Invalid blockchain address"}
+    </div>
+    {walletError && (
+      <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
+        {walletError}
+      </div>
+    )}
   </>
 )}
-   </div>
 
+  
       {/* Wallet Summary Cards */}
       {monitoredWallet && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 mt-2">
@@ -772,7 +778,7 @@ const componentOpen = isOpen;
 
       {/* Top 15 Assets */}
       {monitoredWallet && topAssets.length > 0 && (
-        <section className="mb        -12">
+        <section className="mb-12">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Top 15 Assets</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -887,15 +893,6 @@ const componentOpen = isOpen;
           </footer>
   </main>
   </PlanGuard>
-);
-
-
-
- 
-
-
+  </>
+)
 }
-
-
- 
-          
