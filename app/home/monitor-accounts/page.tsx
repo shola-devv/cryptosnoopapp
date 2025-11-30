@@ -408,12 +408,12 @@ const componentOpen = isOpen;
 
           
     <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
-      {/* Back Button */}
-      <a href="/home">
+      {/* Back Button <a href="/home">
         <button className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#c750f7] dark:hover:text-[#c750f7] transition-colors mb-2 cursor-pointer">
           <ArrowLeft className="w-8 h-8 text-[#c750f7]" />
         </button>
-      </a>
+      </a>   */}
+      
 
       {/* Page Title */}
 
@@ -535,18 +535,16 @@ const componentOpen = isOpen;
       setAddressValidation(result);
 
       // Auto-select chain if valid and user hasn't manually chosen one
-      if (result?.isValid && result.chain && !userManuallySelectedChain) {
+      if (result?.isValid && result && !userManuallySelectedChain) {
         const found = SUPPORTED_CHAINS.find(
           (c) => c.name.toLowerCase() === result.chain.toLowerCase()
         );
         if (found) setSelectedChain(found.id);
       }
     }}
-    placeholder={
-      selectedChain === "solana"
-        ? "Enter Solana address..."
-        : "Enter wallet address (0x...)"
-    }
+   placeholder={`Enter ${
+  SUPPORTED_CHAINS.find(c => c.id === selectedChain)?.name || "wallet"
+} address...`}
     className="flex-1 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7] focus:border-transparent transition-all"
     disabled={isLoadingWallet}
   />
@@ -586,9 +584,6 @@ const componentOpen = isOpen;
 {/* Validation Error */}
 {addressValidation && !addressValidation.isValid && (
   <>
-    <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
-      {addressValidation.error || "Invalid blockchain address"}
-    </div>
     {walletError && (
       <div className="mt-4 text-center font-semibold py-2 rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200">
         {walletError}

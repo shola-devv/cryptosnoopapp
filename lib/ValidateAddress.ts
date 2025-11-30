@@ -78,7 +78,7 @@ export function validateBlockchainAddress(raw: string) {
   // -------------------------
   // Solana
   // -------------------------
-  if (address.length >= 32 && address.length <= 44) {
+  if (address.length >= 25 && address.length <= 44) {
     const ok = isValidSolana(address);
     return {
       isValid: ok,

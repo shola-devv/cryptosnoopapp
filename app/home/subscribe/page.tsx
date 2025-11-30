@@ -24,6 +24,11 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
   if (!isOpen) return null;
 
   const testFeatures = [
+     {
+      icon: Bell,
+      title: 'Track and label up to 50 addresses, organized your way with expanded storage for the entire week.',
+      description: 'Organize up to 50 addresses with clean labeling and flexible sorting, giving you total control without storage restrictions.'
+    },
     {
       icon: TrendingUp,
       title: '7 days of unlimited portfolio tracking',
@@ -34,19 +39,10 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
       title: '7 days of unlimited remote wallet tracking, fully powered and always on.',
       description: 'Monitor any wallet instantly and in real time, giving you full visibility across your ecosystem for 7 days of uninterrupted tracking.'
     },
-      {
-      icon: Bell,
-      title: 'Track and label up to 50 addresses, organized your way with expanded storage for the entire week.',
-      description: 'Organize up to 50 addresses with clean labeling and flexible sorting, giving you total control without storage restrictions.'
-    },
-    {
-      icon: Bell,
-      title: 'Unlock the web app dark mode, designed your way for a cleaner, calmer view.',
-      description: 'Switch to a sleek, distraction-free dark interface that adapts to your workflow — perfect for late-night tracking, easier on the eyes, and styled your way.'
-    },
+    
     {
       icon: 'Bell',
-      title: 'Real-time price updates, delivered your way the moment markets move.',
+      title: 'Faster Real-time price updates, delivered your way the moment markets move.',
       description: 'Stay ahead with live market data sent directly as prices shift — always fast, always fresh, always in sync.'
     },
      
@@ -181,11 +177,10 @@ export default function SubscriptionPage() {
       icon: Zap,
       color: '#4ecdc4',
       features: [
-        'One month of unlimited portfolio tracking, built your way with every feature unlocked.',
-        'One month of unlimited remote wallet tracking, fully powered and always on.',
+         'One month of unlimited remote wallet tracking, fully powered and always on.',
         'Track and label up to 50 addresses, organized your way with expanded storage.',
-        'Unlock the web app’s dark mode, designed your way for a cleaner, calmer view.',
-        'Real-time price updates, delivered your way the moment markets move.',
+        'One month of unlimited portfolio tracking, built your way with every feature unlocked.',
+        'Faster Real-time price updates, delivered your way the moment markets move.',
         'Priority support, shaped around your needs every step of the month.',
         'Early access to new updates, rolled out your way before anyone else.'
       ],
@@ -201,11 +196,10 @@ export default function SubscriptionPage() {
       icon: Sparkles,
       color: '#c750f7',
       features: [
-        'One year of unlimited portfolio tracking, built your way with every feature unlocked.',
         'One year of unlimited remote wallet tracking, fully powered and always on.',
         'Track and label up to 50 addresses, organized your way with expanded storage all year long.',
-        'Unlock the web app’s dark mode, designed your way for a cleaner, calmer view.',
-        'Real-time price updates, delivered your way the moment markets move.',
+        'One year of unlimited portfolio tracking, built your way with every feature unlocked.',
+        'Faster Real-time price updates, delivered your way the moment markets move.',
         'Priority support, shaped around your needs throughout the year.',
         'Early access to new updates, rolled out your way before anyone else.'
       ],
@@ -221,11 +215,10 @@ export default function SubscriptionPage() {
       icon: Crown,
       color: '#ffd93d',
       features: [
-        'Lifetime unlimited portfolio tracking, built your way with every feature unlocked forever.',
         'Lifetime unlimited remote wallet tracking, fully powered and always on without limits.',
         'Track and label up to 50 addresses, organized your way with permanently expanded storage.',
-        'Unlock the web app’s dark mode, designed your way for a cleaner, calmer view.',
-        'Real-time price updates, delivered your way the moment markets move.',
+        'Lifetime unlimited portfolio tracking, built your way with every feature unlocked forever.',
+        'Faster Real-time price updates, delivered your way the moment markets move.',
         'Priority support, shaped around your needs for life.',
         'Early access to new updates, rolled out your way long before anyone else.',
        

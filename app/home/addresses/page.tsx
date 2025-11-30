@@ -26,8 +26,8 @@ export default function AccountsPage() {
   const name = session?.user?.name;
 
 
-  ///here
-  const userPlan = useUserPlan()
+  ///here useUserPlan()
+  const userPlan = 50
    
   const maxAddresses = userPlan === "free" ? 10 : 50;
   const [addressValidation, setAddressValidation] = useState<{

@@ -59,14 +59,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="antialiased">
-        
+         <DarkModeProvider>
             <Providers>
             <DatabaseWarmer />
-      <DarkModeProvider>
+     
            {children}
-       </DarkModeProvider>
+       
             </Providers>
-        
+        </DarkModeProvider>
       </body>
     </html>
   );
