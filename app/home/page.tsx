@@ -35,9 +35,6 @@ import { usePortfolio } from "@/hooks/usePortfolio"
 import {useEffect} from 'react'
 import { Settings, Check } from 'lucide-react';
 import ProfileModal from '@/components/profileModal'
-import { useUserProfile } from "@/hooks/UserProfile";
-
-
 
 
 export default function UserProfile() {
@@ -53,9 +50,7 @@ export default function UserProfile() {
   const [profile, setProfile] = useState(undefined); // profile index 0-4 or undefined
   const [userName, setUserName] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const profileData = useUserProfile();
-  const userPlan = profileData || 'free'
-
+  
   const avatarOptions = [
   { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
   { id: 2, emoji: '🎨', color: '#ff6b6b', label: 'Artist' },
@@ -77,7 +72,6 @@ export default function UserProfile() {
   }, [status, router]);
 
    const userId = session?.user?.id;
-
    const name = session?.user?.name;
    
   
@@ -290,61 +284,62 @@ const handleProfileSave = (newName, newAvatarIndex) => {
           </div>
         </header>
 
-        <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
+ <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
           <div className="w-12 h-12 sm:w-8 sm:h-8 border-2 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
         </div>
 
-        <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
-          <div className="max-w-7xl mx-auto px-4 sm:px-2 lg:px-8 text-center">
-            <div className="flex items-center justify-center gap-6 mb-6">
-              <a
-                href="/home/privacy"
-                className="dark:text-white text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-              >
-                privacy policy
-              </a>
-              <a
-                href="/home/help"
-                className="dark:text-white text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-              >
-                Help
-              </a>
-              <a
-                href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dark:text-white text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-              >
-                our socials
-              </a>
-              <a
-                href="#logout"
-                className=" dark:text-white text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline"
-              >
-                Logout
-              </a>
-            </div>
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-12 h-12 flex items-center justify-center">
-                <Image
-                  src="/cryptosnooplogo1.png"
-                  alt="DIVAFlex Logo"
-                  width={48}
-                  height={32}
-                  className="object-contain"
-                  priority
-                />
-              </div>
-              <h4 className="text-xl font-bold dark:text-white">CryptoSnoop.app</h4>
-            </div>
-            <p className="text-slate-600 dark:text-white mb-2">
-              Track your crypto journey with confidence
-            </p>
-            <p className="text-gray-600 dark:text-white">
-              © 2025 CryptoSnoop. All rights reserved.
-            </p>
-          </div>
-        </footer>
+       <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    
+    {/* Links */}
+    <div className="flex flex-wrap items-center justify-center gap-6 mb-6 text-[10px] sm:text-xs md:text-sm">
+      <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
+        privacy policy
+      </a>
+      <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
+        Help
+      </a>
+      <a 
+        href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white"
+      >
+        our socials
+      </a>
+      <a onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
+        Logout
+      </a>
+    </div>
+
+    {/* Logo + App Name */}
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+      <div className="w-12 h-12 flex items-center justify-center">
+        <Image
+          src="/cryptosnooplogo1.png"
+          alt="cryptosnooplogo Logo"
+          width={48}
+          height={32}
+          className="object-contain"
+          priority
+        />
+      </div>
+      <h4 className="text-sm sm:text-base md:text-lg font-bold dark:text-white">
+        CryptoSnoop.app
+      </h4>
+    </div>
+
+    {/* Footer notes */}
+    <p className="text-[10px] sm:text-xs md:text-sm text-slate-600 dark:text-white mb-1">
+      Track your crypto journey with confidence
+    </p>
+    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 dark:text-white">
+      © {new Date().getFullYear()} CryptoSnoop. All rights reserved.
+    </p>
+
+  </div>
+</footer>
+
       </main>
     )
   }
@@ -395,7 +390,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
         </div>
 
         <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-2 lg:px-8 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="flex items-center justify-center gap-6 mb-6">
               <a
                 href="/home/privacy"
@@ -454,28 +449,20 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-  <div className="container mx-auto px-3 sm:px-2 py-3 sm:py-4 flex items-center justify-between">
+  <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
 
     {/* Left Side: Logo */}
     <div className="flex items-center gap-2 sm:gap-4">
       <div className="flex items-center gap-2">
 
-       <div className="
-  w-12 h-12                /* default size */
-  sm:w-6 sm:h-6            /* small screens */
-  md:w-8 md:h-8          /* medium screens */
-  lg:w-12 lg:h-12          /* large screens */
-  xl:w-14 xl:h-14          /* extra large screens */
-  relative
-">
-  <Image
-    src="/cryptosnooplogo1.png"
-    alt="Cryptosnoop Logo"
-    fill
-    className="object-contain"
-    priority
-  />
-</div>
+        <Image
+          src="/cryptosnooplogo1.png"
+          alt="Cryptosnoop Logo"
+          width={48}
+          height={32}
+          className="object-contain"
+          priority
+        />
 
         <div className="flex flex-col leading-none">
           <span className="font-bold text-sm sm:text-lg leading-tight" style={{ color: '#c750f7' }}>
@@ -488,12 +475,12 @@ const handleProfileSave = (newName, newAvatarIndex) => {
       </div>
     </div>
 
-    
+    {/* Right Side: Dark Mode Toggle */}
     <DarkModeToggle />
-    
+
   </div>
 </header>
- 
+
 
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
@@ -506,35 +493,25 @@ const handleProfileSave = (newName, newAvatarIndex) => {
               {/* Mobile Layout */}
               <div className="flex sm:hidden flex-col gap-4">
                 {/* Top Row: Avatar and Hello Text */}
-               
-               
-
-<div className="relative flex-shrink-0">
-  {/* blurred background — behind the image */}
+                <div className="flex items-center gap-3">
+  <div className="relative flex-shrink-0">
+    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
   <div
-    className="absolute inset-0 rounded-full blur-lg opacity-40 z-0"
-    style={{ backgroundColor: userAvatar.color }}
-  ></div>
-
-  {/* image container — on top of the blur */}
-  <div
-    className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl z-10"
-    style={{
-      borderColor: userAvatar.color,
-      backgroundColor: userAvatar.color,
-    }}
-  >
-    {profile !== undefined ? (
-      <img
-        src={`/profile${profile}.png`}
-        alt={userAvatar.label}
-        className="w-full h-full object-cover"
-      />
-    ) : null}
-  </div>
+  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
+  style={{ 
+    borderColor: userAvatar.color,
+    backgroundColor: userAvatar.color
+  }}
+>
+  {profile !== undefined ? (
+                      <img
+                        src={`/profile${profile}.png`}
+                        alt={userAvatar.label}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
 </div>
-
-
+  </div>
   <div className="flex-1 flex items-center gap-2">
     <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {userName}!</p>
     <button 
@@ -557,14 +534,10 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                       {showBalance ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                     </p>
                     <Button 
-                    variant="ghost"
                       size="sm" 
-                      
-              className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
-               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
-               active:translate-y-1 active:shadow-none 
-               hover:brightness-95 overflow-hidden transition-all duration-200"
-                     
+                      variant="ghost"
+                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+
                       onClick={() => {handleNavigation("/home/monitor-accounts"); buzzClick();}}
                     >
                       Monitor
@@ -599,33 +572,25 @@ const handleProfileSave = (newName, newAvatarIndex) => {
               
              {/* Desktop Layout */}
 <div className="hidden sm:flex flex-row items-start gap-4">
-
-<div className="relative flex-shrink-0">
-  {/* blurred background — behind the image */}
-  <div
-    className="absolute inset-0 rounded-full blur-lg opacity-40 z-0"
-    style={{ backgroundColor: userAvatar.color }}
-  ></div>
-
-  {/* image container — on top of the blur */}
-  <div
-    className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl z-10"
-    style={{
-      borderColor: userAvatar.color,
-      backgroundColor: userAvatar.color,
-    }}
-  >
-    {profile !== undefined ? (
-      <img
-        src={`/profile${profile}.png`}
-        alt={userAvatar.label}
-        className="w-full h-full object-cover"
-      />
-    ) : null}
-  </div>
+  <div className="relative flex-shrink-0">
+    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
+   <div
+  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
+  style={{ 
+    borderColor: userAvatar.color,
+    backgroundColor: userAvatar.color
+  }}
+>
+ {profile !== undefined ? (
+                      <img
+                        src={`/profile${profile}.png`}
+                        alt={userAvatar.label}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
 </div>
 
-
+  </div>
   
   <div className="flex-1 w-full">
     <div className="flex items-center justify-between mb-3">
@@ -650,13 +615,10 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                         {showBalance ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                       </p>
                       <Button 
-                      variant="ghost"
                         size="lg" 
-                       className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
-               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
-               active:translate-y-1 active:shadow-none 
-               hover:brightness-95 overflow-hidden transition-all duration-200"
-                         
+                        variant="ghost"
+                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+
                          onClick={() => {handleNavigation("/home/monitor-accounts"); buzzClick();}}
                       >
                        Monitor 
@@ -753,7 +715,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   }}
   className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
 >
-  <div  
+  <div
     className="w-12 h-10 sm:w-16 sm:h-12 md:w-18 md:h-14 
                rounded-xl flex items-center justify-center flex-shrink-0 
                bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
@@ -810,15 +772,13 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                           </p>
                         </div>
                         <Button 
-                        variant="ghost"
                           size="sm" 
-                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
-               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
-               active:translate-y-1 active:shadow-none 
-               hover:brightness-95 overflow-hidden transition-all duration-200"
+                          variant="ghost"
+                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+
                           onClick={() => handleAddClick(coin)}
                         >
-                          <Plus className="w-3 h-3 font-extrabold sm:w-4 sm:h-4" />
+                          <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </div>
                     ))}
@@ -829,9 +789,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
          Support for more coins coming soon!
       </p>
                 </section>
-      
-</div>
-
+      </div>
 
       {isModalOpen && selectedCoin && (
   <div
@@ -998,43 +956,33 @@ const handleProfileSave = (newName, newAvatarIndex) => {
 
 
 
- <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60 sm:text-xs">
-  <div className="max-w-7xl mx-auto px-4 sm:px-2 lg:px-8 text-center">
+ <footer className="mt-8 bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     
-    <div className="flex items-center justify-center gap-6 mb-6 sm:gap-3 sm:text-xs">
-      <a 
-        href="/home/privacy" 
-        className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white sm:text-[10px]"
-      >
+    {/* Links */}
+    <div className="flex flex-wrap items-center justify-center gap-6 mb-6 text-[10px] sm:text-xs md:text-sm">
+      <a href="/home/privacy" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
         privacy policy
       </a>
-
-      <a 
-        href="/home/help" 
-        className="sm:text-xs text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white sm:text-[10px]"
-      >
+      <a href="/home/help" className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
         Help
       </a>
-
-      <a
-        href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`}
-        target="_blank"
-        rel="noopener noreferrer dark:text-white"
-        className="sm:text-xs text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white sm:text-[10px]"
+      <a 
+        href={`https://twitter.com/intent/follow?screen_name=${`cryptosnoop_app`}`} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-gray-600 hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white"
       >
         our socials
       </a>
-
-      <a  
-        onClick={() => signOut({ callbackUrl: "/" })}
-        className="sm:text-xs text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white sm:text-[10px]"
-      >
+      <a onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
         Logout
       </a>
     </div>
 
-    <div className="flex items-center justify-center gap-3 mb-4 sm:gap-1">
-      <div className="w-12 h-12 flex items-center justify-center sm:w-8 sm:h-8">
+    {/* Logo + App Name */}
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+      <div className="w-12 h-12 flex items-center justify-center">
         <Image
           src="/cryptosnooplogo1.png"
           alt="cryptosnooplogo Logo"
@@ -1044,26 +992,22 @@ const handleProfileSave = (newName, newAvatarIndex) => {
           priority
         />
       </div>
-
-      <h4 className="text-xl font-bold dark:text-white sm:text-base">
+      <h4 className="text-sm sm:text-base md:text-lg font-bold dark:text-white">
         CryptoSnoop.app
       </h4>
     </div>
 
-    <p className="sm:text-xs text-slate-600 dark:text-white sm:text-[10px]">
+    {/* Footer notes */}
+    <p className="text-[10px] sm:text-xs md:text-sm text-slate-600 dark:text-white mb-1">
       Track your crypto journey with confidence
     </p>
-
-    <p className="sm:text-xs text-gray-600 dark:text-white sm:text-[10px]">
+    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 dark:text-white">
       © {new Date().getFullYear()} CryptoSnoop. All rights reserved.
     </p>
+
   </div>
 </footer>
 
     </main>
   )
 }
-
-
-
-/* <img src="/assets.png" alt="Assets" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" /> */
