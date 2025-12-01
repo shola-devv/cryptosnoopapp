@@ -471,7 +471,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   <Image
     src="/cryptosnooplogo1.png"
     alt="Cryptosnoop Logo"
-    fill            // makes the image fill the parent container
+    fill
     className="object-contain"
     priority
   />
@@ -493,7 +493,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     
   </div>
 </header>
-
+ 
 
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-6 py-4 sm:py-8">
@@ -507,24 +507,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
               <div className="flex sm:hidden flex-col gap-4">
                 {/* Top Row: Avatar and Hello Text */}
                
-                <div className="relative flex-shrink-0">
-    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
-  <div
-  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
-  style={{ 
-    borderColor: userAvatar.color,
-    backgroundColor: userAvatar.color
-  }}
->
-  {profile !== undefined ? (
-                      <img
-                        src={`/profile${profile}.png`}
-                        alt={userAvatar.label}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : null}
-</div>
-  </div>
+               
 
 <div className="relative flex-shrink-0">
   {/* blurred background — behind the image */}
@@ -616,25 +599,33 @@ const handleProfileSave = (newName, newAvatarIndex) => {
               
              {/* Desktop Layout */}
 <div className="hidden sm:flex flex-row items-start gap-4">
-  <div className="relative flex-shrink-0">
-    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
-   <div
-  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
-  style={{ 
-    borderColor: userAvatar.color,
-    backgroundColor: userAvatar.color
-  }}
->
- {profile !== undefined ? (
-                      <img
-                        src={`/profile${profile}.png`}
-                        alt={userAvatar.label}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : null}
+
+<div className="relative flex-shrink-0">
+  {/* blurred background — behind the image */}
+  <div
+    className="absolute inset-0 rounded-full blur-lg opacity-40 z-0"
+    style={{ backgroundColor: userAvatar.color }}
+  ></div>
+
+  {/* image container — on top of the blur */}
+  <div
+    className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl z-10"
+    style={{
+      borderColor: userAvatar.color,
+      backgroundColor: userAvatar.color,
+    }}
+  >
+    {profile !== undefined ? (
+      <img
+        src={`/profile${profile}.png`}
+        alt={userAvatar.label}
+        className="w-full h-full object-cover"
+      />
+    ) : null}
+  </div>
 </div>
 
-  </div>
+
   
   <div className="flex-1 w-full">
     <div className="flex items-center justify-between mb-3">
@@ -762,7 +753,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   }}
   className="relative h-full font-semibold flex flex-col items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 rounded-lg transition-colors"
 >
-  <div
+  <div  
     className="w-12 h-10 sm:w-16 sm:h-12 md:w-18 md:h-14 
                rounded-xl flex items-center justify-center flex-shrink-0 
                bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
@@ -838,7 +829,9 @@ const handleProfileSave = (newName, newAvatarIndex) => {
          Support for more coins coming soon!
       </p>
                 </section>
-      </div>
+      
+</div>
+
 
       {isModalOpen && selectedCoin && (
   <div
@@ -1070,4 +1063,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
     </main>
   )
 }
+
+
+
 /* <img src="/assets.png" alt="Assets" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" /> */

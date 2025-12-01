@@ -140,6 +140,8 @@ function maskEmail(email: string) {
 
       if (res?.ok) {
         setError("Verification successful, logging you in...");
+        //test something
+         alert("Verification successful, logging you in...")
         onClose();
         router.push("/home");
       } else if (res?.error) {

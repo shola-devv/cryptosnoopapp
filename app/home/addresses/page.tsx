@@ -278,8 +278,9 @@ if (addresses.length >= maxAddresses) {
              </header>
      
              <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
-               <div className="w-16 h-16 border-4 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
-             </div>
+          <div className="w-12 h-12 sm:w-8 sm:h-8 border-2 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
      
             <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
                       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
