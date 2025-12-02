@@ -496,10 +496,9 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                 {/* Top Row: Avatar and Hello Text */}
                 <div className="flex items-center gap-3">
  <div className="relative w-12 h-12 flex-shrink-0">
-  <div
-    className="absolute inset-0 rounded-full blur-lg opacity-40"
-    style={{ backgroundColor: userAvatar.color }}
-  ></div>
+
+  <div className="absolute inset-0 rounded-full blur-lg opacity-40"
+       style={{ backgroundColor: userAvatar.color }}></div>
 
   <div
     className="w-full h-full rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
@@ -516,7 +515,9 @@ const handleProfileSave = (newName, newAvatarIndex) => {
       />
     ) : null}
   </div>
+
 </div>
+
 
   <div className="flex-1 flex items-center gap-2">
     <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {userName}!</p>

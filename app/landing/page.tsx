@@ -93,6 +93,26 @@ const CryptoSnoop = () => {
       icon: "/padlock.png",
     },
   ];
+  const additions = [
+  {
+    title: "Hassle-Free Tracking",
+    description:
+      "CryptoSnoop helps you track your crypto assets and holdings hassle-free without necessarily connecting your wallet. Monitor your portfolio and wallets with real-time data and insights across all chains.",
+    icon: "/eye.png",
+  },
+  {
+    title: "Easy Management",
+    description:
+      "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallets and label them securely all in one centralized location.",
+    icon: "/wallet.png",
+  },
+  {
+    title: "Easy Login and Security",
+    description:
+      "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
+    icon: "/padlock.png",
+  },
+];
 
   return (
    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden">
@@ -110,21 +130,27 @@ const CryptoSnoop = () => {
   {/* Header */}
   <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 flex items-center justify-center">
-          <Image
-            src="/cryptosnooplogo1.png"
-            alt="CryptoSnoop Logo"
-            width={48}
-            height={32}
-            className="object-contain"
-            priority
-          />
-        </div>
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-black bg-clip-text text-transparent">
-          cryptoSnoop
-        </h1>
-      </div>
+      <div className="flex items-center gap-2">
+                      <Image
+                        src="/cryptosnooplogo1.png"
+                        alt="DIVAFlex Logo"
+                        width={48}
+                        height={32}
+                        className="object-contain"
+                        priority
+                      />
+                      <div className="flex flex-col leading-none">
+                        <span
+                          className="font-bold text-sm sm:text-lg leading-tight"
+                          style={{ color: "#c750f7" }}
+                        >
+                          crypto
+                        </span>
+                        <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
+                          Snoop
+                        </span>
+                      </div>
+                    </div>
       <div className="flex gap-3">
         <button
           onClick={() => setIsAuthModalOpen(true)}
@@ -139,7 +165,7 @@ const CryptoSnoop = () => {
   </header>
 
   {/* Hero Section */}
-  <main className="pt-20 sm:pt-32 pb-8 relative z-10">
+  <main className="pt-20 sm:pt-32 pb-8 sm:pb-4 relative z-10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div className="text-center mb-8">
@@ -160,42 +186,21 @@ const CryptoSnoop = () => {
 
         <div className="max-w-2xl mx-auto space-y-4 mb-8">
           <div className="flex items-center justify-center gap-3">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={38}
-              height={28}
-              className="object-contain flex-shrink-0 animate-slide-in-left-repeat"
-              priority
-            />
+            
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
               Manage crypto assets with live data
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-3">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={38}
-              height={28}
-              className="object-contain flex-shrink-0"
-              priority
-            />
+            
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
               Keep all your wallet labels securely in one place
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-3">
-            <Image
-              src="/cryptosnooplogo1.png"
-              alt="CryptoSnoop Logo"
-              width={38}
-              height={28}
-              className="object-contain flex-shrink-0"
-              priority
-            />
+           
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
               Monitor remote crypto wallets
             </p>
@@ -213,7 +218,7 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden py-8 my-8">
+      <div className="relative overflow-hidden pb-2 my-8">
         <div className="flex justify-center items-center min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
@@ -226,7 +231,7 @@ const CryptoSnoop = () => {
               }`}
             >
               <div
-                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-8 w-80 border border-white/50"
+                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-4 w-80 border border-white/50"
                 style={{
                   background:
                     "linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(108, 198, 255, 0.2))",
@@ -328,6 +333,39 @@ const CryptoSnoop = () => {
           </div>
         ))}
       </div>
+      <section className="w-full max-w-3xl mx-auto px-4 py-10">
+      {/* Header */}
+      <h2 className="text-center font-bold text-3xl sm:text-4xl md:text-5xl leading-tight mb-8">
+        CryptoSnoop<br />Does crypto tracking<br />Better
+      </h2>
+
+      {/* Feature Boxes */}
+      <div className="flex flex-col gap-4">
+        {additions.map((feature, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-3 bg-white shadow-sm rounded-2xl px-4 py-3 border border-gray-200 w-full"
+          >
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl bg-gray-100 flex items-center justify-center overflow-hidden">
+              <Image
+                src={feature.icon}
+                alt={feature.title}
+                width={40}
+                height={40}
+                className="object-contain w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <p className="font-semibold text-sm sm:text-base md:text-lg">{feature.title}</p>
+              <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-snug">
+                {feature.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
       {/* CTA Section */}
       <div className="mt-32 text-center rounded-3xl p-16">
