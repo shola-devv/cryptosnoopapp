@@ -495,24 +495,29 @@ const handleProfileSave = (newName, newAvatarIndex) => {
               <div className="flex sm:hidden flex-col gap-4">
                 {/* Top Row: Avatar and Hello Text */}
                 <div className="flex items-center gap-3">
-  <div className="relative flex-shrink-0">
-    <div className="absolute inset-0 rounded-full blur-lg opacity-40" style={{ backgroundColor: userAvatar.color }}></div>
+ <div className="relative w-12 h-12 flex-shrink-0">
   <div
-  className="w-12 h-12 rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
-  style={{ 
-    borderColor: userAvatar.color,
-    backgroundColor: userAvatar.color
-  }}
->
-  {profile !== undefined ? (
-                      <img
-                        src={`/profile${profile}.png`}
-                        alt={userAvatar.label}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : null}
-</div>
+    className="absolute inset-0 rounded-full blur-lg opacity-40"
+    style={{ backgroundColor: userAvatar.color }}
+  ></div>
+
+  <div
+    className="w-full h-full rounded-full border-2 relative overflow-hidden flex items-center justify-center text-xl"
+    style={{ 
+      borderColor: userAvatar.color,
+      backgroundColor: userAvatar.color
+    }}
+  >
+    {profile !== undefined ? (
+      <img
+        src={`/profile${profile}.png`}
+        alt={userAvatar.label}
+        className="w-full h-full object-cover"
+      />
+    ) : null}
   </div>
+</div>
+
   <div className="flex-1 flex items-center gap-2">
     <p className="text-sm font-semibold text-slate-800 dark:text-white">Welcome {userName}!</p>
     <button 
@@ -537,7 +542,11 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                     <Button 
                       size="sm" 
                       variant="ghost"
-                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+                         
+                      className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
 
                       onClick={() => {handleNavigation("/home/monitor-accounts"); buzzClick();}}
                     >
@@ -618,7 +627,10 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                       <Button 
                         size="lg" 
                         variant="ghost"
-                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
 
                          onClick={() => {handleNavigation("/home/monitor-accounts"); buzzClick();}}
                       >
@@ -773,9 +785,13 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                           </p>
                         </div>
                         <Button 
-                          size="sm" 
+                          
                           variant="ghost"
-                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f] shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] active:translate-y-1 active:shadow-none  hover:brightness-95 overflow-hidden transition-all duration-200"
+                          size="sm" 
+                          className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
 
                           onClick={() => handleAddClick(coin)}
                         >
