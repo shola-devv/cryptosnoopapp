@@ -393,6 +393,7 @@ const CryptoSnoop = () => {
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
-};
+}
 
 export default CryptoSnoop
+
