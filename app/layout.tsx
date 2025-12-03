@@ -6,6 +6,10 @@ import { Providers } from "@/providers/provider";
 import DatabaseWarmer from "@/components/DatabaseWarmer"; // New component
 import { inter } from "./fonts";
 import { DarkModeProvider } from "@/components/useDarkModeInit";
+import Script from "next/script";
+import GAListener from "@/components/GAListener";
+
+
 
 
 const geistSans = localFont({
@@ -18,6 +22,10 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+
+
+
+
 
 export const metadata: Metadata = {
   title: "cryptosnoop",
@@ -59,10 +67,28 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="antialiased">
+
+      <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+
          <DarkModeProvider>
             <Providers>
             <DatabaseWarmer />
-     
+            <GAListener />
+    
            {children}
        
             </Providers>
