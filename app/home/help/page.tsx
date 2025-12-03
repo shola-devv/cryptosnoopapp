@@ -213,7 +213,7 @@ const handleDelete = async () => {
           <CardContent>
             <div className="space-y-3">
               {faqItems.map((item, index) => (
-                <div key={index} className="border text-[#c750f7] rounded-lg overflow-hidden dark:bg-slate-900/60">
+                <div key={index} className="border text-white rounded-lg overflow-hidden dark:bg-slate-900/60">
                   <button
                     className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 dark:bg-slate-900/60 transition-colors"
                     onClick={() => toggleFaq(index)}
@@ -310,8 +310,13 @@ const handleDelete = async () => {
               </Button>
               
               <Button
-                variant="outline"
-                className="h-12  text-[#c750f7] border-[#c750f7] hover:bg-slate-900/60 active:translate-y-1 font-bold  shadow-lg"
+                 variant="ghost"
+                         
+                 className="text-white  text-xs sm:text-sm h-8 sm:h-10 flex-shrink-0  bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] 
+               shadow-[0_8px_12px_-2px_rgba(0,0,0,0.35)] 
+               active:translate-y-1 active:shadow-none 
+               hover:brightness-95 overflow-hidden transition-all duration-200"
+
                 onClick={() => {
                   window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
                 }}
@@ -331,7 +336,7 @@ const handleDelete = async () => {
         <div className="mt-12 flex justify-center">
           <Button
             variant="outline"
-            className="px-6 py-3 bg-red-600 text-white border-red-600 active:translate-y-1  font-bold"
+            className="px-6 py-3 bg-red-500 text-white border-red-500 active:translate-y-1  font-bold"
             onClick={handleLogout}
           >
           
@@ -339,13 +344,13 @@ const handleDelete = async () => {
           </Button>
         </div>
      
-     {/* DELETE Button. the handle delete func shoulf have a alert(are you syre) */}
+     {/* DELETE Button. the handle delete func shoulf have a alert(are you sure) */}
          
         <div className="mt-12 flex justify-center">
           <button
          variant="outline"
         onClick={() => setShowConfirm(true)}
-        className="px-6 py-3 rounded-lg bg-red-600 text-white border-red-600 active:translate-y-1  font-bold"
+        className="px-6 py-3 rounded-lg bg-red-500 text-white border-red-500 active:translate-y-1  font-bold"
       >
         Delete Account
       </button>
@@ -394,7 +399,7 @@ const handleDelete = async () => {
               <button
                 onClick={handleDelete}
                 disabled={isDeleting || confirmText !== CONFIRM_PHRASE}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold"
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold"
               >
                 {isDeleting ? "Deleting..." : "Yes, Delete My Account"}
               </button>

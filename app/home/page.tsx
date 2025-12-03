@@ -47,7 +47,8 @@ export default function UserProfile() {
   const [quantity, setQuantity] = useState("")
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
-  const [profile, setProfile] = useState(undefined); // profile index 0-4 or undefined
+  
+  const [profile, setProfile] = useState<number | undefined>(2)
   const [userName, setUserName] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
   
@@ -58,10 +59,8 @@ export default function UserProfile() {
   { id: 4, emoji: '⚡', color: '#ffd93d', label: 'Energy' },
   { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
 ];
-  const [userAvatar, setUserAvatar] = useState(avatarOptions[0]);
-
-
-  //session
+const [userAvatar, setUserAvatar] = useState(avatarOptions[2])
+ 
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -227,6 +226,7 @@ const fetchUserProfile = async (userId) => {
     }
   } catch (error) {
     console.error('Error fetching user profile:', error);
+  
   }
 };
 
