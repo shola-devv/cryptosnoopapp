@@ -72,6 +72,23 @@ export default function RootLayout({
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
           strategy="afterInteractive"
         />
+        <script
+      dangerouslySetInnerHTML={{
+        __html: `
+          (function() {
+            try {
+              var isDark = localStorage.getItem('darkMode');
+              if (isDark === 'true' || 
+                 (!isDark && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+              } else {
+                document.documentElement.classList.remove('dark');
+              }
+            } catch (e) {}
+          })();
+        `,
+      }}
+    />
 
         <Script id="google-analytics" strategy="afterInteractive">
           {`
