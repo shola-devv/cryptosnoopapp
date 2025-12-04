@@ -537,9 +537,11 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                 <div className=" dark:from-slate-700 dark:to-slate-800 rounded-lg p-3">
                   <p className="text-xs text-slate-600 dark:text-white mb-1">Total balance</p>
                   <div className="flex items-baseline justify-between">
-                    <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                      {showBalance ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
-                    </p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white break-all">
+  {showBalance
+    ? `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    : '••••••'}
+</p>
                     <Button 
                       size="sm" 
                       variant="ghost"
@@ -561,10 +563,10 @@ const handleProfileSave = (newName, newAvatarIndex) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       
-<p className="text-sm text-slate-600 dark:text-white mb-1">
+<p className="text-sm text-slate-600 dark:text-white mb-1 ">
   Change in 24HR
 </p>
-<p className={`text-lg font-bold ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+<p className={`text-lg font-bold break-all ${totalChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
   {showBalance
     ? `${totalChange >= 0 ? '+' : '-'}$${Math.abs((totalChange * totalValue) / 100).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
     : '••••••'}

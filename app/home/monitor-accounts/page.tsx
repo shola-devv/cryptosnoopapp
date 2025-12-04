@@ -665,7 +665,7 @@ const componentOpen = isOpen;
                     <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 text-right">
                       Total Balance
                     </p>
-                    <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white break-all">
                       {showBalance
                         ? `$${monitoredWallet.totalValue?.toLocaleString(undefined, { maximumFractionDigits: 2 }) || '0.00'}`
                         : '••••••'}
@@ -708,13 +708,16 @@ const componentOpen = isOpen;
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   24h Change:
                 </span>
-                <span
-                  className={`text-sm font-bold ${monitoredWallet.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}
-                >
-                  {showBalance
-                    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}${Math.abs(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
-                    : '••••••'}
-                </span>
+              <span
+  className={`text-sm font-bold break-all ${
+    monitoredWallet.change24h >= 0 ? 'text-green-600' : 'text-red-600'
+  }`}
+>
+  {showBalance
+    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}$${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    : '••••••'}
+</span>
+
               </div>
 
               {/* MOBILE: Wallet address footer (replaces 24h change) */}
@@ -753,11 +756,17 @@ const componentOpen = isOpen;
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                   Change in 24H
                 </p>
-                <p className={`text-lg font-bold ${monitoredWallet.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {showBalance
-                    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}${Math.abs(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
-                    : '••••••'}
-                </p>
+               <p
+  className={`text-lg font-bold break-all ${
+    monitoredWallet.change24h >= 0 ? 'text-green-600' : 'text-red-600'
+  }`}
+>
+  {showBalance
+    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}$${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    : '••••••'}
+</p>
+
+
               </CardContent>
             </Card>
 
@@ -823,15 +832,15 @@ const componentOpen = isOpen;
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Holdings</p>
-                      <p className="font-bold text-slate-900 dark:text-white text-sm">
+                      <p className="font-bold  text-slate-900 dark:text-white text-sm break-all">
                         {showBalance ? `${asset.amount.toFixed(asset.price < 1 ? 4 : 6)}` : '••••••'}
                       </p>
                     </div>
 
                     <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Price</p>
-                      <p className="font-bold text-slate-900 dark:text-white text-sm">
-                        {showBalance ? `${asset.price.toLocaleString(undefined, {
+                      <p className="font-bold text-slate-900 dark:text-white text-sm break-all">
+                        {showBalance ? `$${asset.price.toLocaleString(undefined, {
                           minimumFractionDigits: asset.price < 1 ? 2 : 0,
                           maximumFractionDigits: asset.price < 1 ? 6 : 2,
                         })}` : '••••••'}
@@ -840,14 +849,14 @@ const componentOpen = isOpen;
 
                     <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">Value</p>
-                      <p className="font-bold text-slate-900 dark:text-white text-sm">
-                        {showBalance ? `${assetValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
+                      <p className="font-bold text-slate-900 dark:text-white text-sm break-all">
+                        {showBalance ? `$${assetValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : '••••••'}
                       </p>
                     </div>
 
                     <div className="bg-purple-50 dark:bg-slate-800 rounded-lg p-3">
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-1">24h Change</p>
-                      <p className={`font-bold text-sm ${asset.pCh24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <p className={`font-bold text-sm break-all ${asset.pCh24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {asset.pCh24h >= 0 ? '+' : ''}{asset.pCh24h.toFixed(2)}%
                       </p>
                     </div>
