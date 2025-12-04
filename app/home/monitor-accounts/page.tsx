@@ -714,7 +714,7 @@ const componentOpen = isOpen;
   }`}
 >
   {showBalance
-    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}$${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    ? `$${monitoredWallet.change24h >= 0 ? '+' : ''}${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
     : '••••••'}
 </span>
 
@@ -762,7 +762,7 @@ const componentOpen = isOpen;
   }`}
 >
   {showBalance
-    ? `${monitoredWallet.change24h >= 0 ? '+' : ''}$${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+    ? `$${monitoredWallet.change24h >= 0 ? '+' : ''}${(monitoredWallet.change24h || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`
     : '••••••'}
 </p>
 
