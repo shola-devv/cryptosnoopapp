@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function PlanGuard({ children }) {
-  const plan = "fee" //useUserPlan();
+  const plan = "free" //useUserPlan();
   const router = useRouter();
 
   useEffect(() => {

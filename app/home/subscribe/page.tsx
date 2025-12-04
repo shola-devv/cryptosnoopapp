@@ -23,6 +23,19 @@ import Link from 'next/Link'
 function TestPlanModal({ isOpen, onClose, onActivate }) {
   if (!isOpen) return null;
 
+  const [loading, setLoading] = useState(false);
+
+  const handleButtonClick = () => {
+  setLoading(true);
+
+  // run both functions immediately
+  onActivate();
+    // your second function
+
+  // stop spinner after 7 seconds
+  setTimeout(() => setLoading(false), 7000);
+};
+
   const testFeatures = [
      {
       icon: Bell,
@@ -147,11 +160,20 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
           Maybe Later
         </button>
         <button
-          onClick={onActivate}
-          className="flex-1 py-4 px-6 rounded-xl font-bold text-[#c750f7] border-2 border-[#c750f7] hover:bg-[#c750f7]/10 dark:hover:bg-[#c750f7]/20 transition-all"
-        >
-          Start Test for $3.99 🚀
-        </button>
+  onClick={handleButtonClick}
+  disabled={loading}
+  className={`flex-1 py-4 px-6 rounded-xl font-bold text-[#c750f7] border-2 border-[#c750f7]
+    hover:bg-[#c750f7]/10 dark:hover:bg-[#c750f7]/20 transition-all flex items-center justify-center gap-2
+    ${loading ? "opacity-70 cursor-not-allowed" : ""}
+  `}
+>
+  {loading ? (
+    <span className="animate-spin inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full"></span>
+  ) : (
+    "Start Test for $3.99 🚀"
+  )}
+</button>
+
       </div>
     </div>
   </div>
@@ -226,10 +248,14 @@ export default function SubscriptionPage() {
       popular: false
     }
   ];
+const [loading, setLoading] = useState(false);
 
   const handleSelectPlan = (plan) => {
+    setLoading(true);
+  setTimeout(() => setLoading(false), 7000);
     // Navigate immediately to payment page with amount
     router.push(`/home/payment?amount=${plan.priceValue}&plan=${plan.id}&name=${encodeURIComponent(plan.name)}`);
+    
   };
 
   const handleTestPlanActivate = () => {
@@ -362,16 +388,27 @@ export default function SubscriptionPage() {
                         ))}
                       </ul>
 
-                      <button
-                        onClick={() => handleSelectPlan(plan)}
-                        className="w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 border-2 hover:shadow-lg hover:scale-105 backdrop-blur-sm"
-                        style={{
-                          borderColor: plan.color,
-                          color: plan.color
-                        }}
-                      >
-                        Get Started
-                      </button>
+                   <button
+  onClick={() => handleSelectPlan(plan)}
+  disabled={loading}
+  className={`w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 border-2
+    hover:shadow-lg hover:scale-105 backdrop-blur-sm flex items-center justify-center gap-2
+    ${loading ? "opacity-70 cursor-not-allowed" : ""}
+  `}
+  style={{
+    borderColor: plan.color,
+    color: plan.color
+  }}
+>
+  {loading ? (
+    <span className="animate-spin inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full"></span>
+  ) : (
+    "Get Started"
+  )}
+</button>
+
+
+
                     </div>
                   </div>
                 );
