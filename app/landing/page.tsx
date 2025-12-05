@@ -97,19 +97,19 @@ const CryptoSnoop = () => {
   //second part text
   const additions = [
   {
-    title: "Crypto assets tracking",
+    title: "Crypto portfolio tracking",
     description:
       "with just a click of a button, track your crypto assets without hassle",
     icon: "/eye.png",
   },
   {
-    title: "Remote wallet tracking across all ch",
+    title: "Remote wallet tracking across all chain",
     description:
       "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallets and label them securely all in one centralized location.",
     icon: "/wallet.png",
   },
   {
-    title: "Easy Login and Security",
+    title: "Adresses management",
     description:
       "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
     icon: "/padlock.png",
