@@ -916,5 +916,5 @@ const handleCancelEdit = () => {
        </div>
      </footer>
     </div>
-  )
+  );
 }
