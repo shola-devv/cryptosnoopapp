@@ -8,23 +8,29 @@ const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white   z-50">
+     <header className="fixed top-0 w-full bg-white   z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 flex items-center justify-center">
-              <Image
-                src="/cryptosnooplogo1.png"
-                alt="CryptoSnoop Logo"
-                width={48}
-                height={32}
-                className="object-contain"
-                priority
-              />
-            </div>
-            <h1 className="text-xl font-bold text-black">
-              cryptoSnoop
-            </h1>
-          </div>
+          <div className="flex items-center gap-2">
+                      <Image
+                        src="/cryptosnooplogo1.png"
+                        alt="DIVAFlex Logo"
+                        width={48}
+                        height={32}
+                        className="object-contain"
+                        priority
+                      />
+                      <div className="flex flex-col leading-none">
+                        <span
+                          className="font-bold text-sm sm:text-lg leading-tight"
+                          style={{ color: "#c750f7" }}
+                        >
+                          crypto
+                        </span>
+                        <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
+                          Snoop
+                        </span>
+                      </div>
+                    </div>
          <a href="/landing" className="px-6 py-2 rounded-lg  text-black underline  hover:text-[#d575fc] ">
             Back
           </a>
