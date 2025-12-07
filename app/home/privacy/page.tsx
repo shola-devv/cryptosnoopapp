@@ -64,7 +64,8 @@ const PrivacyPolicy = () => {
           {/* Introduction */}
           <section className="mb-12">
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-6">
-              At CryptoSnoop, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our cryptocurrency portfolio tracking service. Please read this privacy policy carefully...
+              At CryptoSnoop, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our cryptocurrency portfolio tracking service. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the web application.
+            
             </p>
           </section>
 
@@ -78,13 +79,12 @@ const PrivacyPolicy = () => {
               Personal Information
             </h3>
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We may collect personal information that you voluntarily provide…
-            </p>
+             We may collect personal information that you voluntarily provide to us when you register on the application, including:
+             </p>
 
             <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
               <li>Email address</li>
               <li>Username</li>
-              <li>Password (encrypted)</li>
               <li>Profile information</li>
             </ul>
 
@@ -97,10 +97,10 @@ const PrivacyPolicy = () => {
             </p>
 
             <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li>Wallet addresses…</li>
-              <li>Custom labels…</li>
-              <li>Transaction history…</li>
-              <li>Portfolio preferences…</li>
+              <li>Wallet addresses you choose to track</li>
+              <li>Custom labels for your wallets</li>
+              <li>Transaction history (public blockchain data)</li>
+              <li>Portfolio preferences and settings</li>
             </ul>
 
             <h3 className="font-semibold text-xl sm:text-3xl md:text-4xl text-black dark:text-white mt-8 mb-4">
@@ -130,7 +130,6 @@ const PrivacyPolicy = () => {
               <li>Real-time analytics</li>
               <li>Improve UX</li>
               <li>Security updates</li>
-              <li>Fraud detection</li>
               <li>Legal obligations</li>
             </ul>
           </section>
@@ -142,7 +141,17 @@ const PrivacyPolicy = () => {
             </h2>
 
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
-              We implement industry-standard security measures…
+              We implement industry-standard security measures to protect your personal information:
+            </p>
+            <ul>
+              <li>End-to-end encryption for sensitive data</li>
+              <li>Secure socket layer (SSL) technology</li>
+              <li>Regular security audits and updates</li>
+              <li>Password hashing and salting</li>
+              <li>Limited employee access to personal data</li>
+              </ul>
+             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
+              However, no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your information, we cannot guarantee absolute security.
             </p>
           </section>
 
@@ -151,12 +160,16 @@ const PrivacyPolicy = () => {
             <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
               Information Sharing and Disclosure
             </h2>
+           <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
+            We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
+           </p>
+ 
 
             <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li>Service providers</li>
-              <li>Legal requests</li>
-              <li>Business transfers</li>
-              <li>With consent</li>
+              <li><strong>Service Providers:</strong> We may share data with trusted third-party service providers who assist in operating our platform (e.g., cloud hosting, analytics)</li>
+              <li><strong>Legal Requirements:</strong> We may disclose information if required by law, court order, or government request</li>
+              <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your information may be transferred</li>
+              <li><strong>With Your Consent:</strong> We may share information for any other purpose with your explicit consent</li>
             </ul>
           </section>
 
@@ -192,9 +205,10 @@ const PrivacyPolicy = () => {
     <li><strong className="dark:text-white">Objection:</strong> Object to certain types of processing</li>
     <li><strong className="dark:text-white">Withdraw Consent:</strong> Withdraw consent anytime</li>
   </ul>
+  
 
   <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-    To exercise any of these rights, please contact us using the information below.
+    To exercise any of these rights, please contact us using the information at the end of the page.
   </p>
 </section>
 

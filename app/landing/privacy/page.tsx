@@ -69,222 +69,226 @@ const PrivacyPolicy = () => {
 
           {/* Introduction */}
           <section className="mb-12">
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg mb-6">
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-6">
               At CryptoSnoop, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our cryptocurrency portfolio tracking service. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the web application.
+            
             </p>
           </section>
 
           {/* Information We Collect */}
           <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
+            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white m-0 mb-6">
               Information We Collect
             </h2>
 
-            <h3 className="text-xl sm:text-3xl md:text-4xl font-semibold text-black mt-8 mb-4">
+            <h3 className="font-semibold text-xl sm:text-3xl md:text-4xl text-black dark:text-white mt-8 mb-4">
               Personal Information
             </h3>
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+             We may collect personal information that you voluntarily provide to us when you register on the application, including:
+             </p>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We may collect personal information that you voluntarily provide to us when you register on the application, including:
-            </p>
-
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
               <li>Email address</li>
               <li>Username</li>
-              <li>Password (encrypted)</li>
               <li>Profile information</li>
             </ul>
 
-            {/* Crypto Data */}
-            <h3 className="text-xl sm:text-3xl md:text-4xl font-semibold text-black mt-8 mb-4">
+            <h3 className="font-semibold text-xl sm:text-3xl md:text-4xl text-black dark:text-white mt-8 mb-4">
               Cryptocurrency Data
             </h3>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
               To provide our services, we collect and store:
             </p>
 
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
               <li>Wallet addresses you choose to track</li>
               <li>Custom labels for your wallets</li>
               <li>Transaction history (public blockchain data)</li>
               <li>Portfolio preferences and settings</li>
             </ul>
 
-            {/* Auto Data */}
-            <h3 className="text-xl sm:text-3xl md:text-4xl font-semibold text-black mt-8 mb-4">
+            <h3 className="font-semibold text-xl sm:text-3xl md:text-4xl text-black dark:text-white mt-8 mb-4">
               Automatically Collected Information
             </h3>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              When you access our service, we automatically collect certain information, including:
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+              When you access our service, we automatically collect…
             </p>
 
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li>IP address and location data</li>
-              <li>Browser type and version</li>
-              <li>Device information</li>
-              <li>Usage data and analytics</li>
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+              <li>IP address</li>
+              <li>Browser type</li>
+              <li>Device info</li>
+              <li>Usage data</li>
             </ul>
           </section>
 
-          {/* How We Use Info */}
+          {/* How We Use Your Info */}
           <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
+            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
               How We Use Your Information
             </h2>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We use the information we collect to:
-            </p>
-
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li>Provide, operate, and maintain our cryptocurrency tracking service</li>
-              <li>Display real-time portfolio data and analytics</li>
-              <li>Improve and personalize your user experience</li>
-              <li>Communicate with you about updates, security alerts, and support</li>
-              <li>Monitor and analyze usage patterns to enhance our service</li>
-              <li>Detect and prevent fraudulent activity</li>
-              <li>Comply with legal obligations</li>
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+              <li>Provide and maintain service</li>
+              <li>Real-time analytics</li>
+              <li>Improve UX</li>
+              <li>Security updates</li>
+              <li>Legal obligations</li>
             </ul>
           </section>
 
           {/* Data Security */}
           <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
+            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
               Data Security
             </h2>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
               We implement industry-standard security measures to protect your personal information:
             </p>
-
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+            <ul>
               <li>End-to-end encryption for sensitive data</li>
-              <li>SSL secure communication</li>
-              <li>Regular security audits</li>
+              <li>Secure socket layer (SSL) technology</li>
+              <li>Regular security audits and updates</li>
               <li>Password hashing and salting</li>
-              <li>Restricted employee access</li>
-            </ul>
-
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              However, no method of storage or transmission online is 100% secure.
+              <li>Limited employee access to personal data</li>
+              </ul>
+             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
+              However, no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your information, we cannot guarantee absolute security.
             </p>
           </section>
 
           {/* Information Sharing */}
           <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
+            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
               Information Sharing and Disclosure
             </h2>
+           <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
+            We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
+           </p>
+ 
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We do not sell or rent your personal information. We may share data only in these cases:
-            </p>
-
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li><strong>Service Providers:</strong> Hosting, analytics, backend services.</li>
-              <li><strong>Legal Requirements:</strong> If required by law or court order.</li>
-              <li><strong>Business Transfers:</strong> During acquisitions or mergers.</li>
-              <li><strong>With Your Consent:</strong> Only when explicitly approved.</li>
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+              <li><strong>Service Providers:</strong> We may share data with trusted third-party service providers who assist in operating our platform (e.g., cloud hosting, analytics)</li>
+              <li><strong>Legal Requirements:</strong> We may disclose information if required by law, court order, or government request</li>
+              <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your information may be transferred</li>
+              <li><strong>With Your Consent:</strong> We may share information for any other purpose with your explicit consent</li>
             </ul>
           </section>
 
+          {/* Rest of sections… ALL remain dark mode styled */}
           {/* Data Retention */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Data Retention
-            </h2>
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Data Retention
+  </h2>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We retain your personal information only as long as necessary. Upon deletion of your account, data is erased or anonymized within 30 days.
-            </p>
-          </section>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    We retain your personal information only for as long as necessary to fulfill the purposes 
+    outlined in this Privacy Policy, unless a longer retention period is required by law. 
+    When you delete your account, we will delete or anonymize your personal information within 30 days.
+  </p>
+</section>
 
-          {/* Rights */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Your Privacy Rights
-            </h2>
+{/* Your Privacy Rights */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Your Privacy Rights
+  </h2>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              Depending on your region, you may have rights such as:
-            </p>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    Depending on your location, you may have the following rights regarding your personal information:
+  </p>
 
-            <ul className="list-disc pl-6 text-gray-700 text-sm sm:text-base md:text-lg space-y-2 mb-6">
-              <li>Access your personal data</li>
-              <li>Request corrections</li>
-              <li>Request deletion</li>
-              <li>Data portability</li>
-              <li>Object to processing</li>
-              <li>Withdraw consent</li>
-            </ul>
-          </section>
+  <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
+    <li><strong className="dark:text-white">Access:</strong> Request a copy of the personal information we hold</li>
+    <li><strong className="dark:text-white">Correction:</strong> Fix inaccurate or incomplete info</li>
+    <li><strong className="dark:text-white">Deletion:</strong> Request deletion of your data</li>
+    <li><strong className="dark:text-white">Portability:</strong> Transfer your data to another service</li>
+    <li><strong className="dark:text-white">Objection:</strong> Object to certain types of processing</li>
+    <li><strong className="dark:text-white">Withdraw Consent:</strong> Withdraw consent anytime</li>
+  </ul>
+  
 
-          {/* Cookies */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Cookies and Tracking Technologies
-            </h2>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    To exercise any of these rights, please contact us using the information at the end of the page.
+  </p>
+</section>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We use cookies to enhance your experience. You may disable cookies through your browser settings.
-            </p>
-          </section>
+{/* Cookies */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Cookies and Tracking Technologies
+  </h2>
 
-          {/* Third Party */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Third-Party Links
-            </h2>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    We use cookies and similar tracking technologies to enhance your experience. You can control 
+    cookie preferences through your browser settings. However, disabling cookies may affect the 
+    functionality of our service.
+  </p>
+</section>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We are not responsible for external sites linked from our platform.
-            </p>
-          </section>
+{/* Third-Party Links */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Third-Party Links
+  </h2>
 
-          {/* Changes */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Changes to This Privacy Policy
-            </h2>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    Our service may contain links to third-party websites or services. We are not responsible 
+    for the privacy practices of these external sites. We encourage you to review their privacy 
+    policies before providing any personal information.
+  </p>
+</section>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              We may update this policy occasionally. Continued use of our service indicates acceptance.
-            </p>
-          </section>
+{/* Changes to Policy */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Changes to This Privacy Policy
+  </h2>
 
-          {/* Contact */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Contact Us
-            </h2>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    We may update this Privacy Policy from time to time. We will notify you of any changes by 
+    posting the new Privacy Policy and updating the "Last updated" date. Continued use of our 
+    service after changes constitutes acceptance of the updated policy.
+  </p>
+</section>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              If you have any questions,{" "}
-              <span
-                onClick={() => {
-                  window.location.href =
-                    'mailto:cryptosnoop@gmail.com?subject=Feedback&body=Hello Cryptosnoop Team,%0D%0A%0D%0AHere is my feedback...';
-                }}
-                className="cursor-pointer text-[#c750f7] underline font-medium"
-              >
-                contact us
-              </span>
-              .
-            </p>
-          </section>
+{/* Contact */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Contact Us
+  </h2>
 
-          {/* Disclaimer */}
-          <section className="mb-12">
-            <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black mb-6">
-              Disclaimer
-            </h2>
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    If you have any questions about this Privacy Policy,&nbsp;
+    <span
+      onClick={() => {
+        window.location.href = 'mailto:cryptosnoopapp@gmail.com?subject=Feedback';
+      }}
+      className="cursor-pointer text-[#c750f7] dark:text-[#d575fc] underline font-medium transition-colors"
+    >
+      contact us
+    </span>.
+  </p>
+</section>
 
-            <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              Nothing on this application is financial advice. Always do your own research.
-            </p>
-          </section>
+{/* Disclaimer */}
+<section className="mb-12">
+  <h2 className="font-bold text-2xl sm:text-4xl md:text-5xl text-black dark:text-white mb-6">
+    Disclaimer
+  </h2>
+
+  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+    No part of the content on this web application provides financial advice. Any use or reliance 
+    on our content for any purpose is solely at your own risk. Always conduct your own research 
+    before making decisions.
+  </p>
+</section>
+
 
         </div>
       </div>
