@@ -78,7 +78,7 @@ const CryptoSnoop = () => {
       title: "Hassle-Free Tracking",
       description:
         "CryptoSnoop helps you track your crypto assets and holdings hassle-free without necessarily connecting your wallet. Monitor your portfolio and wallets with real-time data and insights accross all chains.",
-      icon: "/eye.jpg",
+      icon: "/eye.png",
     },
     {
       title: "Easy Management",
@@ -97,22 +97,28 @@ const CryptoSnoop = () => {
   //second part text
   const additions = [
   {
-    title: "Crypto portfolio tracking",
+    title: "Secure Crypto portfolio tracking",
     description:
       "with just a click of a button, track your crypto assets without hassle",
-    icon: "/eye.png",
+    icon: "/bitcoinbag.png",
   },
   {
     title: "Remote wallet tracking across all chain",
     description:
       "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallets and label them securely all in one centralized location.",
-    icon: "/wallet.png",
+    icon: "/greencursor.png",
   },
   {
-    title: "Adresses management",
+    title: "Adress book for all your wallets",
+    description:
+      "",
+    icon: "/coinbag.png",
+  },
+  {
+    title: "real time price updates",
     description:
       "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
-    icon: "/padlock.png",
+    icon: "/zap.png",
   },
 ];
 
@@ -348,15 +354,14 @@ const CryptoSnoop = () => {
             key={index}
             className="flex items-center gap-3 bg-white shadow-sm rounded-2xl px-4 py-3 border border-gray-200 w-full"
           >
-            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl bg-gray-100 flex items-center justify-center overflow-hidden">
-              <Image
-                src={feature.icon}
-                alt={feature.title}
-                width={40}
-                height={40}
-                className="object-contain w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"
-              />
-            </div>
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl bg-gray-100 flex items-center justify-center overflow-hidden relative">
+  <Image
+    src={feature.icon}
+    alt={feature.title}
+    fill
+    className="object-cover"
+  />
+</div>
 
             <div className="flex flex-col">
               <p className="font-semibold text-sm sm:text-base md:text-lg">{feature.title}</p>
