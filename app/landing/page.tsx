@@ -78,7 +78,7 @@ const CryptoSnoop = () => {
       title: "Hassle-Free Tracking",
       description:
         "CryptoSnoop helps you track your crypto assets and holdings hassle-free without necessarily connecting your wallet. Monitor your portfolio and wallets with real-time data and insights accross all chains.",
-      icon: "/eye.png",
+      icon: "/eye.jpg",
     },
     {
       title: "Easy Management",
@@ -190,21 +190,21 @@ const CryptoSnoop = () => {
           <div className="flex items-center justify-center gap-3">
             
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-              Manage crypto assets with live data
+              Manage crypto assets with real-time data
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-3">
             
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-              Keep all your wallet labels securely in one place
+            Monitor remote crypto wallets
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-3">
            
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-              Monitor remote crypto wallets
+              Keep all your wallet labels securely in one place
             </p>
           </div>
         </div>
@@ -335,7 +335,7 @@ const CryptoSnoop = () => {
           </div>
         ))}
       </div>
-      <section className="w-full max-w-3xl mx-auto px-4 py-10">
+      <section className="w-full max-w-3xl mx-auto px-4 py-24">
       {/* Header */}
       <h2 className="text-center font-bold text-3xl sm:text-4xl md:text-5xl leading-tight mb-8">
         CryptoSnoop<br />Does crypto tracking<br />Better

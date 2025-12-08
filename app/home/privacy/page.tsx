@@ -108,7 +108,7 @@ const PrivacyPolicy = () => {
             </h3>
 
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
-              When you access our service, we automatically collect…
+              When you access our service, we automatically collect:
             </p>
 
             <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
@@ -143,13 +143,15 @@ const PrivacyPolicy = () => {
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
               We implement industry-standard security measures to protect your personal information:
             </p>
-            <ul>
+            
+             <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
               <li>End-to-end encryption for sensitive data</li>
               <li>Secure socket layer (SSL) technology</li>
               <li>Regular security audits and updates</li>
               <li>Password hashing and salting</li>
               <li>Limited employee access to personal data</li>
               </ul>
+
              <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
               However, no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your information, we cannot guarantee absolute security.
             </p>
