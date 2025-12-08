@@ -6,6 +6,10 @@ const CACHE_KEY = 'external_api:market_data';
 const CACHE_TTL_SECONDS = 60;
 const API_TIMEOUT = 10000; // 10 seconds timeout
 
+
+
+// RATE LIMIT THIS ENDPOINT, CHECK FOR RTELIMIT FIRST
+
 export async function GET(request: NextRequest) {
   try {
     const now = Date.now();

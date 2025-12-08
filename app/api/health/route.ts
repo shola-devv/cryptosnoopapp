@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connect from '@/lib/db';
 import mongoose from 'mongoose';
+import { ratelimit } from '@/lib/rate-limit';
 
 export async function GET() {
   try {
@@ -30,5 +31,5 @@ export async function GET() {
       },
       { status: 500 }
     );
-  }
+  };
 }

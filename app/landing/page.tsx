@@ -210,7 +210,7 @@ const CryptoSnoop = () => {
           <div className="flex items-center justify-center gap-3">
            
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-              Keep all your wallet labels securely in one place
+              Keep all your address labels securely in one place
             </p>
           </div>
         </div>
@@ -354,7 +354,7 @@ const CryptoSnoop = () => {
             key={index}
             className="flex items-center gap-3 bg-white shadow-sm rounded-2xl px-4 py-3 border border-gray-200 w-full"
           >
-            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl bg-gray-100 flex items-center justify-center overflow-hidden relative">
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl  flex items-center justify-center overflow-hidden relative">
   <Image
     src={feature.icon}
     alt={feature.title}
