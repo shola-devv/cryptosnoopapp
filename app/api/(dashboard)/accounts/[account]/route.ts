@@ -57,7 +57,7 @@ const accountId = params.account;
     return new NextResponse(
       JSON.stringify({ message: "Error fetching account", error: error.message }),
       { status: 500 }
-    );
+    )
   }
 };
 

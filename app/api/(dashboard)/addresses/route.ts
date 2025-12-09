@@ -14,7 +14,7 @@ export const GET = async (request: Request) => {
       return new NextResponse(
         JSON.stringify({ message: "Invalid or missing userId" }),
         { status: 400 }
-      );
+      )
     }
 
     await connect();

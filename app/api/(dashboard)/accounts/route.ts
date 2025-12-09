@@ -38,7 +38,7 @@ export const GET = async (request: Request) => {
     return new NextResponse(
       JSON.stringify({ message: "Error fetching accounts", error: error.message }),
       { status: 500 }
-    );
+    )
   }
 };
 

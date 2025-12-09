@@ -58,7 +58,7 @@ export const GET = async (request: Request, context: { params: Promise<{ name: s
       { status: 500 }
     );
   }
-};
+}
 
 export const PATCH = async (request: Request, context: { params: Promise<{ name: string }> }) => {
   try {

@@ -173,4 +173,4 @@ export const DELETE = async (request: Request, context: { params: any }) => {
       { status: 500 }
     );
   }
-};
+}
