@@ -3,199 +3,210 @@ import User from "@/lib/models/user";
 import Asset from "@/lib/models/asset";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
+import { ratelimit } from "@/lib/rate-limit";
+import { getToken } from "next-auth/jwt";
 
-export const GET = async (request: Request, context: { params: Promise<{ name: string }> }) => {
-  try {
-    const params = await context.params;
-    const assetName = decodeURIComponent(params.name);
+// -------------------------------------
+// Security Headers config
+// -------------------------------------
+const securityHeaders = {
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy":
+    "camera=(), microphone=(), geolocation=(), payment=()",
+  "Content-Type": "application/json",
+};
 
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
-    }
-
-    if (!assetName) {
-      return new NextResponse(
-        JSON.stringify({ message: "Missing asset name" }),
-        { status: 400 }
-      );
-    }
-
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const asset = await Asset.findOne({ 
-      name: { $regex: new RegExp(`^${assetName.trim()}$`, 'i') },
-      user: userId 
-    });
-    
-    if (!asset) {
-      return new NextResponse(
-        JSON.stringify({ message: "Asset not found" }),
-        { status: 404 }
-      );
-    }
-
-    return new NextResponse(
-      JSON.stringify({ asset }),
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error fetching asset", error: error.message }),
-      { status: 500 }
-    );
-  }
+// Reusable response wrapper
+function json(body: any, status = 200) {
+  return new NextResponse(JSON.stringify(body), {
+    status,
+    headers: securityHeaders,
+  });
 }
 
-export const PATCH = async (request: Request, context: { params: Promise<{ name: string }> }) => {
-  try {
-    const params = await context.params;
-    const assetName = decodeURIComponent(params.name);
+// -------------------------------------
+// Shared Validation Helper
+// -------------------------------------
+async function validateRequest(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    "127.0.0.1";
 
-    const body = await request.json();
-    const { name, quantity } = body;
+  // ---- Rate Limit ----
+  try {
+    const { success } = await ratelimit.limit(ip);
+    if (!success) return json({ message: "Rate limit exceeded" }, 429);
+  } catch (e) {
+    console.warn("Rate limit check failed (continuing)", e);
+  }
+
+  // ---- Session Check ----
+  try {
+    const token =
+      (await getToken({ req })) ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
+
+    if (!token) return json({ message: "Unauthorized" }, 401);
+  } catch (err) {
+    console.warn("Session token check error:", err);
+  }
+
+  return null;
+}
+
+// -------------------------------------
+// Shared lookup function
+// -------------------------------------
+async function getUserAndAsset(userId: string, assetName: string) {
+  if (!userId || !Types.ObjectId.isValid(userId))
+    return { error: json({ message: "Invalid or missing userId" }, 400) };
+
+  if (!assetName)
+    return { error: json({ message: "Missing asset name" }, 400) };
+
+  await connect();
+
+  const user = await User.findById(userId);
+  if (!user) return { error: json({ message: "User not found" }, 404) };
+
+  const asset = await Asset.findOne({
+    name: { $regex: new RegExp(`^${assetName.trim()}$`, "i") },
+    user: userId,
+  });
+
+  return { user, asset };
+}
+
+// -------------------------------------
+// GET ASSET BY NAME
+// -------------------------------------
+export const GET = async (
+  request: Request,
+  context: { params: Promise<{ name: string }> }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
+
+  try {
+    const { name } = await context.params;
+    const assetName = decodeURIComponent(name);
 
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId")!;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
-    }
+    const { error, asset } = await getUserAndAsset(userId, assetName);
+    if (error) return error;
 
-    if (!assetName) {
-      return new NextResponse(
-        JSON.stringify({ message: "Missing asset name" }),
-        { status: 400 }
-      );
-    }
+    if (!asset) return json({ message: "Asset not found" }, 404);
 
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const asset = await Asset.findOne({ 
-      name: { $regex: new RegExp(`^${assetName.trim()}$`, 'i') },
-      user: userId 
-    });
-    
-    if (!asset) {
-      return new NextResponse(
-        JSON.stringify({ message: "Asset not found or not owned by user" }),
-        { status: 404 }
-      );
-    }
-
-    // If changing name, check if new name already exists
-    if (name && name.toLowerCase() !== assetName.toLowerCase()) {
-      const existingAsset = await Asset.findOne({ 
-        name: { $regex: new RegExp(`^${name.trim()}$`, 'i') },
-        user: userId 
-      });
-      if (existingAsset) {
-        return new NextResponse(
-          JSON.stringify({ message: "Asset with this name already exists" }),
-          { status: 409 }
-        );
-      }
-    }
-
-    const updatedAsset = await Asset.findByIdAndUpdate(
-      asset._id,
-      { name: name || asset.name, quantity },
-      { new: true }
-    );
-
-    return new NextResponse(
-      JSON.stringify({ message: "Asset updated successfully", asset: updatedAsset }),
-      { status: 200 }
-    );
+    return json({ asset });
   } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({
-        message: "Error updating asset",
-        error: error.message,
-      }),
-      { status: 500 }
+    return json(
+      { message: "Error fetching asset", error: error.message },
+      500
     );
   }
 };
 
-export const DELETE = async (request: Request, context: { params: Promise<{ name: string }> }) => {
+// -------------------------------------
+// PATCH (UPDATE ASSET)
+// -------------------------------------
+export const PATCH = async (
+  request: Request,
+  context: { params: Promise<{ name: string }> }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
+
   try {
-    const params = await context.params;
-    const assetName = decodeURIComponent(params.name);
+    const { name } = await context.params;
+    const assetName = decodeURIComponent(name);
+
+    const body = await request.json();
+    const { name: newName, quantity } = body;
 
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId")!;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
+    const { error, asset } = await getUserAndAsset(userId, assetName);
+    if (error) return error;
+
+    if (!asset)
+      return json(
+        { message: "Asset not found or not owned by user" },
+        404
       );
+
+    // Check if renaming to a name that already exists
+    if (newName && newName.toLowerCase() !== assetName.toLowerCase()) {
+      const existing = await Asset.findOne({
+        name: { $regex: new RegExp(`^${newName.trim()}$`, "i") },
+        user: userId,
+      });
+      if (existing)
+        return json(
+          { message: "Asset with this name already exists" },
+          409
+        );
     }
 
-    if (!assetName) {
-      return new NextResponse(
-        JSON.stringify({ message: "Missing asset name" }),
-        { status: 400 }
-      );
-    }
+    const updated = await Asset.findByIdAndUpdate(
+      asset._id,
+      {
+        name: newName || asset.name,
+        quantity,
+      },
+      { new: true }
+    );
 
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const asset = await Asset.findOne({ 
-      name: { $regex: new RegExp(`^${assetName.trim()}$`, 'i') },
-      user: userId 
+    return json({
+      message: "Asset updated successfully",
+      asset: updated,
     });
-    
-    if (!asset) {
-      return new NextResponse(
-        JSON.stringify({ message: "Asset not found or not owned by user" }),
-        { status: 404 }
+  } catch (error: any) {
+    return json(
+      { message: "Error updating asset", error: error.message },
+      500
+    );
+  }
+};
+
+// -------------------------------------
+// DELETE ASSET
+// -------------------------------------
+export const DELETE = async (
+  request: Request,
+  context: { params: Promise<{ name: string }> }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
+
+  try {
+    const { name } = await context.params;
+    const assetName = decodeURIComponent(name);
+
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId")!;
+
+    const { error, asset } = await getUserAndAsset(userId, assetName);
+    if (error) return error;
+
+    if (!asset)
+      return json(
+        { message: "Asset not found or not owned by user" },
+        404
       );
-    }
 
     await Asset.findByIdAndDelete(asset._id);
 
-    return new NextResponse(
-      JSON.stringify({ message: "Asset deleted successfully" }),
-      { status: 200 }
-    );
+    return json({ message: "Asset deleted successfully" });
   } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error deleting asset", error: error.message }),
-      { status: 500 }
+    return json(
+      { message: "Error deleting asset", error: error.message },
+      500
     );
   }
 };

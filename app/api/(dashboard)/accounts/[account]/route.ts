@@ -1,3 +1,6 @@
+//UNUSED API
+
+
 import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import Account from "@/lib/models/account";

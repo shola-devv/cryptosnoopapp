@@ -3,174 +3,159 @@ import User from "@/lib/models/user";
 import Address from "@/lib/models/address";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
+import { ratelimit } from "@/lib/rate-limit";
+import { getToken } from "next-auth/jwt";
 
-export const GET = async (request: Request, context: { params: any }) => {
-  const addressId = context.params.address;
+// -------------------------------------
+// Security headers
+// -------------------------------------
+const securityHeaders = {
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+  "Content-Type": "application/json",
+};
+
+// Helper → consistent JSON response
+function json(body: any, status = 200) {
+  return new NextResponse(JSON.stringify(body), {
+    status,
+    headers: securityHeaders,
+  });
+}
+
+// Shared validation → rate limit + session
+async function validateRequest(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    "127.0.0.1";
+
+  // Rate limit
+  try {
+    const { success } = await ratelimit.limit(ip);
+    if (!success) return json({ message: "Rate limit exceeded" }, 429);
+  } catch (err) {
+    console.warn("Rate limit check failed, continuing", err);
+  }
+
+  // Session check
+  try {
+    const token =
+      (await getToken({ req })) ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) return json({ message: "Unauthorized" }, 401);
+  } catch (err) {
+    console.warn("Session check failed", err);
+  }
+
+  return null;
+}
+
+// Shared user + address lookup
+async function getUserAndAddress(userId: string, addressId: string) {
+  if (!userId || !Types.ObjectId.isValid(userId))
+    return { error: json({ message: "Invalid or missing userId" }, 400) };
+  if (!addressId || !Types.ObjectId.isValid(addressId))
+    return { error: json({ message: "Invalid or missing addressId" }, 400) };
+
+  await connect();
+
+  const user = await User.findById(userId);
+  if (!user) return { error: json({ message: "User not found" }, 404) };
+
+  const address = await Address.findOne({ _id: addressId, user: userId });
+  return { user, address };
+}
+
+// -------------------------------------
+// GET Address by ID
+// -------------------------------------
+export const GET = async (
+  request: Request,
+  context: { params: any }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
 
   try {
+    const addressId = context.params.address;
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId")!;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
-    }
+    const { error, address } = await getUserAndAddress(userId, addressId);
+    if (error) return error;
 
-    if (!addressId || !Types.ObjectId.isValid(addressId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing addressId" }),
-        { status: 400 }
-      );
-    }
+    if (!address) return json({ message: "Address not found" }, 404);
 
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const address = await Address.findOne({
-      _id: addressId,
-      user: userId,
-    });
-
-    if (!address) {
-      return new NextResponse(
-        JSON.stringify({ message: "Address not found" }),
-        { status: 404 }
-      );
-    }
-
-    return new NextResponse(
-      JSON.stringify({ address }),
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error fetching address", error: error.message }),
-      { status: 500 }
-    );
+    return json({ address });
+  } catch (err: any) {
+    return json({ message: "Error fetching address", error: err.message }, 500);
   }
 };
 
-export const PATCH = async (request: Request, context: { params: any }) => {
-  const addressId = context.params.address;
+// -------------------------------------
+// PATCH (update address)
+// -------------------------------------
+export const PATCH = async (
+  request: Request,
+  context: { params: any }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
 
   try {
+    const addressId = context.params.address;
     const body = await request.json();
     const { address, label, category } = body;
 
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId")!;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
-    }
+    const { error, address: addressDoc } = await getUserAndAddress(userId, addressId);
+    if (error) return error;
 
-    if (!addressId || !Types.ObjectId.isValid(addressId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing addressId" }),
-        { status: 400 }
-      );
-    }
+    if (!addressDoc)
+      return json({ message: "Address not found or not owned by user" }, 404);
 
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const addressDoc = await Address.findOne({ _id: addressId, user: userId });
-    if (!addressDoc) {
-      return new NextResponse(
-        JSON.stringify({ message: "Address not found or not owned by user" }),
-        { status: 404 }
-      );
-    }
-
-    const updatedAddress = await Address.findByIdAndUpdate(
+    const updated = await Address.findByIdAndUpdate(
       addressId,
       { address, label, category },
       { new: true }
     );
 
-    return new NextResponse(
-      JSON.stringify({ message: "Address updated successfully", address: updatedAddress }),
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({
-        message: "Error updating address",
-        error: error.message,
-      }),
-      { status: 500 }
-    );
+    return json({ message: "Address updated successfully", address: updated });
+  } catch (err: any) {
+    return json({ message: "Error updating address", error: err.message }, 500);
   }
 };
 
-export const DELETE = async (request: Request, context: { params: any }) => {
-  const addressId = context.params.address;
+// -------------------------------------
+// DELETE Address
+// -------------------------------------
+export const DELETE = async (
+  request: Request,
+  context: { params: any }
+) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
 
   try {
+    const addressId = context.params.address;
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId")!;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
-    }
+    const { error, address } = await getUserAndAddress(userId, addressId);
+    if (error) return error;
 
-    if (!addressId || !Types.ObjectId.isValid(addressId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing addressId" }),
-        { status: 400 }
-      );
-    }
-
-    await connect();
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
-
-    const address = await Address.findOne({ _id: addressId, user: userId });
-    if (!address) {
-      return new NextResponse(
-        JSON.stringify({ message: "Address not found or not owned by user" }),
-        { status: 404 }
-      );
-    }
+    if (!address)
+      return json({ message: "Address not found or not owned by user" }, 404);
 
     await Address.findByIdAndDelete(addressId);
 
-    return new NextResponse(
-      JSON.stringify({ message: "Address deleted successfully" }),
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error deleting address", error: error.message }),
-      { status: 500 }
-    );
+    return json({ message: "Address deleted successfully" });
+  } catch (err: any) {
+    return json({ message: "Error deleting address", error: err.message }, 500);
   }
-}
+};

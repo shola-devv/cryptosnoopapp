@@ -187,7 +187,6 @@ if (addresses.length >= maxAddresses) {
       setEditingId(null)
       setEditData({})
       await refreshAddresses()
-       setTimeout(() => {alert('Address updated successfully!')}, 3000);
       buzzClick()
       
     } catch (error) {
@@ -222,7 +221,7 @@ if (addresses.length >= maxAddresses) {
       setMessageType("success")
       await refreshAddresses()
       buzzClick();
-       setTimeout(() => {alert('Address deleted successfully!')}, 3000);
+       
 
     } catch (error) {
       console.error(error)
@@ -554,7 +553,9 @@ if (addresses.length >= maxAddresses) {
     {/* ADD BUTTON */}
     <div className="md:col-span-1">
       <label className="block text-sm font-semibold text-transparent mb-2">Add</label>
-      <button
+      <Button
+       variant="ghost"
+                
         onClick={addNewAddress}
         disabled={
           !newAddress.trim() ||
@@ -572,7 +573,7 @@ if (addresses.length >= maxAddresses) {
             Add
           </>
         )}
-      </button>
+      </Button>
     </div>
 
   </div>
@@ -590,9 +591,15 @@ if (addresses.length >= maxAddresses) {
 
           {!addresses || addresses.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Wallet className="w-10 h-10 text-[#c750f7]" />
-              </div>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full overflow-hidden relative mx-auto mb-4">
+               <Image
+                 src="/wallet.png"
+                 alt="Pie chart icon"
+                 fill
+                 className="object-cover"   // <– fills the whole circle
+               />
+             </div>
+             
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Addresses Yet</h3>
               <p className="text-slate-600 dark:text-slate-400">Add your first address to get started</p>
             </div>

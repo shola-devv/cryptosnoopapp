@@ -3,46 +3,100 @@ import User from "@/lib/models/user";
 import Asset from "@/lib/models/asset";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
+import { ratelimit } from "@/lib/rate-limit";
+import { getToken } from "next-auth/jwt";
 
-// GET ALL assets for a user
+// -------------------------------------
+// Security Headers
+// -------------------------------------
+const securityHeaders = {
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy":
+    "camera=(), microphone=(), geolocation=(), payment=()",
+  "Content-Type": "application/json",
+};
+
+// -------------------------------------
+// Helper → return response with headers
+// -------------------------------------
+function json(body: any, status = 200) {
+  return new NextResponse(JSON.stringify(body), {
+    status,
+    headers: securityHeaders,
+  });
+}
+
+// -------------------------------------
+// Helper → Validate & Auth
+// -------------------------------------
+async function validateRequest(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0] ||
+    "127.0.0.1";
+
+  // ---- Rate Limit ----
+  try {
+    const { success } = await ratelimit.limit(ip);
+    if (!success) return json({ message: "Rate limit exceeded" }, 429);
+  } catch (e) {
+    console.warn("Rate limit failed (continuing)", e);
+  }
+
+  // ---- Check Session ----
+  try {
+    const token =
+      (await getToken({ req })) ||
+      req.headers.get("authorization")?.replace("Bearer ", "");
+
+    if (!token) return json({ message: "Unauthorized" }, 401);
+  } catch (err) {
+    console.warn("Session check failed", err);
+  }
+
+  return null; // means allowed
+}
+
+// -------------------------------------
+// GET ALL USER ASSETS
+// -------------------------------------
 export const GET = async (request: Request) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
+
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
+      return json({ message: "Invalid or missing userId" }, 400);
     }
 
     await connect();
 
     const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
+    if (!user) return json({ message: "User not found" }, 404);
 
     const assets = await Asset.find({ user: userId });
 
-    return new NextResponse(
-      JSON.stringify({ assets }),
-      { status: 200 }
-    );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error fetching assets", error: error.message }),
-      { status: 500 }
+    return json({ assets });
+  } catch (err: any) {
+    return json(
+      { message: "Error fetching assets", error: err.message },
+      500
     );
   }
 };
 
-// CREATE a new asset
+// -------------------------------------
+// CREATE NEW ASSET
+// -------------------------------------
 export const POST = async (request: Request) => {
+  const blocked = await validateRequest(request);
+  if (blocked) return blocked;
+
   try {
     const body = await request.json();
     const { name, quantity } = body;
@@ -51,54 +105,36 @@ export const POST = async (request: Request) => {
     const userId = searchParams.get("userId");
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or missing userId" }),
-        { status: 400 }
-      );
+      return json({ message: "Invalid or missing userId" }, 400);
     }
 
     if (!name || quantity === undefined) {
-      return new NextResponse(
-        JSON.stringify({ message: "Name and quantity are required" }),
-        { status: 400 }
-      );
+      return json({ message: "Name and quantity are required" }, 400);
     }
 
     await connect();
 
     const user = await User.findById(userId);
-    if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404 }
-      );
-    }
+    if (!user) return json({ message: "User not found" }, 404);
 
-    // Check if asset with same name already exists for this user
-    const existingAsset = await Asset.findOne({ name, user: userId });
-    if (existingAsset) {
-      return new NextResponse(
-        JSON.stringify({ message: "Asset with this name already exists" }),
-        { status: 409 }
-      );
-    }
+    // Prevent duplicate asset names
+    const exists = await Asset.findOne({ name, user: userId });
+    if (exists)
+      return json({ message: "Asset with this name already exists" }, 409);
 
-    const newAsset = new Asset({
-      name,
-      quantity,
-      user: userId,
-    });
+    const newAsset = await Asset.create({ name, quantity, user: userId });
 
-    await newAsset.save();
-
-    return new NextResponse(
-      JSON.stringify({ message: "Asset created successfully", asset: newAsset }),
-      { status: 201 }
+    return json(
+      {
+        message: "Asset created successfully",
+        asset: newAsset,
+      },
+      201
     );
-  } catch (error: any) {
-    return new NextResponse(
-      JSON.stringify({ message: "Error creating asset", error: error.message }),
-      { status: 500 }
+  } catch (err: any) {
+    return json(
+      { message: "Error creating asset", error: err.message },
+      500
     );
   }
-}
+};
