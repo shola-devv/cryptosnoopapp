@@ -47,7 +47,7 @@ export function usePortfolio() {
     }
   );
 
-  const isLoading = marketLoading || assetsLoading || accountsLoading || addressesLoading;
+  const isLoading = marketLoading || assetsLoading || accountsLoading || addressesLoading
   const hasError = marketError || assetsError || accountsError || addressesError;
 
   // Manual refresh functions
