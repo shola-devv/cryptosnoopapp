@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 import { signOut } from "next-auth/react";
-import { useSession } from 'next-auth/react';
+
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from "@/components/darkToggle"
 
@@ -35,6 +35,7 @@ import { usePortfolio } from "@/hooks/usePortfolio"
 import {useEffect} from 'react'
 import { Settings, Check } from 'lucide-react';
 import ProfileModal from '@/components/profileModal'
+import { useSession } from 'next-auth/react';
 
 
 export default function UserProfile() {
@@ -62,6 +63,9 @@ export default function UserProfile() {
 const [userAvatar, setUserAvatar] = useState(avatarOptions[2])
  
   const { data: session, status } = useSession();
+  const userId = session?.user?.id;
+  const name = session?.user?.name; 
+   
   const router = useRouter();
 
    useEffect(() => {
@@ -70,8 +74,7 @@ const [userAvatar, setUserAvatar] = useState(avatarOptions[2])
     }
   }, [status, router]);
 
-   const userId = session?.user?.id;
-   const name = session?.user?.name;
+  
    
   
 

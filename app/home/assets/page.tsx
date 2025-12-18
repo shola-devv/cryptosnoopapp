@@ -25,16 +25,16 @@ export default function CryptoPortfolioPage() {
   const [selectedCoin, setSelectedCoin] = useState<any>(null)
   const [quantity, setQuantity] = useState("")
   const [showBalance, setShowBalance] = useState(true)
-  const { data: session, status } = useSession();
+  
   const router = useRouter();
-  const userId = session?.user?.id;
+
+  const {data: session, status}= useSession(); 
+     const userId = session?.user?.id;
   const name = session?.user?.name;
   const userPlan = session?.user?.subscription?.plan || "free";
 const maxAssets = userPlan === "free" ? 10 : 50;
 
-
   
-
 
 
   // Calculate totals from portfolio data

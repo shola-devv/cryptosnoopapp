@@ -20,21 +20,28 @@ import { useUserPlan } from "@/hooks/UserProfile";
 
 
 export default function AccountsPage() {
- const { data: session, status } = useSession();
+ 
   const router = useRouter();
+ 
+const { data: session, status } = useSession();
   const userId = session?.user?.id;
-  const name = session?.user?.name;
-
-
   ///here useUserPlan()
-  const userPlan = 50
+  const userPlan = "free"
    
   const maxAddresses = userPlan === "free" ? 10 : 50;
+  //
   const [addressValidation, setAddressValidation] = useState<{
   isValid: boolean;
   chain: string | null;
   error: string | null;
 } | null>(null);
+
+//
+const [editAddressValidation, setEditAddressValidation] = useState<{
+  isValid: boolean;
+  message?: string;
+} | null>(null);
+ 
 
   const { addresses, refreshAddresses, refreshAll, isLoading, error } = usePortfolio()
   
@@ -276,10 +283,14 @@ if (addresses.length >= maxAddresses) {
                </div>
              </header>
      
-      <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
-               <div className="w-12 h-12 sm:w-8 sm:h-8 border-2 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
-             </div>
-     
+      <div className="flex flex-col items-center gap-4 mt-20 sm:mt-24 lg:mt-28">
+  <div className="w-12 h-12 sm:w-8 sm:h-8 border-2 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
+
+  <p className="text-gray-600 dark:text-white text-sm text-center">
+    Securely retrieving your labelled addresses...
+  </p>
+</div>
+
             <footer className="mt-[60vh] bg-white text-gray-900 py-12 relative z-10 dark:bg-slate-900/60">
        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
          
@@ -619,13 +630,35 @@ if (addresses.length >= maxAddresses) {
                     <tr key={account._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                       <td className="px-6 py-4">
                         {editingId === account._id ? (
-                          <input
-                            type="text"
-                            value={editData.address}
-                            onChange={(e) => updateEditData("address", e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7]"
-                            disabled={isSending}
-                          />
+                          <div classNme = "flex flex-col">
+                         <input
+  type="text"
+  value={editData.address}
+  onChange={(e) => {
+    updateEditData("address", e.target.value);
+    setEditAddressValidation(null); // reset while typing
+  }}
+  onBlur={() => {
+    const chk = validateBlockchainAddress(editData.address);
+    setEditAddressValidation(chk);
+  }}
+  className={`w-full px-3 py-2 rounded-lg border 
+    ${
+      editAddressValidation && !editAddressValidation.isValid
+        ? "border-red-500 focus:ring-red-500"
+        : "border-slate-300 dark:border-slate-700 focus:ring-[#c750f7]"
+    }
+    bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm
+    focus:outline-none focus:ring-2`}
+  disabled={isSending}
+/>
+ {editAddressValidation && !editAddressValidation.isValid && (
+        <p className="mt-1 text-xs text-red-500">
+          {editAddressValidation.message || "Invalid blockchain address"}
+        </p>
+      )}
+      </div>
+
                         ) : (
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-sm text-slate-900 dark:text-white truncate max-w-xs">
@@ -654,6 +687,7 @@ if (addresses.length >= maxAddresses) {
                             onChange={(e) => updateEditData("label", e.target.value)}
                             className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7]"
                             disabled={isSending}
+                             maxLength={40}
                           />
                         ) : (
                           <span className="text-sm font-medium text-slate-900 dark:text-white">
@@ -686,10 +720,20 @@ if (addresses.length >= maxAddresses) {
                         <div className="flex items-center justify-end gap-2">
                           {editingId === account._id ? (
                             <button
-                              onClick={() => saveEdits(account._id)}
-                              disabled={isSending}
-                              className="inline-flex items-center gap-1 px-3 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-xs font-semibold hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors disabled:opacity-50"
-                            >
+  onClick={() => saveEdits(account._id)}
+  disabled={
+    isSending ||
+    !editData.address.trim() ||
+    (editAddressValidation && !editAddressValidation.isValid)
+  }
+  className="inline-flex items-center gap-1 px-3 py-2
+    bg-green-100 dark:bg-green-900/30
+    text-green-700 dark:text-green-400
+    rounded-lg text-xs font-semibold
+    hover:bg-green-200 dark:hover:bg-green-900/50
+    transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+>
+
                               {isSending ? (
                                 <div className="w-3.5 h-3.5 border-2 border-green-700 border-t-transparent rounded-full animate-spin"></div>
                               ) : (
@@ -719,6 +763,8 @@ if (addresses.length >= maxAddresses) {
                           </button>
                         </div>
                       </td>
+                      
+
                     </tr>
                   ))}
                 </tbody>

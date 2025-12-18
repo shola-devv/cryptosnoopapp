@@ -18,9 +18,9 @@ export function SlotInfo({ used, max, isFree, onUpgrade }: SlotInfoProps) {
             className="cursor-pointer underline"
             onClick={onUpgrade}
           >
-            Upgrade
+            Upgrade plan
           </span>{" "}
-          to continue
+          to unlock more slots.
         </span>
       ) : (
         <span>{used}/{max} slots used</span>

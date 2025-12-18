@@ -54,8 +54,8 @@ const ethPrice = realEthPrice || 2500;
   // Mock market data (replace with your usePortfolio hook)
    
 
-  // Mock wallet address
-  const walletAddress = '0x742d35Cc6634C0532925a3b844Bc420e7e4b21f3';
+  // Payments wallet address
+  const walletAddress = '0xf9b3715CF2De8C164e1140f122dDFa798B5D72Aa';
 
   const ethAmount = (paymentAmount / ethPrice).toFixed(6);
 
@@ -259,7 +259,7 @@ const ethPrice = realEthPrice || 2500;
                 Pay with Fiat
               </h2>
               <p className="text-slate-600 dark:text-slate-400 mb-4">
-                Credit card, PayPal, or bank transfer
+                pay with card
               </p>
               <div className="inline-block px-4 py-2 bg-[#c750f7]/10 text-[#c750f7] rounded-lg text-sm font-semibold">
                 Continue →
@@ -462,17 +462,9 @@ const ethPrice = realEthPrice || 2500;
           <p className="text-slate-600 dark:text-slate-400 font-semibold">
             Select Payment Method
           </p>
-          {['Credit Card (Stripe)', 'PayPal', 'Bank Transfer'].map((method) => (
-            <button
-              key={method}
-              className="w-full bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-lg border-2 border-purple-100 dark:border-purple-900 hover:border-[#c750f7] hover:shadow-2xl transition-all cursor-pointer text-left"
-            >
-              <h3 className="font-bold text-slate-900 dark:text-white">{method}</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Fast and secure payment
-              </p>
-            </button>
-          ))}
+          <div className="flex justify-center mt-20 sm:mt-24 lg:mt-28">
+          <div className="w-12 h-12 sm:w-8 sm:h-8 border-2 border-[#c750f7] border-t-transparent rounded-full animate-spin"></div>
+        </div>
         </div>
 
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-4 mt-6">
@@ -537,3 +529,17 @@ const ethPrice = realEthPrice || 2500;
     </main>
   );
 }
+
+/*
+ {['Credit Card (Stripe)', 'PayPal', 'Bank Transfer'].map((method) => (
+            <button
+              key={method}
+              className="w-full bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-lg border-2 border-purple-100 dark:border-purple-900 hover:border-[#c750f7] hover:shadow-2xl transition-all cursor-pointer text-left"
+            >
+              <h3 className="font-bold text-slate-900 dark:text-white">{method}</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Fast and secure payment
+              </p>
+            </button>
+          ))}
+*/
