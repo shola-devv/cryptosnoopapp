@@ -36,7 +36,7 @@ import {useEffect} from 'react'
 import { Settings, Check } from 'lucide-react';
 import ProfileModal from '@/components/profileModal'
 import { useSession } from 'next-auth/react';
-
+import {useUserProfile} from "@/hooks/userProfile"
 
 export default function UserProfile() {
   const [showBalance, setShowBalance] = useState(true)
@@ -49,9 +49,7 @@ export default function UserProfile() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
   
-  const [profile, setProfile] = useState<number | undefined>(2)
-  const [userName, setUserName] = useState('');
-  const [showProfileModal, setShowProfileModal] = useState(false);
+  
   
   const avatarOptions = [
   { id: 1, emoji: '👤', color: '#c750f7', label: 'Default' },
@@ -64,8 +62,33 @@ const [userAvatar, setUserAvatar] = useState(avatarOptions[2])
  
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
-  const name = session?.user?.name; 
-   
+ const { user, loading } = useUserProfile(userId);
+  if (!user) return null;
+ const {
+    _id,
+    _username,
+    _email,
+    _profile,
+    _subscription,
+  } = user;
+
+
+  const [profile, setProfile] = useState<number | undefined>(2)
+  const [userName, setUserName] = useState('');
+  const [showProfileModal, setShowProfileModal] = useState(false);
+useEffect(() => {
+  if (_profile !== null && _profile !== undefined) {
+    setProfile(_profile);
+  }
+
+  if (_username && _username.trim()) {
+    setUserName(_username);
+  }
+}, [_profile, _username]);
+
+
+
+
   const router = useRouter();
 
    useEffect(() => {

@@ -20,13 +20,13 @@ import { validateBlockchainAddress } from "@/lib/ValidateAddress";
 
 
 const SUPPORTED_CHAINS = [
-  { id: 'ethereum', name: 'Ethereum', icon: '⟠', color: '#627EEA' },
-  { id: 'solana', name: 'Solana', icon: '◎', color: '#14F195' },
-  { id: 'polygon', name: 'Polygon', icon: '⬡', color: '#8247E5' },
-  { id: 'bsc', name: 'BSC', icon: '◆', color: '#F3BA2F' },
-  { id: 'arbitrum', name: 'Arbitrum', icon: '◢', color: '#28A0F0' },
-  { id: 'optimism', name: 'Optimism', icon: '🔴', color: '#FF0420' },
-  { id: 'avalanche', name: 'Avalanche', icon: '▲', color: '#E84142' }
+  { id: 'ethereum', name: 'Ethereum', icon: '/ethl.png', color: '#627EEA' },
+  { id: 'solana', name: 'Solana', icon: '/soll.png', color: '#14F195' },
+  { id: 'polygon', name: 'Polygon', icon: '/poll.png', color: '#8247E5' },
+  { id: 'bsc', name: 'BSC', icon: '/bscl.png', color: '#F3BA2F' },
+  { id: 'arbitrum', name: 'Arbitrum', icon: '/arbll.png', color: '#28A0F0' },
+  { id: 'optimism', name: 'Optimism', icon: '/optl.png', color: '#FF0420' },
+  { id: 'avalanche', name: 'Avalanche', icon: '/aval.png', color: '#E84142' }
 ];
 
 const avatarOptions = [
@@ -123,7 +123,29 @@ export default function MonitorWalletsPage() {
   const [addressValidation, setAddressValidation] = useState(null);
   const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
   
+//Trial code 
+  const FREE_TRIAL_LIMIT = 2;
+
+const [trackUses, setTrackUses] = useState(0);
+const [refreshUses, setRefreshUses] = useState(0);
+
+useEffect(() => {
+  const saved = localStorage.getItem("walletMonitorTrial");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    setTrackUses(parsed.trackUses || 0);
+    setRefreshUses(parsed.refreshUses || 0);
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem(
+    "walletMonitorTrial",
+    JSON.stringify({ trackUses, refreshUses })
+  );
+}, [trackUses, refreshUses]);
   
+
 // ensure isOpen follows monitoredWallet changes so the arrow + open state never get out of sync
 useEffect(() => {
   setIsOpen(!monitoredWallet);
@@ -187,6 +209,10 @@ const componentOpen = isOpen;
   }
 
   const handleAddWallet = async () => {
+    if (trackUses >= FREE_TRIAL_LIMIT) return;
+
+  setTrackUses((prev) => prev + 1);
+
     if (!walletAddress.trim()) return
 
     setWalletError("")
@@ -221,6 +247,9 @@ const componentOpen = isOpen;
   }
 
   const handleRefresh = async () => {
+    if (refreshUses >= FREE_TRIAL_LIMIT) return;
+
+  setRefreshUses((prev) => prev + 1);
     if (!walletAddress.trim()) return
 
     setWalletError("")
@@ -420,11 +449,22 @@ const componentOpen = isOpen;
 
       {/* Wallet Address Input with Chain Selector */}
 
-
-<div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
+  <span
+  className={
+    trackUses >= FREE_TRIAL_LIMIT
+      ? "text-red-500 font-semibold"
+      : ""
+  }
+>
+   {trackUses}/{FREE_TRIAL_LIMIT} free trial left for this feature, <span className="underline cursor-pointer" onClick={()=> router.push('/home/subscribe')} > upgrade plan </span> to unlock full access
+</span>
+<div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-xl border border-purple-100 dark:border-purple-900 mb-8">
         {/* HEADER: always visible */}
-        <div className="flex items-center justify-between mb-6">
+           
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
+       
+
             <div className="w-10 h-10 bg-[#c750f7] rounded-xl flex items-center justify-center">
               <Plus className="w-5 h-5 text-white" />
             </div>
@@ -470,7 +510,9 @@ const componentOpen = isOpen;
       className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-left flex items-center justify-between hover:border-[#c750f7] transition-all cursor-pointer"
     >
       <div className="flex items-center gap-3">
-        <span className="text-2xl">{selectedChainData?.icon}</span>
+       <div className="w-8 h-8 relative">
+  <Image src={selectedChainData?.icon} alt={selectedChainData?.name} fill className="object-contain" />
+</div>
         <span className="font-semibold">{selectedChainData?.name}</span>
       </div>
 
@@ -500,8 +542,11 @@ const componentOpen = isOpen;
               selectedChain === chain.id ? "bg-purple-50 dark:bg-slate-700" : ""
             }`}
           >
-            <span className="text-2xl">{chain.icon}</span>
-            <div className="flex-1 text-left">
+           <div className="w-8 h-8 relative">
+  <Image src={chain.icon} alt={chain.name} fill className="object-contain" />
+</div>
+
+       
               <p className="font-semibold text-slate-900 dark:text-white">{chain.name}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {chain.id === "ethereum" && "The original smart contract platform"}
@@ -512,7 +557,7 @@ const componentOpen = isOpen;
                 {chain.id === "optimism" && "Optimistic Ethereum L2"}
                 {chain.id === "avalanche" && "High-throughput blockchain"}
               </p>
-            </div>
+            
             {selectedChain === chain.id && (
               <div className="w-2 h-2 rounded-full bg-[#c750f7]"></div>
             )}
@@ -554,8 +599,9 @@ const componentOpen = isOpen;
     onClick={handleAddWallet}
     disabled={
       !walletAddress.trim() ||
-      isLoadingWallet ||
-      (addressValidation && !addressValidation.isValid)
+    isLoadingWallet ||
+    trackUses >= FREE_TRIAL_LIMIT ||
+    (addressValidation && !addressValidation.isValid)
     }
     className="px-6 py-3 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border-4 border-[#d575fc] cursor-pointer"
   >
@@ -577,7 +623,7 @@ const componentOpen = isOpen;
     className="px-3 py-1 rounded-full font-semibold text-white flex items-center gap-2"
     style={{ backgroundColor: selectedChainData?.color }}
   >
-    <span>{selectedChainData?.icon}</span>
+   
     <span>{selectedChainData?.name}</span>
   </div>
 </div>
@@ -688,7 +734,7 @@ const componentOpen = isOpen;
                       className="text-white font-semibold text-xs h-8 px-3 border-2 border-[#d575fc] cursor-pointer hover:shadow-lg hover:shadow-purple-500/30 transition-all"
                       style={{ backgroundColor: '#c750f7' }}
                       onClick={handleRefresh}
-                      disabled={isLoadingWallet}
+                     disabled={isLoadingWallet || refreshUses >= FREE_TRIAL_LIMIT}
                       title="Refresh wallet data"
                     >
                       {isLoadingWallet ? (

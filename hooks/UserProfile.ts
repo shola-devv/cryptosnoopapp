@@ -1,115 +1,51 @@
-'use client';
-import useSWR, { mutate } from 'swr';
-import { fetcher } from '@/lib/fetcher';
-import { useUser } from '../context/UserContext';
-import { calculatePortfolioValue } from '@/lib/calculations';
+// hooks/useUserPortfolio.ts
+import { useCallback, useEffect, useState } from "react";
 
-export function usePortfolio() {
-  const { user } = useUser();
+interface UserProfile {
+  id: string;
+  username: string;
+  email: string;
+  profile?: string;
+  subscription?: string;
+}
 
-  // Fetch market data (live prices) - refreshes every 1 minutes
-  const { data: marketData, error: marketError, isLoading: marketLoading } = useSWR(
-    '/api/market-data',
-    fetcher,
-    { 
-      refreshInterval: 60000,
-      revalidateOnFocus: false,
-    }
-  );
+export function useUserProfile(userId?: string) {
+  const [user, setUser] = useState<UserPortfolio | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch user's assets - refreshes every 1 minutes
-  const { data: assetsData, error: assetsError, isLoading: assetsLoading } = useSWR(
-    user ? `/api/assets?userId=${user.id}` : null,
-    fetcher,
-    { 
-      refreshInterval: 60000,
-      revalidateOnFocus: false,
-    }
-  );
+  const fetchUser = useCallback(async () => {
+    if (!userId) return;
 
-  // Fetch user's accounts - refreshes every 10 min
-  const { data: accountsData, error: accountsError, isLoading: accountsLoading } = useSWR(
-    user ? `/api/accounts?userId=${user.id}` : null,
-    fetcher,
-    { 
-      refreshInterval: 600000,
-      revalidateOnFocus: false,
-    }
-  );
+    setLoading(true);
+    setError(null);
 
-  // Fetch user's addresses - refreshes every 10 minutes
-  const { data: addressesData, error: addressesError, isLoading: addressesLoading } = useSWR(
-    user ? `/api/addresses?userId=${user.id}` : null,
-    fetcher,
-    { 
-      refreshInterval: 600000,
-      revalidateOnFocus: false,
-    }
-  );
-
-  const isLoading = marketLoading || assetsLoading || accountsLoading || addressesLoading;
-  const hasError = marketError || assetsError || accountsError || addressesError;
-
-  // Manual refresh functions
-  const refreshAssets = () => {
-    if (user) {
-      mutate(`/api/assets?userId=${user.id}`);
-    }
-  };
-
-  const refreshAccounts = () => {
-    if (user) {
-      mutate(`/api/accounts?userId=${user.id}`);
-    }
-  };
-
-  const refreshAddresses = () => {
-    if (user) {
-      mutate(`/api/addresses?userId=${user.id}`);
-    }
-  };
-
-  const refreshAll = () => {
-    mutate('/api/market-data');
-    refreshAssets();
-    refreshAccounts();
-    refreshAddresses();
-  };
-
-  // Return partial data even if some APIs fail
-  const assets = assetsData?.assets || [];
-  const accounts = accountsData?.accounts || [];
-  const addresses = addressesData?.addresses || [];
-  const market = marketData?.data?.result || null;
-
-  // Calculate portfolio if we have the minimum required data
-  let portfolio = null;
-  if (user && market && assets.length > 0) {
     try {
-      portfolio = calculatePortfolioValue(assets, market);
-    } catch (error) {
-      console.error('Error calculating portfolio:', error);
+      const res = await fetch(`/api/users?userId=${userId}`);
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to fetch user");
+      }
+
+      const data = await res.json();
+      setUser(data.user);
+    } catch (err: any) {
+      setError(err.message);
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
-  }
+  }, [userId]);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   return {
-    portfolio,
-    assets,
-    accounts,
-    addresses,
-    marketData: market,
-    isLoading,
-    error: hasError,
-    errors: {
-      marketError,
-      assetsError,
-      accountsError,
-      addressesError,
-    },
-    source: marketData?.source,
-    refreshAssets,
-    refreshAccounts,
-    refreshAddresses,
-    refreshAll,
+    user,
+    loading,
+    error,
+    refetch: fetchUser,
   };
 }
