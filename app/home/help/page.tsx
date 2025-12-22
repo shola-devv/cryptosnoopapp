@@ -218,7 +218,7 @@ const handleDelete = async () => {
                     className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 dark:bg-slate-900/60 transition-colors"
                     onClick={() => toggleFaq(index)}
                   >
-                    <span className="font-semibold text-left">{item.question}</span>
+                    <span className="font-semibold text-left text-gray-900 dark:text-white">{item.question}</span>
                     {expandedFaq === index ? (
                       <ChevronUp className="w-5 h-5 text-[#c750f7] flex-shrink-0" />
                     ) : (
