@@ -596,7 +596,7 @@ if (addresses.length >= maxAddresses) {
           <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Wallet className="w-5 h-5 text-[#c750f7]" />
-              Your Labelled Addresses ({addresses?.length || 0})
+              Your Labelled Addresses {addresses?.length || 0}
             </h2>
           </div>
 

@@ -13,7 +13,7 @@ export function SlotInfo({ used, max, isFree, onUpgrade }: SlotInfoProps) {
     <div className="text-sm m-2">
       {isFree ? (
         <span>
-          You have used {used}/{max} address slots{" "}
+          You have used {used}/{max} address slots,{" "}
           <span
             className="cursor-pointer underline"
             onClick={onUpgrade}

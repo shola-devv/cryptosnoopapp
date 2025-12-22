@@ -36,7 +36,7 @@ import {useEffect} from 'react'
 import { Settings, Check } from 'lucide-react';
 import ProfileModal from '@/components/profileModal'
 import { useSession } from 'next-auth/react';
-import {useUserProfile} from "@/hooks/userProfile"
+import { useUserProfile } from "@/hooks/UserProfile"
 
 export default function UserProfile() {
   const [showBalance, setShowBalance] = useState(true)

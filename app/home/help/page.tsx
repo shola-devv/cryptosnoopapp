@@ -299,15 +299,7 @@ const handleDelete = async () => {
               Need personalized assistance? Our support team is here to help you with any questions or issues.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Button
-                className="h-12 bg-gradient-to-b from-[#c750f7]/60 to-[#c750f7] shadow-[0_10px_15px_-2px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none hover:brightness-95 overflow-hidden hover: font-bold text-white "
-                onClick={() => {
-                  window.location.href = 'mailto:cryptosnoopapp.com?subject=Support Request&body=Hello Cryptosnoop Support Team,%0D%0A%0D%0APlease describe your issue here...';
-                }}
-              >
-                <Mail className="w-5 h-5 mr-2" />
-                Email Support
-              </Button>
+             
               
               <Button
                  variant="ghost"

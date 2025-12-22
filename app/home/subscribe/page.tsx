@@ -102,9 +102,7 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
           const Icon = feature.icon;
           return (
             <div key={index} className="flex gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center">
-                <Icon className="w-6 h-6 text-[#c750f7]" />
-              </div>
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center"> <Icon className="w-6 h-6 text-[#c750f7]" /> </div>
               <div>
                 <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">
                   {feature.title}
@@ -197,7 +195,7 @@ export default function SubscriptionPage() {
       price: '$7.99',
       priceValue: 7.99,
       period: '/month',
-      icon: Zap,
+      icon: "zap.png",
       color: '#4ecdc4',
       features: [
          'One month of unlimited remote wallet tracking, fully powered and always on.',
@@ -216,7 +214,7 @@ export default function SubscriptionPage() {
       priceValue: 79.99,
       period: '/year',
       savings: 'Save $16',
-      icon: Sparkles,
+      icon: "star.png",
       color: '#c750f7',
       features: [
         'One year of unlimited remote wallet tracking, fully powered and always on.',
@@ -231,11 +229,11 @@ export default function SubscriptionPage() {
     {
       id: 'lifetime',
       name: 'Lifetime',
-      price: '$249',
-      priceValue: 249,
+      price: '$269',
+      priceValue: 269,
       period: 'one-time',
       savings: 'Best Value',
-      icon: Crown,
+      icon: "Crown.png",
       color: '#ffd93d',
       features: [
         'Lifetime unlimited remote wallet tracking, fully powered and always on without limits.',
@@ -358,7 +356,12 @@ const [loading, setLoading] = useState(false);
 
                     <div className="p-8">
                       <div className="flex items-center justify-between mb-4">
-                        <Icon className="w-10 h-10" style={{ color: plan.color }} />
+                         <img
+    src={`/${plan.icon}`} // ✅ uses the filename from plan.icon
+    alt={plan.name}
+    className="w-16 h-10"
+    style={{ color: plan.color }} // note: this won’t change PNG color, only for SVGs
+  />
                         {plan.savings && !plan.popular && (
                           <span className="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold border border-white/20 text-slate-700 dark:text-slate-300">
                             {plan.savings}
