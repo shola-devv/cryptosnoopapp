@@ -1,16 +1,26 @@
-// hooks/useUserPortfolio.ts
 import { useCallback, useEffect, useState } from "react";
+import { useUser } from "../context/UserContext";
+
+interface Subscription {
+  id: string;
+  status: string;
+  plan: string;
+}
 
 interface UserProfile {
   id: string;
   username: string;
   email: string;
-  profile?: string;
-  subscription?: string;
+  profile?: number;
+  image?: string | null;
+  subscription?: Subscription;
 }
 
-export function useUserProfile(userId?: string) {
-  const [user, setUser] = useState<UserPortfolio | null>(null);
+export function useUserProfile() {
+  const { user } = useUser(); // ⬅️ ensure correct casing
+  const userId = user?.id;
+
+  const [data, setData] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,31 +31,39 @@ export function useUserProfile(userId?: string) {
     setError(null);
 
     try {
-      const res = await fetch(`/api/users?userId=${userId}`);
+      const res = await fetch(`/api/users/${userId}`);
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Failed to fetch user");
+      let json;
+      try {
+        json = await res.json();
+      } catch {
+        throw new Error("Invalid server response");
       }
 
-      const data = await res.json();
-      setUser(data.user);
+      if (!res.ok) {
+        throw new Error(json?.message || "Failed to fetch user");
+      }
+
+      setData(json.user);
     } catch (err: any) {
-      setError(err.message);
-      setUser(null);
+      console.error("useUserProfile error:", err);
+      setError(err.message || "Unknown error");
+      setData(null);
     } finally {
       setLoading(false);
     }
   }, [userId]);
 
   useEffect(() => {
+    if (!userId) return;
     fetchUser();
-  }, [fetchUser]);
+  }, [userId, fetchUser]);
 
   return {
-    user,
+    user: data,
     loading,
     error,
     refetch: fetchUser,
+    isReady: Boolean(userId),
   };
 }

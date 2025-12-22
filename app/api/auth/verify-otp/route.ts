@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`🎲 [Send OTP] Generated OTP: ${otp}`);
+    console.log(`🎲 [Send OTP] Generated OTP`);
 
     // Delete any existing OTP for this email
     await Otp.deleteMany({ email: emailString });
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     });
 
     await otpRecord.save();
-    console.log(`💾 [Send OTP] OTP saved to DB`);
+   // console.log(`💾 [Send OTP] OTP saved to DB`);
 
     // Configure email transporter
     const transporter = nodemailer.createTransport({

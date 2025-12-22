@@ -30,17 +30,17 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "cryptosnoop",
-  description: "Track your portfolio and holdings with ease",
-  themeColor: "#d575fc",
+  description: "Track your crypto portfolio and holdings with ease",
+  
 
   openGraph: {
      title: "Cryptosnoop",
      description: "track your crypto assets and holdings with ease",
-     url: "",
+     url: "https://cryptosnoop.app",
      siteName: "cryptosnoop",
      images: [
       {
-        url: "https://myapp.app-image.png",
+        url: "/cryptosnoopwallpaper.jpg",
         width: 1200,
         height: 630,
         alt: "cryptosnoop preview"
@@ -51,11 +51,16 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "cryptosnoop",
     description: "track your crypto assets and holdings with ease",
-    images: ["https://mywebapp.vercel.apphhh.png"],
+    images: ["/cryptosnoopwallpaper.jpg"],
    },
 
 
 };
+
+export const viewport = {
+  themeColor: "#d575fc",
+};
+
 
 export default function RootLayout({
   children,

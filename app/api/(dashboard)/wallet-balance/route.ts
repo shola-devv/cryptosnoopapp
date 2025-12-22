@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
                request.headers.get('x-real-ip') ||
                '127.0.0.1';
 
-    console.log('💰 Market data request for:', address, 'on chain:', chain, 'from IP:', ip);
+    // console.log('💰 Market data request for:', address, 'on chain:', chain, 'from IP:', ip);
 
     // Generate cache key for this address + chain combo
     const CACHE_KEY = `market:data:${address.toLowerCase()}:${chain}`;
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
       console.warn('⚠️ Rate limit check error:', rateLimitError);
     }
 
-    console.log('🔄 Fetching fresh market data from CoinStats API for', chain);
+    // console.log('🔄 Fetching fresh market data from CoinStats API for', chain);
 
     // Fetch balance from CoinStats API
     const connectionId = CHAIN_CONNECTIONS[chain];
@@ -197,7 +197,7 @@ export async function GET(request: NextRequest) {
       clearTimeout(timeout);
 
       if (!res.ok) {
-        console.warn(`⚠️ CoinStats API returned status ${res.status}`);
+        console.warn(`⚠️ C API returned status ${res.status}`);
         
         // Return stale cache if API fails
         if (cached) {
@@ -256,7 +256,7 @@ export async function GET(request: NextRequest) {
       const roundedTotalValue = Math.round(totalValue * 100) / 100;
       const roundedChange24h = Math.round(totalChange24h * 100) / 100;
 
-      console.log(`✅ Fetched ${enrichedTokens.length} assets, Total Value: $${roundedTotalValue}`);
+     //  console.log(`✅ Fetched ${enrichedTokens.length} assets, Total Value: $${roundedTotalValue}`);
 
       // Prepare response
       const marketData: MarketDataResponse = {

@@ -62,29 +62,20 @@ const [userAvatar, setUserAvatar] = useState(avatarOptions[2])
  
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
- const { user, loading } = useUserProfile(userId);
-  if (!user) return null;
- const {
-    _id,
-    _username,
-    _email,
-    _profile,
-    _subscription,
-  } = user;
+ const { user, loading } = useUserProfile();
+  
 
 
   const [profile, setProfile] = useState<number | undefined>(2)
   const [userName, setUserName] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
-useEffect(() => {
-  if (_profile !== null && _profile !== undefined) {
-    setProfile(_profile);
-  }
 
-  if (_username && _username.trim()) {
-    setUserName(_username);
-  }
-}, [_profile, _username]);
+  useEffect(() => {
+  setProfile(user?.profile ?? 2);
+  console.log(user?.username)
+  setUserName(user?.username?.trim() || "User");
+}, [user]);
+
 
 
 

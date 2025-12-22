@@ -48,64 +48,93 @@ async function validateRequest(req: Request) {
 // -------------------------------------
 // GET User
 // ----------------------------------
-
-export const GET = async (request: Request) => {
+// GET User
+// -------------------------------------
+export const GET = async (
+  request: Request,
+  context: { params: { userId: string } }
+) => {
   try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return new NextResponse(
-        JSON.stringify({ message: "Unauthorized" }),
-        { status: 401, headers: securityHeaders }
-      );
+    // ----------------------------
+    // 1️⃣ AUTH
+    // ----------------------------
+    const token = await getToken({ req: request });
+    if (!token?.sub) {
+      return json({ message: "Unauthorized" }, 401);
     }
 
-    const identifier = session.user.id;
-
+    // ----------------------------
+    // 2️⃣ RATE LIMIT
+    // ----------------------------
     try {
-      await ratelimit.limit(identifier);
-    } catch {
-      console.warn("Rate limiter failed, skipping");
+      const rate = await ratelimit.limit(token.sub);
+      if (!rate.success) {
+        return json({ message: "Rate limit exceeded" }, 429);
+      }
+    } catch (err) {
+      console.warn("Rate limiter unavailable, continuing:", err);
     }
 
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    // ----------------------------
+    // 3️⃣ ROUTE PARAMS
+    // ----------------------------
+    const { userId } = context.params;
 
-    if (!userId || !Types.ObjectId.isValid(userId)) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid user ID" }),
-        { status: 400, headers: securityHeaders }
-      );
+    if (!userId) {
+      return json({ message: "User ID is required" }, 400);
     }
 
-    if (userId !== session.user.id) {
-      return new NextResponse(
-        JSON.stringify({ message: "Forbidden" }),
-        { status: 403, headers: securityHeaders }
-      );
+    if (!Types.ObjectId.isValid(userId)) {
+      return json({ message: "Invalid user ID format" }, 400);
     }
 
-    await connect();
+    // ----------------------------
+    // 4️⃣ OWNERSHIP CHECK
+    // ----------------------------
+    if (userId !== token.sub) {
+      return json({ message: "Forbidden" }, 403);
+    }
 
-    const user = await User.findById(userId).select("-password -__v").lean();
+    // ----------------------------
+    // 5️⃣ DB CONNECTION
+    // ----------------------------
+    try {
+      await connect();
+    } catch (err) {
+      console.error("DB connection failed:", err);
+      return json({ message: "Database connection failed" }, 500);
+    }
+
+    // ----------------------------
+    // 6️⃣ FETCH USER
+    // ----------------------------
+    const user = await User.findById(userId)
+      .select("-password -__v")
+      .lean();
 
     if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "User not found" }),
-        { status: 404, headers: securityHeaders }
-      );
+      return json({ message: "User not found" }, 404);
     }
 
-    return NextResponse.json(
-      { user },
-      { headers: securityHeaders }
+    // ----------------------------
+    // 7️⃣ SUCCESS
+    // ----------------------------
+    return json(
+      {
+        user: {
+          id: user._id,
+          email: user.email,
+          username: user.username,
+          profile: user.profile ?? 2,
+          image: user.image ?? null,
+          subscription: user.subscription ?? null,
+        },
+      },
+      200
     );
   } catch (err) {
-    console.error("USERS API CRASH:", err);
-    return new NextResponse(
-      JSON.stringify({ message: "Internal server error" }),
-      { status: 500, headers: securityHeaders }
-    );
+    console.error("USERS API UNHANDLED ERROR:", err);
+    return json({ message: "Internal server error" }, 500);
   }
 };
 

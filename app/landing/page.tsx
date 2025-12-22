@@ -92,6 +92,7 @@ const CryptoSnoop = () => {
         "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
       icon: "/padlock.png",
     },
+     
   ];
 
   //second part text
@@ -99,26 +100,33 @@ const CryptoSnoop = () => {
   {
     title: "Secure Crypto portfolio tracking",
     description:
-      "with just a click of a button, track your crypto assets without hassle",
+      "Track your crypto assets effortlessly with just a click, keeping all your holdings organized and up-to-date.",
     icon: "/bitcoinbag.png",
   },
   {
-    title: "Remote wallet tracking across all chain",
+    title: "Remote wallet monitoring across all chain",
     description:
-      "Management help for keeping your crypto account addresses easily accessible. Store and organize all your wallets and label them securely all in one centralized location.",
+       "Paste your wallet addresses to instantly view your portfolio and holdings across multiple blockchains, all in one centralized dashboard.",
     icon: "/greencursor.png",
   },
   {
-    title: "Adress book for all your wallets",
+    title: "secure labelling for all your addresses",
     description:
-      "",
+      "Organize and label all your wallets safely, ensuring easy access and management while keeping your account information secure.",
     icon: "/coinbag.png",
   },
   {
     title: "real time price updates",
     description:
-      "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
+       "Stay informed with up-to-the-second price changes across your portfolio, helping you make timely decisions.",
     icon: "/zap.png",
+  },
+  {
+    title: "Top-tier security",
+    description:
+ "Your security is our priority. Access your portfolio with confidence, protected by industry-leading encryption and security protocols.",
+   
+    icon: "/padlock.png",
   },
 ];
 
@@ -154,7 +162,7 @@ const CryptoSnoop = () => {
                         >
                           crypto
                         </span>
-                        <span className="text-slate-700 dark:text-slate-300 font-bold text-sm sm:text-lg leading-tight -mt-1">
+                        <span className="text-slate-700  font-bold text-sm sm:text-lg leading-tight -mt-1">
                           Snoop
                         </span>
                       </div>
@@ -196,7 +204,7 @@ const CryptoSnoop = () => {
           <div className="flex items-center justify-center gap-3">
             
             <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-              Manage crypto assets with real-time data
+              Manage your crypto portfolio with real-time data
             </p>
           </div>
 
@@ -333,7 +341,7 @@ const CryptoSnoop = () => {
                 <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 text-center">
                   {feature.title}
                 </h3>
-                <p className="text-sm sm:text-lg md:text-xl text-gray-600 leading-relaxed font-bold text-center">
+                <p className="text-sm sm:text-lg md:text-xl text-gray-900 leading-relaxed font-bold text-center">
                   {feature.description}
                 </p>
               </div>
@@ -343,7 +351,7 @@ const CryptoSnoop = () => {
       </div>
       <section className="w-full max-w-3xl mx-auto px-4 py-24">
       {/* Header */}
-      <h2 className="text-center font-bold text-3xl sm:text-4xl md:text-5xl leading-tight mb-8">
+      <h2 className="text-center font-bold text-3xl sm:text-4xl md:text-5xl leading-tight mb-8 text-gray-900">
         CryptoSnoop<br />Does crypto tracking<br />Better
       </h2>
 
@@ -364,8 +372,8 @@ const CryptoSnoop = () => {
 </div>
 
             <div className="flex flex-col">
-              <p className="font-semibold text-sm sm:text-base md:text-lg">{feature.title}</p>
-              <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-snug">
+              <p className="font-semibold text-sm sm:text-base md:text-lg text-gray-900">{feature.title}</p>
+              <p className="text-gray-900 text-xs sm:text-sm md:text-base leading-snug">
                 {feature.description}
               </p>
             </div>

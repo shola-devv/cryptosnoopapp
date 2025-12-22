@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
   // ----------------------------
   // 4. Fetch fresh data
   // ----------------------------
-  console.log("🔄 Fetching fresh CoinStats market data...");
+  console.log("🔄 Fetching fresh C market data...");
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT);
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.error("❌ Market data API error:", err);
+    console.error(" Market data API error:", err);
 
     return new NextResponse(
       JSON.stringify({
