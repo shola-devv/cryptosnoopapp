@@ -254,13 +254,17 @@ useEffect(() => {
   }
 }, [session?.user?.id]);
 
-// Optimistic update handler
-const handleProfileSave = (newName: string, newAvatarIndex: number) => {
+// Optimistic update handler (accept nullable values from ProfileModal)
+const handleProfileSave = (newName: string | null, newAvatarIndex: number | null) => {
   // Immediately update UI (optimistic)
-  setProfile(newAvatarIndex);
-  setUserAvatar(avatarOptions[newAvatarIndex]);
-  setUserName(newName);
-  
+  if (typeof newAvatarIndex === 'number') {
+    setProfile(newAvatarIndex);
+    setUserAvatar(avatarOptions[newAvatarIndex]);
+  }
+  if (typeof newName === 'string') {
+    setUserName(newName);
+  }
+
   // Then fetch from server to confirm
   if (session?.user?.id) {
     fetchUserProfile(session.user.id);
@@ -981,10 +985,10 @@ const handleProfileSave = (newName: string, newAvatarIndex: number) => {
 <ProfileModal 
   isOpen={showProfileModal}
   onClose={() => setShowProfileModal(false)}
-  currentName={name}
+  currentName={userName}
   currentAvatar={profile ?? 0}          // numeric 0–4 from session
   currentUserId={session?.user?.id}   // 👈 required for PATCH
-  onSave={handleProfileSave}
+  onSave={(n, a) => handleProfileSave(n, a)}
 />
 
 
