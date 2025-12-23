@@ -108,9 +108,9 @@ export const GET = async (
     // ----------------------------
     // 6️⃣ FETCH USER
     // ----------------------------
-    const user = (await User.findById(userId)
+    const user: any = await User.findById(userId)
       .select("-password -__v")
-      .lean()) as any;
+      .lean();
 
     if (!user) {
       return json({ message: "User not found" }, 404);

@@ -128,15 +128,17 @@ export async function GET(request: NextRequest) {
       const cachedString = await redis.get(CACHE_KEY);
       if (cachedString) {
         cached = typeof cachedString === 'string' ? JSON.parse(cachedString) : cachedString;
-        const age = now - (cached.timestamp || 0);
-        
-        if (age < CACHE_TTL_SECONDS * 1000) {
-          console.log('✅ Returning cached market data, age:', Math.floor(age / 1000), 'seconds');
-          return NextResponse.json({
-            ...cached,
-            source: 'cache',
-            age: Math.floor(age / 1000),
-          });
+        if (cached) {
+          const age = now - (cached.timestamp || 0);
+
+          if (age < CACHE_TTL_SECONDS * 1000) {
+            console.log('✅ Returning cached market data, age:', Math.floor(age / 1000), 'seconds');
+            return NextResponse.json({
+              ...cached,
+              source: 'cache',
+              age: Math.floor(age / 1000),
+            });
+          }
         }
       }
     } catch (cacheError) {
