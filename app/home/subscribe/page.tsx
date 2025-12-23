@@ -34,7 +34,7 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
     // your second function
 
   // stop spinner after 7 seconds
-  setTimeout(() => setLoading(false), 7000);
+  setTimeout(() => setLoading(false), 20000);
 };
 
   const testFeatures = [
@@ -251,9 +251,10 @@ const [loading, setLoading] = useState(false);
 
   const handleSelectPlan = (plan) => {
     setLoading(true);
-  setTimeout(() => setLoading(false), 7000);
     // Navigate immediately to payment page with amount
     router.push(`/home/payment?amount=${plan.priceValue}&plan=${plan.id}&name=${encodeURIComponent(plan.name)}`);
+  setTimeout(() => setLoading(false), 15000);
+    
     
   };
 

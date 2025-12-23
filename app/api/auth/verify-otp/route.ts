@@ -3,6 +3,7 @@ import connect from "@/lib/db";
 import Otp from "@/lib/models/otp";
 
 import { headers } from "next/headers";
+import bcrypt from "bcryptjs";
 
 // Simple in-memory rate limiting (for production, use Redis or a proper rate limiting service)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -77,67 +78,39 @@ export async function POST(request: Request) {
 
     await connect();
 
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`🎲 [Send OTP] Generated OTP`);
+    // Expect client to send the OTP to verify
+    const { otp } = body;
 
-    // Delete any existing OTP for this email
-    await Otp.deleteMany({ email: emailString });
-    console.log(`🗑️ [Send OTP] Cleared old OTPs`);
+    if (!otp) {
+      return NextResponse.json(
+        { success: false, message: "OTP is required for verification" },
+        { status: 400 }
+      );
+    }
 
-    // Save new OTP
-    const otpRecord = new Otp({
-      email: emailString,
-      otp: otp,
-      createdAt: new Date(),
-    });
+    // Find OTP record (hashed OTP expected)
+    const record = await Otp.findOne({ email: emailString });
+    if (!record) {
+      return NextResponse.json(
+        { success: false, message: "OTP not found or expired" },
+        { status: 400 }
+      );
+    }
 
-    await otpRecord.save();
-   // console.log(`💾 [Send OTP] OTP saved to DB`);
+    // Compare provided OTP with stored (supports hashed OTPs)
+    const isMatch = await bcrypt.compare(otp.toString(), record.otp);
+    if (!isMatch) {
+      return NextResponse.json(
+        { success: false, message: "Invalid OTP" },
+        { status: 401 }
+      );
+    }
 
-    // Configure email transporter
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
-
-    // Send OTP email
-    await transporter.sendMail({
-      from: `"CryptoSnoop" <${process.env.MAIL_USER}>`,
-      to: emailString,
-      subject: "Your CryptoSnoop OTP Code",
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #FFFFFF; margin: 0;">CryptoSnoop</h1>
-          </div>
-          <div style="background: linear-gradient(135deg, #c750f7 0%, #d575fc 100%); padding: 30px; border-radius: 15px; text-align: center;">
-            <h2 style="color: white; margin: 0 0 20px 0;">Your OTP Code</h2>
-            <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block;">
-              <h1 style="color: #FFFFFF; font-size: 42px; letter-spacing: 10px; margin: 0;">${otp}</h1>
-            </div>
-            <p style="color: white; margin-top: 20px; font-size: 14px;">This code will expire in 5 minutes</p>
-          </div>
-          <p style="color: #666; margin-top: 20px; text-align: center; font-size: 14px;">
-            If you didn't request this code, please ignore this email.
-          </p>
-          <p style="color: #999; margin-top: 30px; text-align: center; font-size: 12px;">
-            © ${new Date().getFullYear()} CryptoSnoop. All rights reserved.
-          </p>
-        </div>
-      `,
-    });
-
-    console.log(`✅ [Send OTP] OTP email sent to ${emailString}`);
+    // Delete OTP after successful verification
+    await Otp.deleteOne({ _id: record._id });
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "OTP sent successfully",
-      },
+      { success: true, message: "OTP verified successfully" },
       { status: 200 }
     );
   } catch (error: any) {
