@@ -638,6 +638,7 @@ const handleCancelEdit = () => {
                             <button onClick={(e) =>{
                                
                             e.stopPropagation();
+                            handleSaveAmount(asset.name, editAmount);
                             handleCancelEdit();
                             }} className="p-0.5 sm:p-1 bg-green-500 rounded">
                               <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />

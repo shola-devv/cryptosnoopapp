@@ -1,34 +1,144 @@
 "use client"
-import { Suspense, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { ArrowLeft, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
+import { signOut } from 'next-auth/react';
+import { usePortfolio } from '@/hooks/usePortfolio';
+
+// Smart Contract ABI (minimal) and address
+const PAYMENT_CONTRACT_ABI = [
+  {
+    type: 'function',
+    name: 'payForService',
+    stateMutability: 'payable',
+    inputs: [{ name: 'orderId', type: 'string' }],
+    outputs: [],
+  },
+  {
+    type: 'event',
+    name: 'PaymentReceived',
+    inputs: [
+      { name: 'payer', type: 'address', indexed: true },
+      { name: 'amount', type: 'uint256', indexed: false },
+      { name: 'orderId', type: 'string', indexed: false },
+      { name: 'timestamp', type: 'uint256', indexed: false },
+    ],
+  },
+];
+
+const CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890';
 
 function PaymentInner() {
   const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState<'select' | 'crypto' | 'fiat'>('select');
+  const searchParams = useSearchParams();
+  const { marketData } = usePortfolio();
+
+  const [paymentMethod, setPaymentMethod] = useState<'select' | 'crypto' | 'fiat' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const planName = 'Pro Plan';
-  const paymentAmount = 9.99;
+  const [copied, setCopied] = useState(false);
+  const [planName, setPlanName] = useState<string>('');
+  const [paymentAmount, setPaymentAmount] = useState<number>(0);
 
   function handleBack() {
     router.back();
   }
 
+  // Read URL params (amount, name, plan)
+  useEffect(() => {
+    const amount = searchParams.get('amount');
+    const name = searchParams.get('name') || searchParams.get('plan');
+
+    if (amount) {
+      const parsed = Number(amount);
+      if (!Number.isNaN(parsed)) setPaymentAmount(parsed);
+    }
+
+    if (name) {
+      try {
+        setPlanName(decodeURIComponent(name));
+      } catch {
+        setPlanName(name);
+      }
+    }
+  }, [searchParams]);
+
+  // Extract ETH price from market data
+  const realEthPrice = marketData?.find((coin: any) =>
+    coin?.symbol?.toLowerCase?.() === 'eth' || coin?.id?.toLowerCase?.() === 'ethereum'
+  )?.price as number | undefined;
+
+  const ethPrice = realEthPrice ?? 2500;
+
+  // Compute ETH amount (string with 6 decimal places)
+  const ethAmount = paymentAmount > 0 ? (paymentAmount / ethPrice).toFixed(6) : '0.000000';
+
   async function handleCryptoClick() {
-    setError(null);
+    const result = await makeSmartContractPayment();
+    if (result.success) {
+      console.log('Payment successful!', result);
+      setTimeout(() => router.push('/home/subscribe'), 3000);
+    }
+  }
+
+  // Wallet address to show for manual transfers
+  const walletAddress = '0xf9b3715CF2De8C164e1140f122dDFa798B5D72Aa';
+
+  const copyToClipboard = () => {
+    if (!navigator?.clipboard) return;
+    navigator.clipboard.writeText(walletAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // ============================================
+  // Smart Contract Payment Function
+  // ============================================
+  async function makeSmartContractPayment() {
     setIsProcessing(true);
+    setError('');
+    setTxHash(null);
+
     try {
-      // Simulate a wallet flow for build-time safety; integrate ethers logic in a later iteration
-      await new Promise((res) => setTimeout(res, 1200));
-      setTxHash('0x' + Math.random().toString(16).slice(2, 10));
-      setIsProcessing(false);
-      setTimeout(() => router.push('/home'), 800);
-    } catch (err) {
-      setError('Payment failed.');
+      const anyWindow = window as any;
+      if (!anyWindow?.ethereum) {
+        throw new Error('MetaMask is not installed');
+      }
+
+      const orderId = `ORDER-${Date.now()}`;
+
+      // Dynamically import ethers to avoid server-side bundling issues
+      const ethersMod: any = await import('ethers');
+
+      // Provider & signer
+      const provider = new ethersMod.BrowserProvider(anyWindow.ethereum);
+      await provider.send('eth_requestAccounts', []);
+      const signer = await provider.getSigner();
+
+      // Contract instance
+      const contract: any = new ethersMod.Contract(CONTRACT_ADDRESS, PAYMENT_CONTRACT_ABI, signer);
+
+      // Convert ETH to Wei
+      const weiAmount = ethersMod.parseEther(ethAmount);
+
+      // Send payment
+      const tx: any = await contract.payForService(orderId, {
+        value: weiAmount,
+        gasLimit: 100000,
+      });
+
+      setTxHash(tx.hash);
+      await tx.wait(1);
+
+      return { success: true, txHash: tx.hash, orderId, amount: ethAmount };
+    } catch (err: any) {
+      const errorMessage = err?.reason || err?.message || 'Payment failed';
+      setError(errorMessage);
+      console.error('Payment error:', errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
       setIsProcessing(false);
     }
   }
@@ -86,6 +196,22 @@ function PaymentInner() {
 
         {paymentMethod === 'crypto' && (
           <div className="mt-6">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-6">
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Ethereum Amount</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white">{ethAmount} ETH</p>
+            </div>
+
+            {/* Wallet Address */}
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900 mb-6">
+              <p className="text-slate-600 dark:text-slate-400 text-sm font-semibold mb-3">Send to wallet address:</p>
+              <div className="flex items-center gap-2 bg-purple-50 dark:bg-slate-800 rounded-xl p-3">
+                <code className="flex-1 font-mono text-sm text-slate-900 dark:text-white break-all">{walletAddress}</code>
+                <button onClick={copyToClipboard} className="flex-shrink-0 p-2 hover:bg-purple-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                  {copied ? (<Check className="w-5 h-5 text-green-600" />) : (<Copy className="w-5 h-5 text-slate-600 dark:text-slate-400" />)}
+                </button>
+              </div>
+            </div>
+
             <button onClick={handleCryptoClick} disabled={isProcessing || !!txHash} className="w-full bg-[#c750f7] text-white rounded-2xl p-4 font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
               {isProcessing ? 'Waiting for MetaMask...' : txHash ? 'Payment Complete' : 'Pay with MetaMask'}
             </button>

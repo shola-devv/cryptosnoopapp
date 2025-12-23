@@ -263,7 +263,7 @@ const handleDelete = async () => {
                 href="/home/addresses"
                 className="p-4 border border-purple-200 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-900/60 transition-colors"
               >
-                <h3 className="font-bold text-purple-600 mb-1">your Adresses</h3>
+                <h3 className="font-bold text-purple-600 mb-1">Your Adresses</h3>
                 <p className="text-sm text-gray-600 dark:text-white">view saved and labelled adresses</p>
               </Link>
               
