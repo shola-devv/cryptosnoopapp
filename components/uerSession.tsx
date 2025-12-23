@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
-import UserProfile from "@/app/home";
-import CryptoPortfolioPage from "@/app/home/assets";
-import AccountsPage from "@/app/home/addresses";
+import { auth } from "@/lib/auth";
+import UserProfile from "@/app/home/page";
+import CryptoPortfolioPage from "@/app/home/assets/page";
+import AccountsPage from "@/app/home/addresses/page";
 
 
 export default async function DashboardPage() {
@@ -15,9 +15,9 @@ console.log("USER ID:", session?.user?.id);
 
   return (
     <>
-      <UserProfile userId={userId} />
-      <CryptoPortfolioPage userId={userId} />
-      <AccountsPage userId={userId} />     
+      <UserProfile />
+      <CryptoPortfolioPage />
+      <AccountsPage />     
     </>
   );
 }
