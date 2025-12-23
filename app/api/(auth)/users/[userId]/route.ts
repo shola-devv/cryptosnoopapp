@@ -39,7 +39,7 @@ async function validateRequest(req: Request) {
   }
 
   // Auth check
-  const token = await getToken({ req });
+  const token = await getToken({ req: req as any });
   if (!token?.sub) return json({ message: "Unauthorized" }, 401);
 
   return token;
@@ -58,7 +58,7 @@ export const GET = async (
     // ----------------------------
     // 1️⃣ AUTH
     // ----------------------------
-    const token = await getToken({ req: request });
+    const token = await getToken({ req: request as any });
     if (!token?.sub) {
       return json({ message: "Unauthorized" }, 401);
     }
@@ -108,9 +108,9 @@ export const GET = async (
     // ----------------------------
     // 6️⃣ FETCH USER
     // ----------------------------
-    const user = await User.findById(userId)
+    const user = (await User.findById(userId)
       .select("-password -__v")
-      .lean();
+      .lean()) as any;
 
     if (!user) {
       return json({ message: "User not found" }, 404);

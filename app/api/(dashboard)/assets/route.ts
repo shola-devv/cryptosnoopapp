@@ -48,7 +48,7 @@ async function validateRequest(req: Request) {
   // ---- Check Session ----
   try {
     const token =
-      (await getToken({ req })) ||
+      (await getToken({ req: req as any })) ||
       req.headers.get("authorization")?.replace("Bearer ", "");
 
     if (!token) return json({ message: "Unauthorized" }, 401);
