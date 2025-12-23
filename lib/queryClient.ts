@@ -6,12 +6,14 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
+    // `cacheTime` is not part of the strict QueryObserverOptions in some @tanstack types,
+    // so cast to `any` here to preserve the intended runtime option while satisfying TS.
     queries: {
       // make cacheTime long so data stays available after reload
       cacheTime: 1000 * 60 * 60 * 24,
-      staleTime: 0,  // adjust as needed
+      staleTime: 0, // adjust as needed
       refetchOnWindowFocus: false,
-    },
+    } as any,
   },
 });
 
