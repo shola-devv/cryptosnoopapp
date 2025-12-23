@@ -51,7 +51,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
       const userId = session.user.id;
-      
+
+      // If id is missing for some reason, skip setting user to avoid assigning `undefined` to required `id`
+      if (!userId) {
+        console.warn('[UserProvider] authenticated session missing user.id')
+        return
+      }
+
       setUser({ 
         id: userId,
         email: session.user.email || undefined,
