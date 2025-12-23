@@ -1,30 +1,31 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { redis } from "./redis";
+import * as redisClient from "./redis";
 
-// Default rate limit: 10 req / 10s
-export const ratelimit = new Ratelimit({
-  redis: redis,
-  limiter: Ratelimit.slidingWindow(10, "10 s"),
-  analytics: true,
-});
+// If Upstash isn't configured at build time (e.g., missing env vars), we export
+// a safe no-op limiter that always allows requests. This prevents importing
+// this module from throwing during static builds.
+const UPSTASH_CONFIGURED = Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 
-// Strict rate limit: 5 req / 60s
-export const strictRatelimit = new Ratelimit({
-  redis: redis,
-  limiter: Ratelimit.slidingWindow(5, "60 s"),
-  analytics: true,
-});
+function makeRatelimit(limiterConfig?: { size: number; window: string }) {
+  if (!UPSTASH_CONFIGURED) {
+    return {
+      async limit(_id: string) {
+        return { success: true, remaining: 9999 };
+      },
+    } as const;
+  }
 
-// 🔵 Medium rate limit: 20 req / 30s
-export const mediumRatelimit = new Ratelimit({
-  redis: redis,
-  limiter: Ratelimit.slidingWindow(20, "30 s"),
-  analytics: true,
-});
+  const size = limiterConfig?.size ?? 10;
+  const window = limiterConfig?.window ?? "10 s";
 
-// 🔥 Burst rate limit: 50 req / 5 minutes
-export const burstRatelimit = new Ratelimit({
-  redis: redis,
-  limiter: Ratelimit.slidingWindow(50, "300 s"),
-  analytics: true,
-});
+  return new Ratelimit({
+    redis: redisClient.redis as any,
+    limiter: Ratelimit.slidingWindow(size, window as any),
+    analytics: true,
+  });
+}
+
+export const ratelimit = makeRatelimit({ size: 20, window: "30 s" }); // default medium
+export const strictRatelimit = makeRatelimit({ size: 5, window: "60 s" });
+export const mediumRatelimit = makeRatelimit({ size: 20, window: "30 s" });
+export const burstRatelimit = makeRatelimit({ size: 50, window: "300 s" });
