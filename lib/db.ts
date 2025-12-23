@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  throw new Error('Please add your Mongo URI to .env.local');
-}
+const MONGO_URI = process.env.MONGO_URI || "";
 
 // Configure mongoose for better connection handling
 mongoose.set('strictQuery', false);
@@ -22,6 +18,12 @@ const options = {
 let isConnected = false;
 
 const connect = async () => {
+  // Ensure MONGO_URI is present when attempting to connect. We avoid throwing
+  // at import time so server-side builds or preview environments without a
+  // configured DB don't crash during static analysis.
+  if (!MONGO_URI) {
+    throw new Error('MONGO_URI is not configured. Set MONGO_URI in environment to connect to MongoDB.');
+  }
   // If already connected, return immediately
   if (isConnected && mongoose.connection.readyState === 1) {
     console.log("✅ Using existing MongoDB connection");
