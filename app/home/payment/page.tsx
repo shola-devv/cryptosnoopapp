@@ -1,4 +1,5 @@
-'use client'
+"use client"
+import { signOut as nextAuthSignOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Copy, Check } from 'lucide-react';
@@ -36,7 +37,7 @@ export default function PaymentPage() {
   // Get payment details from URL
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [planName, setPlanName] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'fiat' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
@@ -78,7 +79,7 @@ const ethPrice = realEthPrice || 2500;
     setTxHash('');
 
     try {
-      if (!window.ethereum) {
+      if (!(window as any).ethereum) {
         throw new Error('MetaMask is not installed');
       }
 
@@ -86,7 +87,7 @@ const ethPrice = realEthPrice || 2500;
       const orderId = `ORDER-${Date.now()}`;
 
       // Get provider
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
 
       // Request accounts
       await provider.send('eth_requestAccounts', []);
@@ -130,7 +131,7 @@ const ethPrice = realEthPrice || 2500;
         orderId,
         amount: ethAmount
       };
-    } catch (err) {
+    } catch (err: any) {
       const errorMessage = err?.reason || err?.message || 'Payment failed';
       setError(errorMessage);
       console.error('Payment error:', errorMessage);
@@ -494,7 +495,7 @@ const ethPrice = realEthPrice || 2500;
             >
               our socials
             </a>
-            <a onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
+            <a onClick={() => nextAuthSignOut({ callbackUrl: "/" })} className="text-gray-600 cursor-pointer hover:text-[#c750f7] transition-colors duration-300 font-medium underline dark:text-white">
               Logout
             </a>
           </div>

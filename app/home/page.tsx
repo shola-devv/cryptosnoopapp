@@ -125,7 +125,7 @@ const totalChange = portfolio?.portfolioChangePercent ?? 0;
       symbol: coin.symbol,
       price: coin.price || 0,
       change: coin.priceChange1d || 0,
-      icon: coin.icon || coin.symbol.charAt(0).toUpperCase()
+      icon: coin.icon || (coin.symbol ? coin.symbol.charAt(0).toUpperCase() : "?")
     })) || []
   
   const handleNavigation = (path: string) => {
@@ -140,11 +140,15 @@ const totalChange = portfolio?.portfolioChangePercent ?? 0;
    }
 }
 
-  const handleAddClick = (coin: any) => {
+  const handleAddClick = (coin: { id: string; name: string; symbol: string; price?: number; icon?: string }) => {
     setSelectedCoin(coin)
     setIsModalOpen(true)
     setQuantity("")
     buzzClick()
+  }
+
+  const isAssetInList = (coinName: string) => {
+    return (assets as any[]).some((asset: any) => asset.name.trim().toLowerCase() === coinName.trim().toLowerCase())
   }
 
 
@@ -165,11 +169,7 @@ const handleAddAsset = async () => {
     setMessage("");
     setMessageType("");
 
-    const assetExists = assets.some(
-      (asset) =>
-        asset.name.trim().toLowerCase() ===
-        selectedCoin.name.trim().toLowerCase()
-    );
+    const assetExists = isAssetInList(selectedCoin.name);
      
     {/*why localhost rere*/}
     const url = assetExists
@@ -224,7 +224,7 @@ const handleAddAsset = async () => {
   
 
 //profile handler
-const fetchUserProfile = async (userId) => {
+const fetchUserProfile = async (userId: string) => {
   try {
     console.log('fetching profile data')
     const response = await fetch(`/api/users?userId=${userId}`, {
@@ -255,7 +255,7 @@ useEffect(() => {
 }, [session?.user?.id]);
 
 // Optimistic update handler
-const handleProfileSave = (newName, newAvatarIndex) => {
+const handleProfileSave = (newName: string, newAvatarIndex: number) => {
   // Immediately update UI (optimistic)
   setProfile(newAvatarIndex);
   setUserAvatar(avatarOptions[newAvatarIndex]);
@@ -772,7 +772,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
              <Card className="border-0 shadow-lg" style={{ boxShadow: '0 8px 30px -3px rgba(199, 80, 247, 0.2)' }}>
                 <CardContent className="p-3 sm:p-6">
                   <div className="space-y-2 sm:space-y-3">
-                    {cryptoCoins.map((coin) => (
+                    {cryptoCoins.map((coin: { id: string; name: string; symbol: string; price: number; change: number; icon?: string }) => (
                       <div 
                         key={coin.id} 
                         className="flex items-center justify-between p-2 sm:p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow gap-2 sm:gap-4 flex-wrap sm:flex-nowrap"
@@ -873,8 +873,8 @@ const handleProfileSave = (newName, newAvatarIndex) => {
           </div>
         )}
         <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">
-          {assets.some(
-            (asset) =>
+          {(assets as any[]).some(
+            (asset: any) =>
               asset.name.trim().toLowerCase() ===
               selectedCoin.name.trim().toLowerCase()
           )
@@ -966,11 +966,7 @@ const handleProfileSave = (newName, newAvatarIndex) => {
   ) : (
     <>
       <Plus className="w-5 h-5 mr-2" />
-      {assets.some(
-        (asset) =>
-          asset.name.trim().toLowerCase() ===
-          selectedCoin.name.trim().toLowerCase()
-      )
+      {isAssetInList(selectedCoin.name)
         ? "Update Asset"
         : "Add Asset"}
     </>

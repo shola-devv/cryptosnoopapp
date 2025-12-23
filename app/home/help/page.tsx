@@ -144,7 +144,7 @@ const handleDelete = async () => {
   const handleLogout = async () => {
     if (confirm("Are you sure you want to logout?")) {
       try {
-        await logout()
+        await signOut()
       } catch (error) {
         console.error("Logout failed", error)
       }
@@ -222,7 +222,7 @@ const handleDelete = async () => {
                     {expandedFaq === index ? (
                       <ChevronUp className="w-5 h-5 text-[#c750f7] flex-shrink-0" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-[#c750f7] text-gray-400 flex-shrink-0" />
+                      <ChevronDown className="w-5 h-5 text-[#c750f7] flex-shrink-0" />
                     )}
                   </button>
                   {expandedFaq === index && (
@@ -339,13 +339,13 @@ const handleDelete = async () => {
      {/* DELETE Button. the handle delete func shoulf have a alert(are you sure) */}
          
         <div className="mt-12 flex justify-center">
-          <button
-         variant="outline"
-        onClick={() => setShowConfirm(true)}
-        className="px-6 py-3 rounded-lg bg-red-500 text-white border-red-500 active:translate-y-1  font-bold"
-      >
-        Delete Account
-      </button>
+          <Button
+            variant="outline"
+            onClick={() => setShowConfirm(true)}
+            className="px-6 py-3 rounded-lg bg-red-500 text-white border-red-500 active:translate-y-1  font-bold"
+          >
+            Delete Account
+          </Button>
         </div>
 
 

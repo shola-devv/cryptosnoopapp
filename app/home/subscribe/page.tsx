@@ -21,7 +21,13 @@ import Link from "next/link"
 // -------------------
 // Test Modal Component
 // -------------------
-function TestPlanModal({ isOpen, onClose, onActivate }) {
+type TestPlanModalProps = {
+  isOpen: boolean
+  onClose: () => void
+  onActivate: () => void
+}
+
+function TestPlanModal({ isOpen, onClose, onActivate }: TestPlanModalProps) {
   if (!isOpen) return null;
 
   const [loading, setLoading] = useState(false);
@@ -184,10 +190,24 @@ function TestPlanModal({ isOpen, onClose, onActivate }) {
 // -------------------
 // Subscription Page
 // -------------------
+import { signOut } from 'next-auth/react';
+
+type Plan = {
+  id: string
+  name: string
+  price: string
+  priceValue: number
+  period: string
+  icon?: string
+  color?: string
+  features: string[]
+  popular?: boolean
+}
+
 export default function SubscriptionPage() {
   const router = useRouter();
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const plans = [
     {
       id: 'monthly',
@@ -249,13 +269,12 @@ export default function SubscriptionPage() {
   ];
 const [loading, setLoading] = useState(false);
 
-  const handleSelectPlan = (plan) => {
+  const handleSelectPlan = (plan: Plan) => {
     setLoading(true);
+    setSelectedPlanId(plan.id);
     // Navigate immediately to payment page with amount
     router.push(`/home/payment?amount=${plan.priceValue}&plan=${plan.id}&name=${encodeURIComponent(plan.name)}`);
-  setTimeout(() => setLoading(false), 15000);
-    
-    
+    setTimeout(() => setLoading(false), 15000);
   };
 
   const handleTestPlanActivate = () => {
@@ -332,7 +351,7 @@ const [loading, setLoading] = useState(false);
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {plans.map((plan) => {
                 const Icon = plan.icon;
-                const isSelected = selectedPlan === plan.id;
+                            const isSelected = selectedPlanId === plan.id;
 
                 return (
                   <div

@@ -14,24 +14,48 @@ import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from "@/components/darkToggle"
 
 
+type MarketCoin = {
+  id: string
+  name: string
+  symbol: string
+  price?: number
+  priceChange1d?: number
+  icon?: string
+}
+
+type Asset = {
+  _id: string
+  name: string
+  quantity: number
+  lastPrice?: number
+}
+
+type EnrichedAsset = Asset & {
+  price: number
+  change24h: number
+  icon: string
+  symbol: string
+  value: number
+}
+
 export default function CryptoPortfolioPage() {
   const { portfolio, assets, marketData, refreshAssets, refreshAll, isLoading, error } = usePortfolio()
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [editAmount, setEditAmount] = useState<number>("")
+  const [editAmount, setEditAmount] = useState<string>("")
   const [isSending, setIsSending] = useState(false)
   const [message, setMessage] = useState("")
   const [messageType, setMessageType] = useState<"success" | "error" | "">("")
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedCoin, setSelectedCoin] = useState<any>(null)
+  const [selectedCoin, setSelectedCoin] = useState<MarketCoin | null>(null)
   const [quantity, setQuantity] = useState("")
   const [showBalance, setShowBalance] = useState(true)
   
   const router = useRouter();
 
-  const {data: session, status}= useSession(); 
-     const userId = session?.user?.id;
-  const name = session?.user?.name;
-  const userPlan = session?.user?.subscription?.plan || "free";
+    const {data: session, status}= useSession(); 
+    const userId = (session?.user as any)?.id;
+    const name = (session?.user as any)?.name;
+    const userPlan = (session?.user as any)?.subscription?.plan || "free";
 const maxAssets = userPlan === "free" ? 10 : 50;
 
   
@@ -89,8 +113,8 @@ const handleCancelEdit = () => {
   }
 
 
-  const handleSaveAmount = async (name: string, quantity: number) => {
-    const newAmount = parseFloat(editAmount)
+  const handleSaveAmount = async (name: string, editAmountValue: string) => {
+    const newAmount = parseFloat(editAmountValue)
     if (isNaN(newAmount) || newAmount < 0) return
 
     try {
@@ -137,8 +161,8 @@ const handleCancelEdit = () => {
     setIsSending(true)
 
     try {
-      const assetExists = assets.some(
-        (asset) =>
+      const assetExists = (assets as Asset[]).some(
+        (asset: Asset) =>
           asset.name.trim().toLowerCase() ===
           selectedCoin.name.trim().toLowerCase()
       )
@@ -189,27 +213,30 @@ const handleCancelEdit = () => {
     }
   }
 
-  const cryptoCoins = marketData?.map((coin: any) => ({
+  const cryptoCoins: (MarketCoin & { change: number; price: number })[] = marketData?.map((coin: MarketCoin) => ({
     id: coin.id,
     name: coin.name,
     symbol: coin.symbol,
     price: coin.price || 0,
     change: coin.priceChange1d || 0,
-    icon: coin.icon || coin.symbol.charAt(0).toUpperCase()
+    priceChange1d: coin.priceChange1d || 0,
+    icon: coin.icon || (coin.symbol ? coin.symbol.charAt(0).toUpperCase() : "?")
   })) || []
 
   // Get enriched assets with market data
-  const enrichedAssets = assets.map(asset => {
+  const enrichedAssets: EnrichedAsset[] = assets.map((asset: Asset) => {
     const marketCoin = marketData?.find(
-      coin => coin.name.toLowerCase() === asset.name.toLowerCase()
+      (coin: MarketCoin) => coin.name.toLowerCase() === asset.name.toLowerCase()
     )
+    const price = marketCoin?.price ?? asset.lastPrice ?? 0
+    const change24h = marketCoin?.priceChange1d ?? 0
     return {
       ...asset,
-      price: marketCoin?.price || asset.lastPrice || 0,
-      change24h: marketCoin?.priceChange1d || 0,
+      price,
+      change24h,
       icon: marketCoin?.icon || asset.name.charAt(0).toUpperCase(),
       symbol: marketCoin?.symbol || asset.name.substring(0, 3).toUpperCase(),
-      value: (marketCoin?.price || asset.lastPrice || 0) * asset.quantity
+      value: price * asset.quantity
     }
   })
 
@@ -508,7 +535,7 @@ const handleCancelEdit = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {enrichedAssets.map(asset => {
+              {enrichedAssets.map((asset: EnrichedAsset) => {
                 const percentOfPortfolio = totalValue > 0 ? (asset.value / totalValue) * 100 : 0
 
                 return (
@@ -731,8 +758,8 @@ const handleCancelEdit = () => {
                     </div>
                   )}
                   <h3 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white mb-1">
-                    {assets.some(
-                      (asset) =>
+                    {(assets as Asset[]).some(
+                      (asset: Asset) =>
                         asset.name.trim().toLowerCase() ===
                         selectedCoin.name.trim().toLowerCase()
                     )
@@ -787,7 +814,7 @@ const handleCancelEdit = () => {
                       <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
                         $
                         {(
-                          parseFloat(quantity) * selectedCoin.price
+                          parseFloat(quantity) * (selectedCoin.price ?? 0)
                         ).toLocaleString(undefined, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
@@ -836,8 +863,8 @@ const handleCancelEdit = () => {
                     ) : (
                       <>
                         <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        {assets.some(
-                          (asset) =>
+                        {(assets as Asset[]).some(
+                          (asset: Asset) =>
                             asset.name.trim().toLowerCase() ===
                             selectedCoin.name.trim().toLowerCase()
                         )
@@ -857,7 +884,7 @@ const handleCancelEdit = () => {
                 <Card className="border-0 shadow-lg">
                   <CardContent className="p-3 sm:p-6">
                     <div className="space-y-2 sm:space-y-3">
-                      {cryptoCoins.map((coin) => (
+                      {cryptoCoins.map((coin: MarketCoin & { change: number; price: number }) => (
                         <div
                           key={coin.id}
                           className="flex items-center justify-between p-2 sm:p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:shadow-md transition-shadow gap-2 sm:gap-4 flex-wrap sm:flex-nowrap cursor-pointer"

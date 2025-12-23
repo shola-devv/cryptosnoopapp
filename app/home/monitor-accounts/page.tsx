@@ -120,7 +120,8 @@ export default function MonitorWalletsPage() {
   const { isLoading, error, refreshAll } = usePortfolio()
 
   const [isOpen, setIsOpen] = useState(true);
-  const [addressValidation, setAddressValidation] = useState(null);
+  type AddressValidation = { isValid: boolean; chain: string | null; error: string | null } | null;
+  const [addressValidation, setAddressValidation] = useState<AddressValidation>(null);
   const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
   
 //Trial code 
@@ -511,7 +512,7 @@ const componentOpen = isOpen;
     >
       <div className="flex items-center gap-3">
        <div className="w-8 h-8 relative">
-  <Image src={selectedChainData?.icon} alt={selectedChainData?.name} fill className="object-contain" />
+  <Image src={selectedChainData?.icon ?? '/default-chain.png'} alt={selectedChainData?.name ?? ''} fill className="object-contain" />
 </div>
         <span className="font-semibold">{selectedChainData?.name}</span>
       </div>
@@ -542,9 +543,9 @@ const componentOpen = isOpen;
               selectedChain === chain.id ? "bg-purple-50 dark:bg-slate-700" : ""
             }`}
           >
-           <div className="w-8 h-8 relative">
-  <Image src={chain.icon} alt={chain.name} fill className="object-contain" />
-</div>
+          <div className="w-8 h-8 relative">
+          <Image src={chain.icon ?? '/default-chain.png'} alt={chain.name} fill className="object-contain" />
+        </div>
 
        
               <p className="font-semibold text-slate-900 dark:text-white">{chain.name}</p>
@@ -577,13 +578,13 @@ const componentOpen = isOpen;
       const value = e.target.value;
       setWalletAddress(value);
 
-      const result = validateBlockchainAddress(value); // <-- validate address
+      const result = validateBlockchainAddress(value) as AddressValidation; // <-- validate address
       setAddressValidation(result);
 
       // Auto-select chain if valid and user hasn't manually chosen one
-      if (result?.isValid && result && !userManuallySelectedChain) {
+      if (result?.isValid && !userManuallySelectedChain && result.chain) {
         const found = SUPPORTED_CHAINS.find(
-          (c) => c.name.toLowerCase() === result.chain.toLowerCase()
+          (c) => c.name.toLowerCase() === result.chain!.toLowerCase()
         );
         if (found) setSelectedChain(found.id);
       }
@@ -601,7 +602,7 @@ const componentOpen = isOpen;
       !walletAddress.trim() ||
     isLoadingWallet ||
     trackUses >= FREE_TRIAL_LIMIT ||
-    (addressValidation && !addressValidation.isValid)
+    Boolean(addressValidation && !addressValidation.isValid)
     }
     className="px-6 py-3 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border-4 border-[#d575fc] cursor-pointer"
   >
