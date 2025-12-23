@@ -11,16 +11,20 @@ interface ThemeProviderProps {
   defaultTheme?: Theme
 }
 
-interface ThemeProviderState {
+export interface ThemeProviderState {
   theme: Theme
   setTheme: (theme: Theme) => void
   systemTheme: Theme | undefined
+  isPaidUser: boolean
+  setIsPaidUser: (flag: boolean) => void
 }
 
 const initialState: ThemeProviderState = {
   theme: "system",
   setTheme: () => null,
   systemTheme: undefined,
+  isPaidUser: false,
+  setIsPaidUser: () => null,
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
@@ -28,13 +32,19 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
   const [systemTheme, setSystemTheme] = useState<Theme | undefined>(undefined)
+  const [isPaidUser, setIsPaidUser] = useState<boolean>(false)
 
   // Load theme from localStorage on mount
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as Theme
+    const storedPaid = localStorage.getItem('isPaidUser')
 
     if (storedTheme) {
       setTheme(storedTheme)
+    }
+
+    if (storedPaid !== null) {
+      setIsPaidUser(storedPaid === 'true')
     }
 
     // Check for system preference
@@ -52,6 +62,15 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
       return () => mediaQuery.removeEventListener("change", handleChange)
     }
   }, [])
+
+  // Persist paid status
+  useEffect(() => {
+    try {
+      localStorage.setItem('isPaidUser', isPaidUser ? 'true' : 'false')
+    } catch (e) {
+      // ignore localStorage errors
+    }
+  }, [isPaidUser])
 
   // Apply theme to document
   useEffect(() => {
@@ -72,12 +91,14 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
     theme,
     setTheme,
     systemTheme,
+    isPaidUser,
+    setIsPaidUser,
   }
 
   return <ThemeProviderContext.Provider value={value}>{children}</ThemeProviderContext.Provider>
 }
 
-export const useTheme = () => {
+export const useTheme = (): ThemeProviderState => {
   const context = useContext(ThemeProviderContext)
 
   if (context === undefined) {
