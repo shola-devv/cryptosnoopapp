@@ -2,15 +2,20 @@
 
 import { useUserProfile } from "@/hooks/UserProfile";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, ReactNode } from "react";
 
-export default function PlanGuard({ children }) {
-  const plan = "fre" //useUserPlan();
+type PlanGuardProps = {
+  children: ReactNode;
+}
+
+export default function PlanGuard({ children }: PlanGuardProps) {
+  const { user } = useUserProfile();
+  const plan = (user?.subscription?.plan as string) ?? "free";
   const router = useRouter();
 
   useEffect(() => {
     if (plan === "free") {
-      router.replace("upgrade?restricted=true");
+      router.replace("/home/upgrade?restricted=true");
     }
   }, [plan, router]);
 
