@@ -42,7 +42,7 @@ function isValidSolana(address: string) {
 // Main Validator
 // -----------------------------
 export function validateBlockchainAddress(raw: string) {
-  const address = sanitize(raw);
+  const address: string = sanitize(raw);
 
   if (!address) {
     return {
@@ -78,8 +78,8 @@ export function validateBlockchainAddress(raw: string) {
   // -------------------------
   // Solana
   // -------------------------
-  if (address.length >= 25 && address.length <= 44) {
-    const ok = isValidSolana(address);
+  if (String(address).length >= 25 && String(address).length <= 44) {
+    const ok = isValidSolana(address as string);
     return {
       isValid: ok,
       chain: ok ? "Solana" : null,
