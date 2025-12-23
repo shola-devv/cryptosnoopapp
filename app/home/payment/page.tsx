@@ -34,7 +34,7 @@ function PaymentInner() {
   const searchParams = useSearchParams();
   const { marketData } = usePortfolio();
 
-  const [paymentMethod, setPaymentMethod] = useState<'select' | 'crypto' | 'fiat' | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'select' | 'crypto' | 'fiat'>('select');
   const [isProcessing, setIsProcessing] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +54,8 @@ function PaymentInner() {
     if (amount) {
       const parsed = Number(amount);
       if (!Number.isNaN(parsed)) setPaymentAmount(parsed);
+      // If an amount is present in the URL, default to crypto payment flow
+      setPaymentMethod((prev) => (prev === 'select' ? 'crypto' : prev));
     }
 
     if (name) {
@@ -185,8 +187,18 @@ function PaymentInner() {
         <div className="space-y-4">
           <p className="text-slate-600 dark:text-slate-400 font-semibold">Select Payment Method</p>
           <div className="flex gap-4">
-            <button onClick={() => setPaymentMethod('crypto')} className="px-4 py-2 rounded-md bg-[#c750f7] text-white">Crypto</button>
-            <button onClick={() => setPaymentMethod('fiat')} className="px-4 py-2 rounded-md border">Fiat</button>
+            <button
+              onClick={() => setPaymentMethod('crypto')}
+              className={`px-4 py-2 rounded-md transition-colors ${paymentMethod === 'crypto' ? 'bg-[#c750f7] text-white' : 'bg-white dark:bg-slate-900 border'}`}
+            >
+              Crypto
+            </button>
+            <button
+              onClick={() => setPaymentMethod('fiat')}
+              className={`px-4 py-2 rounded-md transition-colors ${paymentMethod === 'fiat' ? 'bg-[#c750f7] text-white' : 'bg-white dark:bg-slate-900 border'}`}
+            >
+              Fiat
+            </button>
           </div>
         </div>
 

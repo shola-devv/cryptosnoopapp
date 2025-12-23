@@ -40,7 +40,7 @@ export const metadata: Metadata = {
      siteName: "cryptosnoop",
      images: [
       {
-        url: "/cryptosnoopwallpaper.jpg",
+        url: "/cryptosnoopwall.jpg",
         width: 1200,
         height: 630,
         alt: "cryptosnoop preview"
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "cryptosnoop",
     description: "track your crypto assets and holdings with ease",
-    images: ["/cryptosnoopwallpaper.jpg"],
+    images: ["/cryptosnoopwall.jpg"],
    },
 
 

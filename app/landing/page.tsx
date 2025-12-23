@@ -200,24 +200,22 @@ const CryptoSnoop = () => {
           without hassle
         </h2>
 
-        <div className="max-w-2xl mx-auto space-y-4 mb-8">
-          <div className="flex items-center justify-center gap-3">
-            
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
+        <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-8">
+          {/* Use a compact stacked grid on small screens for consistent spacing */}
+          <div className="flex items-center justify-center p-2 sm:p-0">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-semibold text-center">
               Manage your crypto portfolio with real-time data
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-3">
-            
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
-            Monitor remote crypto wallets
+          <div className="flex items-center justify-center p-2 sm:p-0">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-semibold text-center">
+              Monitor remote crypto wallets
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-3">
-           
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-bold">
+          <div className="flex items-center justify-center p-2 sm:p-0">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 font-semibold text-center">
               Keep all your address labels securely in one place
             </p>
           </div>
@@ -234,8 +232,8 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 my-8">
-        <div className="flex justify-center items-center min-h-[220px]">
+      <div className="relative overflow-hidden pb-2 my-4 sm:my-8">
+        <div className="flex justify-center items-center min-h-[180px] sm:min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
           ) : coins.length > 0 ? (
@@ -247,7 +245,7 @@ const CryptoSnoop = () => {
               }`}
             >
               <div
-                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-4 w-80 border border-white/50"
+                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-3 w-64 sm:w-80 border border-white/50"
                 style={{
                   background:
                     "linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(108, 198, 255, 0.2))",
@@ -256,13 +254,13 @@ const CryptoSnoop = () => {
                 }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-transparent rounded-full flex items-center justify-center overflow-hidden shadow-lg">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 bg-transparent rounded-full flex items-center justify-center overflow-hidden shadow-lg">
                       <Image
                         src={coins[currentCoin].icon}
                         alt={coins[currentCoin].name}
-                        width={40}
-                        height={40}
+                        width={32}
+                        height={32}
                         className="object-contain"
                       />
                     </div>
