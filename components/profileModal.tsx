@@ -12,6 +12,15 @@ const avatarOptions = [
   { id: 5, emoji: '🌟', color: '#a8e6cf', label: 'Star' }
 ];
 
+type ProfileModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  currentName?: string | null;
+  currentAvatar?: number | null;
+  currentUserId?: string | null;
+  onSave: (newName: string | null, newAvatarIndex: number | null) => void;
+}
+
 export default function ProfileModal({
   isOpen,
   onClose,
@@ -19,7 +28,7 @@ export default function ProfileModal({
   currentAvatar,
   currentUserId,
   onSave
-}) {
+}: ProfileModalProps) {
   const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0);
   const [newName, setNewName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +43,7 @@ export default function ProfileModal({
 
   // Close on Escape
   useEffect(() => {
-    const handler = (e) => {
+    const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) onClose();
     };
     window.addEventListener('keydown', handler);
@@ -64,7 +73,7 @@ export default function ProfileModal({
       if (!response.ok) {
         alert(data.message || 'Failed to update profile.');
         // Revert by calling onSave with original values
-        onSave(currentName, currentAvatar);
+        onSave(currentName ?? null, currentAvatar ?? null);
         return;
       }
 
@@ -74,7 +83,7 @@ export default function ProfileModal({
       console.error('Error saving profile:', error);
       alert('Something went wrong while saving your changes.');
       // Revert on error
-      onSave(currentName, currentAvatar);
+      onSave(currentName ?? null, currentAvatar ?? null);
     } finally {
       setIsSaving(false);
     }
