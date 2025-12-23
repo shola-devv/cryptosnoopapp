@@ -1,36 +1,10 @@
 "use client"
 import { signOut as nextAuthSignOut } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Copy, Check } from 'lucide-react';
 import { ethers } from 'ethers';
-import Image from "next/image";
-import { usePortfolio } from "@/hooks/usePortfolio";
-
-// Smart Contract ABI
-const PAYMENT_CONTRACT_ABI = [
-  {
-    type: 'function',
-    name: 'payForService',
-    stateMutability: 'payable',
-    inputs: [{ name: 'orderId', type: 'string' }],
-    outputs: []
-  },
-  {
-    type: 'event',
-    name: 'PaymentReceived',
-    inputs: [
-      { name: 'payer', type: 'address', indexed: true },
-      { name: 'amount', type: 'uint256', indexed: false },
-      { name: 'orderId', type: 'string', indexed: false },
-      { name: 'timestamp', type: 'uint256', indexed: false }
-    ]
-  }
-];
-
-const CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890'; // Your deployed contract
-
-export default function PaymentPage() {
+function PaymentInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -45,15 +19,12 @@ export default function PaymentPage() {
   const {marketData} = usePortfolio();
 
   // Extract ETH price from market data
-const realEthPrice = marketData?.find((coin: any) => 
-  coin.symbol.toLowerCase() === 'eth' || coin.id.toLowerCase() === 'ethereum'
-)?.price;
- 
-console.log('Real ETH Price:', realEthPrice);
-const ethPrice = realEthPrice || 2500;
-
-  // Mock market data (replace with your usePortfolio hook)
-   
+  const realEthPrice = marketData?.find((coin: any) => 
+    coin.symbol.toLowerCase() === 'eth' || coin.id.toLowerCase() === 'ethereum'
+  )?.price;
+  
+  console.log('Real ETH Price:', realEthPrice);
+  const ethPrice = realEthPrice || 2500;
 
   // Payments wallet address
   const walletAddress = '0xf9b3715CF2De8C164e1140f122dDFa798B5D72Aa';
@@ -374,6 +345,40 @@ const ethPrice = realEthPrice || 2500;
               <p className="text-sm text-green-600 dark:text-green-400 mt-2">
                 Redirecting to dashboard...
               </p>
+            </div>
+          )}
+
+          {/* Payment Button */}
+          <button
+            onClick={handleCryptoClick}
+            disabled={isProcessing || !!txHash}
+            className="w-full bg-[#c750f7] text-white rounded-2xl p-4 font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isProcessing ? 'Waiting for MetaMask...' : txHash ? 'Payment Complete' : 'Pay with MetaMask'}
+          </button>
+
+          {/* Instructions */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 mt-6">
+            <p className="text-blue-900 dark:text-blue-300 font-semibold mb-2">Instructions:</p>
+            <ol className="space-y-1 text-sm text-blue-800 dark:text-blue-400 list-decimal list-inside">
+              <li>Click "Pay with MetaMask" button</li>
+              <li>Confirm transaction in MetaMask popup</li>
+              <li>Wait for confirmation</li>
+            </ol>
+          </div>
+        </div>
+      </main>
+    );
+  }
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center p-4">Loading...</div>}>
+      <PaymentInner />
+    </Suspense>
+  );
+}
             </div>
           )}
 
