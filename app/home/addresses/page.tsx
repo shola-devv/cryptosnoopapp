@@ -24,7 +24,7 @@ export default function AccountsPage() {
   const router = useRouter();
  
 const { data: session, status } = useSession();
-  const userId = session?.user?.id;
+  const userId = (session?.user as any)?.id;
   // derive user plan from profile
   const { user: profile } = useUserProfile();
   const userPlan = profile?.subscription?.plan ?? "free";
@@ -52,11 +52,12 @@ const [editAddressValidation, setEditAddressValidation] = useState<{
   const [newCategory, setNewCategory] = useState("Wallet")
 
   // State for copy button
-  const [copiedId, setCopiedId] = useState(null)
-
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+  
   // State for editing
-  const [editingId, setEditingId] = useState(null)
-  const [editData, setEditData] = useState({})
+  const [editingId, setEditingId] = useState<string | null>(null)
+  type EditData = { address?: string; label?: string; category?: string };
+  const [editData, setEditData] = useState<EditData>({})
 
   // State for messages
   const [message, setMessage] = useState("")
@@ -64,7 +65,7 @@ const [editAddressValidation, setEditAddressValidation] = useState<{
   const [isSending, setIsSending] = useState(false)
 
   // Ref for the new row
-  const newAddressRef = useRef(null)
+  const newAddressRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -83,7 +84,7 @@ const [editAddressValidation, setEditAddressValidation] = useState<{
   }
 
   // Function to handle copy
-  const handleCopy = (text, id) => {
+  const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedId(id)
       buzzClick()
@@ -136,7 +137,7 @@ if (addresses.length >= maxAddresses) {
       
       // Focus on the address input after adding
       if (newAddressRef.current) {
-        newAddressRef.current.focus()
+        newAddressRef.current?.focus()
       }
     } catch (error) {
       console.error(error)
@@ -150,7 +151,7 @@ if (addresses.length >= maxAddresses) {
   }
 
   // Function to toggle edit mode
-  const toggleEditMode = (id, address, label, category) => {
+  const toggleEditMode = (id: string, address: string, label: string, category: string) => {
     if (editingId === id) {
       setEditingId(null)
       setEditData({})
@@ -161,12 +162,12 @@ if (addresses.length >= maxAddresses) {
   }
 
   // Function to update edit data
-  const updateEditData = (field, value) => {
+  const updateEditData = (field: keyof EditData, value: string) => {
     setEditData(prev => ({ ...prev, [field]: value }))
   }
 
   // Function to save edits
-  const saveEdits = async (id) => {
+  const saveEdits = async (id: string) => {
     if (!editData.address?.trim() || !editData.label?.trim()) return
 
     setMessage("")
@@ -209,7 +210,7 @@ if (addresses.length >= maxAddresses) {
   }
 
   // Function to delete account
-  const deleteAccount = async (id) => {
+  const deleteAccount = async (id: string) => {
     if (!confirm("Are you sure you want to delete this address?")) return
 
     setMessage("")
@@ -243,15 +244,15 @@ if (addresses.length >= maxAddresses) {
   }
 
   // Get category badge color
-  const getCategoryColor = (category) => {
-    const colors = {
-      Wallet: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-      Exchange: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-      Contract: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-      Other: "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400"
+    const getCategoryColor = (category: string) => {
+      const colors: Record<string, string> = {
+        Wallet: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+        Exchange: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+        Contract: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+        Other: "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400"
+      }
+      return colors[category] || colors.Other
     }
-    return colors[category] || colors.Other
-  }
 
   if (isLoading) {
     return (
@@ -573,7 +574,7 @@ if (addresses.length >= maxAddresses) {
           !newAddress.trim() ||
           !newLabel.trim() ||
           isSending ||
-          (addressValidation && !addressValidation.isValid)
+          !!(addressValidation && !addressValidation.isValid)
         }
         className="w-full h-12 bg-[#c750f7] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
@@ -627,20 +628,20 @@ if (addresses.length >= maxAddresses) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                  {addresses.map((account) => (
+                  {addresses.map((account: any) => (
                     <tr key={account._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                       <td className="px-6 py-4">
                         {editingId === account._id ? (
-                          <div classNme = "flex flex-col">
+                          <div className="flex flex-col">
                          <input
   type="text"
-  value={editData.address}
+  value={editData.address ?? ""}
   onChange={(e) => {
     updateEditData("address", e.target.value);
     setEditAddressValidation(null); // reset while typing
   }}
   onBlur={() => {
-    const chk = validateBlockchainAddress(editData.address);
+    const chk = validateBlockchainAddress(editData.address ?? "");
     setEditAddressValidation(chk);
   }}
   className={`w-full px-3 py-2 rounded-lg border 
@@ -684,7 +685,7 @@ if (addresses.length >= maxAddresses) {
                         {editingId === account._id ? (
                           <input
                             type="text"
-                            value={editData.label}
+                            value={editData.label ?? ""}
                             onChange={(e) => updateEditData("label", e.target.value)}
                             className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7]"
                             disabled={isSending}
@@ -700,7 +701,7 @@ if (addresses.length >= maxAddresses) {
                       <td className="px-6 py-4">
                         {editingId === account._id ? (
                           <select
-                            value={editData.category}
+                            value={editData.category ?? "Wallet"}
                             onChange={(e) => updateEditData("category", e.target.value)}
                             className="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c750f7]"
                             disabled={isSending}
@@ -721,11 +722,11 @@ if (addresses.length >= maxAddresses) {
                         <div className="flex items-center justify-end gap-2">
                           {editingId === account._id ? (
                             <button
-  onClick={() => saveEdits(account._id)}
+                            onClick={() => saveEdits(account._id)}
   disabled={
     isSending ||
-    !editData.address.trim() ||
-    (editAddressValidation && !editAddressValidation.isValid)
+    !editData.address?.trim() ||
+    !!(editAddressValidation && !editAddressValidation.isValid)
   }
   className="inline-flex items-center gap-1 px-3 py-2
     bg-green-100 dark:bg-green-900/30
