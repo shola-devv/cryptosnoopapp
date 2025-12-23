@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import { SlotInfo } from "@/components/slotInfo";
 import { validateBlockchainAddress } from "@/lib/ValidateAddress"; // <-- your validator
-import { useUserPlan } from "@/hooks/UserProfile";
+import { useUserProfile } from "@/hooks/UserProfile";
 
 
 
@@ -25,8 +25,9 @@ export default function AccountsPage() {
  
 const { data: session, status } = useSession();
   const userId = session?.user?.id;
-  ///here useUserPlan()
-  const userPlan = "free"
+  // derive user plan from profile
+  const { user: profile } = useUserProfile();
+  const userPlan = profile?.subscription?.plan ?? "free";
    
   const maxAddresses = userPlan === "free" ? 10 : 50;
   //
