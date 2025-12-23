@@ -87,7 +87,7 @@ const CryptoSnoop = () => {
       icon: "/wallet.png",
     },
     {
-      title: "Easy Login and Security",
+      title: "Easy Login and Top-tier Security",
       description:
         "Your security is our priority. Access your portfolio with confidence knowing your data is protected with industry-leading encryption and security protocols.",
       icon: "/padlock.png",
@@ -104,7 +104,7 @@ const CryptoSnoop = () => {
     icon: "/bitcoinbag.png",
   },
   {
-    title: "Remote wallet monitoring across all chain",
+    title: "Remote wallet monitoring across all chains",
     description:
        "Paste your wallet addresses to instantly view your portfolio and holdings across multiple blockchains, all in one centralized dashboard.",
     icon: "/greencursor.png",
