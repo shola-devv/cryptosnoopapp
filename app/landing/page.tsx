@@ -192,7 +192,7 @@ const CryptoSnoop = () => {
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-4">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight px-4">
           Keep your eyes on your <br />
           <span className="bg-gradient-to-r from-[#d575fc] to-[#c750f7] bg-clip-text text-transparent">
             crypto assets
@@ -200,9 +200,9 @@ const CryptoSnoop = () => {
           without hassle
         </h2>
 
-        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-0 mb-8">
-          {/* Keep these stacked vertically on all screen sizes for consistent alignment */}
-          <div className="flex items-center justify-center sm:p-0 p-2">
+        <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-8">
+          {/* Use a compact stacked grid on small screens for consistent spacing */}
+         <div className="flex items-center justify-center sm:p-0 p-2">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
               Manage your crypto portfolio with real-time data
             </p>
@@ -223,8 +223,8 @@ const CryptoSnoop = () => {
 
         <button
           onClick={() => setIsAuthModalOpen(true)}
-          className="px-6  py-3 sm:py-2 rounded-lg bg-[#c750f7] text-white font-semibold 
-          text-base sm:text-lg md:text-lg lg:my-4
+          className="px-6 sm:py-2 py-3 rounded-lg bg-[#c750f7] text-white font-semibold 
+          text-base sm:text-lg md:text-xl 
           hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           Get started For Free
@@ -232,8 +232,8 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 my-4 sm:my-4">
-        <div className="flex justify-center items-center min-h-[160px] sm:min-h-[200px] md:min-h-[180px]">
+      <div className="relative overflow-hidden pb-2 my-4 sm:my-8">
+        <div className="flex justify-center items-center min-h-[180px] sm:min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
           ) : coins.length > 0 ? (
@@ -245,7 +245,7 @@ const CryptoSnoop = () => {
               }`}
             >
               <div
-                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-3 w-64 sm:w-80 md:w-72 lg:w-64 border border-white/50"
+                className="relative backdrop-blur-xl bg-white/40 rounded-3xl shadow-2xl p-3 w-64 sm:w-80 border border-white/50"
                 style={{
                   background:
                     "linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(108, 198, 255, 0.2))",
@@ -255,7 +255,7 @@ const CryptoSnoop = () => {
               >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-12 md:h-12 lg:w-10 lg:h-10 bg-transparent rounded-full flex items-center justify-center overflow-hidden shadow-lg">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 bg-transparent rounded-full flex items-center justify-center overflow-hidden shadow-lg">
                       <Image
                         src={coins[currentCoin].icon}
                         alt={coins[currentCoin].name}
@@ -313,21 +313,21 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Features Section */}
-      <div className="space-y-28 md:space-y-24 mt-28 md:mt-24">
+      <div className="space-y-32 mt-32">
         {features.map((feature, index) => (
-          <div key={index} className="flex flex-col items-center gap-12 md:gap-12">
+          <div key={index} className="flex flex-col items-center gap-12 md:gap-16">
             <SlideIn
               direction={(index % 2 === 0 ? "left" : "right") as "left" | "right"}
               delay={0.2}
             >
               <div className="flex-1">
-                <div className="relative w-full h-64 sm:h-80 md:h-80 lg:h-72 rounded-3xl overflow-hidden bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 flex items-center justify-center">
+                <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-[#6CC6FF]/5 to-[#5AB5EE]/0 flex items-center justify-center">
                   <Image
                     src={feature.icon}
                     alt={feature.title}
                     width={300}
                     height={300}
-                    className="object-contain w-3/4 h-3/4 md:w-2/3 md:h-2/3 lg:w-1/2 lg:h-1/2 transition-all duration-500"
+                    className="object-contain w-3/4 h-3/4 transition-all duration-500"
                     priority
                   />
                 </div>
@@ -336,10 +336,10 @@ const CryptoSnoop = () => {
 
             <SlideIn direction={index % 2 === 0 ? "right" : "left"} delay={0.4}>
               <div className="flex-1 space-y-6">
-                <h3 className="text-2xl sm:text-4xl md:text-4xl lg:text-3xl font-bold text-gray-900 text-center">
+                <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 text-center">
                   {feature.title}
                 </h3>
-                <p className="text-sm sm:text-lg md:text-lg text-gray-900 leading-relaxed font-bold text-center">
+                <p className="text-sm sm:text-lg md:text-xl text-gray-900 leading-relaxed font-bold text-center">
                   {feature.description}
                 </p>
               </div>
@@ -360,7 +360,7 @@ const CryptoSnoop = () => {
             key={index}
             className="flex items-center gap-3 bg-white shadow-sm rounded-2xl px-4 py-3 border border-gray-200 w-full"
           >
-            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-12 md:h-12 lg:w-10 lg:h-10 rounded-xl  flex items-center justify-center overflow-hidden relative">
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl  flex items-center justify-center overflow-hidden relative">
   <Image
     src={feature.icon}
     alt={feature.title}
@@ -370,8 +370,8 @@ const CryptoSnoop = () => {
 </div>
 
             <div className="flex flex-col">
-              <p className="font-semibold text-sm sm:text-base md:text-base text-gray-900">{feature.title}</p>
-              <p className="text-gray-900 text-xs sm:text-sm md:text-sm leading-snug">
+              <p className="font-semibold text-sm sm:text-base md:text-lg text-gray-900">{feature.title}</p>
+              <p className="text-gray-900 text-xs sm:text-sm md:text-base leading-snug">
                 {feature.description}
               </p>
             </div>
