@@ -233,7 +233,7 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 sm:my-2 md:my-4 ">
+      <div className="relative overflow-hidden pb-2 sm:my-0 md:my-4 ">
         <div className="flex justify-center items-center min-h-[180px] sm:min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
