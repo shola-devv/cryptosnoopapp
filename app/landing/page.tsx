@@ -200,9 +200,9 @@ const CryptoSnoop = () => {
           without hassle
         </h2>
 
-        <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-8">
-          {/* Use a compact stacked grid on small screens for consistent spacing */}
-         <div className="flex items-center justify-center sm:p-0 p-2">
+        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-0 mb-8">
+          {/* Keep these stacked vertically on all screen sizes for consistent alignment */}
+          <div className="flex items-center justify-center sm:p-0 p-2">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
               Manage your crypto portfolio with real-time data
             </p>
@@ -220,6 +220,7 @@ const CryptoSnoop = () => {
             </p>
           </div>
         </div>
+        
 
         <button
           onClick={() => setIsAuthModalOpen(true)}
