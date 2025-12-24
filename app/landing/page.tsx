@@ -192,7 +192,7 @@ const CryptoSnoop = () => {
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-4xl font-bold text-gray-900 mb-8 leading-tight px-4">
+        <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight px-4">
           Keep your eyes on your <br />
           <span className="bg-gradient-to-r from-[#d575fc] to-[#c750f7] bg-clip-text text-transparent">
             crypto assets
@@ -200,21 +200,21 @@ const CryptoSnoop = () => {
           without hassle
         </h2>
 
-        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-2 mb-8">
+        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-0 mb-8">
           {/* Keep these stacked vertically on all screen sizes for consistent alignment */}
-          <div className="flex items-center justify-center p-2">
+          <div className="flex items-center justify-center sm:p-0 p-2">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
               Manage your crypto portfolio with real-time data
             </p>
           </div>
 
-          <div className="flex items-center justify-center p-2">
+          <div className="flex items-center justify-center sm:p-0 p-2">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
               Monitor remote crypto wallets
             </p>
           </div>
 
-          <div className="flex items-center justify-center p-2">
+          <div className="flex items-center justify-center sm:p-0 p-2 ">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
               Keep all your address labels securely in one place
             </p>
@@ -223,7 +223,7 @@ const CryptoSnoop = () => {
 
         <button
           onClick={() => setIsAuthModalOpen(true)}
-          className="px-6 py-3 rounded-lg bg-[#c750f7] text-white font-semibold 
+          className="px-6 sm:py-2 py-3 rounded-lg bg-[#c750f7] text-white font-semibold 
           text-base sm:text-lg md:text-lg 
           hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
@@ -232,7 +232,7 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 my-4 sm:my-8">
+      <div className="relative overflow-hidden pb-2 my-4 sm:my-4">
         <div className="flex justify-center items-center min-h-[160px] sm:min-h-[200px] md:min-h-[180px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
