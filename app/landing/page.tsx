@@ -224,7 +224,7 @@ const CryptoSnoop = () => {
 
         <button
           onClick={() => setIsAuthModalOpen(true)}
-          className="px-6 sm:py-2 py-3 rounded-lg bg-[#c750f7] text-white font-semibold 
+          className="px-6 py-3 sm:mt-0 md:mt-3 lg:mt-3 rounded-lg bg-[#c750f7] text-white font-semibold 
           text-base sm:text-lg md:text-xl 
           hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
@@ -233,7 +233,7 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 my-4 sm:my-8">
+      <div className="relative overflow-hidden pb-2 sm:my-2 md:my-4 ">
         <div className="flex justify-center items-center min-h-[180px] sm:min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
