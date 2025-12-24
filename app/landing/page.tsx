@@ -200,7 +200,7 @@ const CryptoSnoop = () => {
           without hassle
         </h2>
 
-        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-0 mb-8">
+        <div className="max-w-2xl mx-auto flex flex-col gap-2 sm:mb-0 md:mb-8">
           {/* Keep these stacked vertically on all screen sizes for consistent alignment */}
           <div className="flex items-center justify-center sm:p-0 p-2">
             <p className="text-sm sm:text-base md:text-lg lg:text-lg text-gray-700 font-semibold text-center">
@@ -233,7 +233,7 @@ const CryptoSnoop = () => {
       </div>
 
       {/* Coin Widget */}
-      <div className="relative overflow-hidden pb-2 sm:my-0 md:my-4 ">
+      <div className="relative overflow-hidden pb-2 sm:my-0 sm:-mt-2 md:my-4 ">
         <div className="flex justify-center items-center min-h-[180px] sm:min-h-[220px]">
           {loading ? (
             <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-300 border-t-[#c750f7] rounded-full animate-spin"></div>
