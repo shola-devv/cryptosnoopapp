@@ -192,7 +192,7 @@ const CryptoSnoop = () => {
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight px-4">
+        <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-4">
           Keep your eyes on your <br />
           <span className="bg-gradient-to-r from-[#d575fc] to-[#c750f7] bg-clip-text text-transparent">
             crypto assets
@@ -223,8 +223,8 @@ const CryptoSnoop = () => {
 
         <button
           onClick={() => setIsAuthModalOpen(true)}
-          className="px-6 sm:py-2 py-3 rounded-lg bg-[#c750f7] text-white font-semibold 
-          text-base sm:text-lg md:text-lg 
+          className="px-6  py-3 sm:py-2 rounded-lg bg-[#c750f7] text-white font-semibold 
+          text-base sm:text-lg md:text-lg lg:my-4
           hover:bg-[#d575fc] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           Get started For Free
