@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 // Helper function to generate username - returns 'user' for everyone
 function generateUsername(email: string): string {
-  return 'user';
+  return 'User';
 }
 
 // Helper function to send OTP via API
@@ -105,7 +105,7 @@ async function createUserInDB(email: string, username: string, provider: string,
       username: username,
       provider,
       image: image || null,
-      profile: 0,
+      profile: 2,
       password: "oauth_user", // Placeholder for OAuth users
       subscription: {
         id: "",
