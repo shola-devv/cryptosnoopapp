@@ -144,7 +144,7 @@ const handleDelete = async () => {
   const handleLogout = async () => {
     if (confirm("Are you sure you want to logout?")) {
       try {
-        await signOut()
+        await signOut({ callbackUrl: "/" })
       } catch (error) {
         console.error("Logout failed", error)
       }
