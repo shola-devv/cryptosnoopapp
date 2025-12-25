@@ -17,7 +17,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PlanGuard from "@/components/PlanGuard";
 import { validateBlockchainAddress } from "@/lib/ValidateAddress";
-
+import { useUserProfile } from "@/hooks/UserProfile"
 
 const SUPPORTED_CHAINS = [
   { id: 'ethereum', name: 'Ethereum', icon: '/ethl.png', color: '#627EEA' },
@@ -107,6 +107,7 @@ export default function MonitorWalletsPage() {
   const [isLoadingWallet, setIsLoadingWallet] = useState(false)
   const [walletError, setWalletError] = useState("")
   const { data: session, status } = useSession();
+  const { user, loading } = useUserProfile();
   
   const userId = session?.user?.id;
   const [selectedChain, setSelectedChain] = useState('ethereum')
@@ -129,6 +130,11 @@ export default function MonitorWalletsPage() {
 
 const [trackUses, setTrackUses] = useState(0);
 const [refreshUses, setRefreshUses] = useState(0);
+
+useEffect(() => {
+  setProfile(user?.profile ?? 2);
+  
+}, []);
 
 useEffect(() => {
   const saved = localStorage.getItem("walletMonitorTrial");
