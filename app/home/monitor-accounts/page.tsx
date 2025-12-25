@@ -107,7 +107,7 @@ export default function MonitorWalletsPage() {
   const [isLoadingWallet, setIsLoadingWallet] = useState(false)
   const [walletError, setWalletError] = useState("")
   const { data: session, status } = useSession();
-  const { user, loading } = useUserProfile();
+  
   
   const userId = session?.user?.id;
   const [selectedChain, setSelectedChain] = useState('ethereum')
@@ -130,10 +130,11 @@ export default function MonitorWalletsPage() {
 
 const [trackUses, setTrackUses] = useState(0);
 const [refreshUses, setRefreshUses] = useState(0);
+const { user, loading } = useUserProfile();
+  
 
 useEffect(() => {
   setProfile(user?.profile ?? 2);
-  
 }, []);
 
 useEffect(() => {
@@ -168,31 +169,13 @@ const handleBack = () => {
 const componentOpen = isOpen;
 
 
-  const fetchUserProfile = async (userId: string) => {
-    try {
-      console.log('fetching profile data')
-      const response = await fetch(`/api/users?userId=${userId}`, {
-        method: "GET",
-      });
-      const data = await response.json();
-      
-      if (response.ok && data.user) {
-        const avatarIndex = data.user.profile ?? 2;
-        setProfile(avatarIndex);
-        setUserAvatar(avatarOptions[avatarIndex]);
-        setUserName(data.user.username || data.user.name || 'User');
-      }
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-    }
-  }
+  
 
   // Load profile on mount
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchUserProfile(session.user.id);
-    }
-  }, [session?.user?.id]);
+  
+useEffect(() => {
+  setProfile(user?.profile ?? 2);
+}, []);
 
 
   // Load cached wallet data on component mount
