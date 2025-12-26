@@ -3,6 +3,7 @@ import { Settings, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
 
 const avatarOptions = [
   { id: 1, emoji: '👤', color: '#c750f7', label: 'Degen' },
@@ -142,10 +143,11 @@ export default function ProfileModal({
           title={avatar.label}
           aria-pressed={isSelected}
         >
-          <img
+          <Image
             src={`/profile${index}.png`}
             alt={avatar.label}
             className="w-full h-full object-cover"
+            priority
           />
           {isSelected && (
             <div
@@ -167,10 +169,11 @@ export default function ProfileModal({
   <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">Preview</p>
   <div className="flex items-center gap-3">
     <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-      <img
+      <Image
         src={`/profile${selectedAvatarIndex}.png`}
         alt={avatarOptions[selectedAvatarIndex].label}
         className="w-full h-full object-cover"
+        priority
       />
     </div>
     <div>
