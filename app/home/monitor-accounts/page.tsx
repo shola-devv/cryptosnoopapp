@@ -495,7 +495,7 @@ const componentOpen = isOpen;
     >
       <div className="flex items-center gap-3">
        <div className="w-8 h-8 relative">
-  <Image src={selectedChainData?.icon ?? '/default-chain.png'} alt={selectedChainData?.name ?? ''} fill className="object-contain" />
+  <Image src={selectedChainData?.icon ?? '/default-chain.png'} alt={selectedChainData?.name ?? ''} fill className="object-contain"  priority />
 </div>
         <span className="font-semibold">{selectedChainData?.name}</span>
       </div>
