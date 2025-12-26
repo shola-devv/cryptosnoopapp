@@ -126,7 +126,7 @@ export default function MonitorWalletsPage() {
   const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
   
 //Trial code 
-  const FREE_TRIAL_LIMIT = 2;
+  const FREE_TRIAL_LIMIT = 5;
 
 const [trackUses, setTrackUses] = useState(0);
 const [refreshUses, setRefreshUses] = useState(0);
@@ -170,12 +170,6 @@ const componentOpen = isOpen;
 
 
   
-
-  // Load profile on mount
-  
-useEffect(() => {
-  setProfile(user?.profile ?? 2);
-}, []);
 
 
   // Load cached wallet data on component mount
@@ -533,7 +527,7 @@ useEffect(() => {
             }`}
           >
           <div className="w-8 h-8 relative">
-          <Image src={chain.icon ?? '/default-chain.png'} alt={chain.name} fill className="object-contain" />
+          <Image src={chain.icon ?? '/default-chain.png'} alt={chain.name} fill className="object-contain" priority />
         </div>
 
        
