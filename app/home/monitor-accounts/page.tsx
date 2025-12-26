@@ -135,7 +135,7 @@ const { user, loading } = useUserProfile();
 
 useEffect(() => {
   setProfile(user?.profile ?? 2);
-}, []);
+}, [user]);
 
 useEffect(() => {
   const saved = localStorage.getItem("walletMonitorTrial");
