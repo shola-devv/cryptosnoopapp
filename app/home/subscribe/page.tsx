@@ -253,7 +253,7 @@ export default function SubscriptionPage() {
       priceValue: 269,
       period: 'one-time',
       savings: 'Best Value',
-      icon: "Crown.png",
+      icon: "crown.png",
       color: '#ffd93d',
       features: [
         'Lifetime unlimited remote wallet tracking, fully powered and always on without limits.',
