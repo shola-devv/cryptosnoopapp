@@ -149,7 +149,7 @@ const PrivacyPolicy = () => {
             <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-4">
               We implement industry-standard security measures to protect your personal information:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6>
+            <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 text-sm sm:text-base md:text-lg space-y-2 mb-6">
               <li>End-to-end encryption for sensitive data</li>
               <li>Secure socket layer (SSL) technology</li>
               <li>Regular security audits and updates</li>
