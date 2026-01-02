@@ -16,7 +16,7 @@ const UserSchema = new Schema(
       required: true 
     },
     
-    image: { type: String, required: true, default: null },
+    image: { type: String, required: false, default: null },
     subscription: {
       id: { type: String, default: "" },
       status: { type: String, default: "free" },
