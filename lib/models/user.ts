@@ -21,6 +21,9 @@ const UserSchema = new Schema(
       id: { type: String, default: "" },
       status: { type: String, default: "free" },
       plan: { type: String, default: "free" },
+      lastPaymentTxHash: { type: String, default: null },
+      lastPaymentDate: { type: Date, default: null },
+      expiryDate: { type: Date, default: null },
     },
   },
   {

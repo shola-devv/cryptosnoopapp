@@ -175,7 +175,7 @@ function TestPlanModal({ isOpen, onClose, onActivate }: TestPlanModalProps) {
   {loading ? (
     <span className="animate-spin inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full"></span>
   ) : (
-    "Start Test for $3.99 🚀"
+    "Start Test for $3 🚀"
   )}
 </button>
 
@@ -212,8 +212,8 @@ export default function SubscriptionPage() {
     {
       id: 'monthly',
       name: 'Monthly',
-      price: '$7.99',
-      priceValue: 7.99,
+      price: '$7',
+      priceValue: 7,
       period: '/month',
       icon: "zap.png",
       color: '#4ecdc4',
@@ -230,8 +230,8 @@ export default function SubscriptionPage() {
     {
       id: 'yearly',
       name: 'Yearly',
-      price: '$79.99',
-      priceValue: 79.99,
+      price: '$79',
+      priceValue: 79,
       period: '/year',
       savings: 'Save $16',
       icon: "star.png",
@@ -280,7 +280,7 @@ const [loading, setLoading] = useState(false);
   const handleTestPlanActivate = () => {
     setIsTestModalOpen(false);
     // Navigate to payment page with test plan amount
-    router.push('/home/payment?amount=3.99&plan=test&name=Test%20Plan');
+    router.push('/home/payment?amount=3&plan=test&name=Test%20Plan');
   };
 
   return (
