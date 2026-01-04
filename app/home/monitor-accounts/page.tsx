@@ -126,33 +126,46 @@ export default function MonitorWalletsPage() {
   const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false);
   
 //Trial code 
+
+const { user, loading } = useUserProfile();
   const FREE_TRIAL_LIMIT = 5;
 
-const [trackUses, setTrackUses] = useState(0);
-const [refreshUses, setRefreshUses] = useState(0);
-const { user, loading } = useUserProfile();
-  
+const subscription = user?.subscription;
+
+const isPaidUser =
+  subscription?.plan !== "free" &&
+  subscription?.status === "active";
+
+const trialKey = user ? `walletTrial:${user.id}` : null;
+
+
+const [trialCount, setTrialCount] = useState(0);
+
+useEffect(() => {
+  if (!trialKey || isPaidUser) return;
+
+  const saved = localStorage.getItem(trialKey);
+  if (saved) {
+    setTrialCount(Number(saved) || 0);
+  }
+}, [trialKey, isPaidUser]);
+
+
+useEffect(() => {
+  if (!trialKey || isPaidUser) return;
+
+  localStorage.setItem(trialKey, String(trialCount));
+}, [trialCount, trialKey, isPaidUser]);
+
+
+const canUseTrial = isPaidUser || trialCount < FREE_TRIAL_LIMIT;
+
+
 
 useEffect(() => {
   setProfile(user?.profile ?? 2);
 }, [user]);
 
-useEffect(() => {
-  const saved = localStorage.getItem("walletMonitorTrial");
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    setTrackUses(parsed.trackUses || 0);
-    setRefreshUses(parsed.refreshUses || 0);
-  }
-}, []);
-
-useEffect(() => {
-  localStorage.setItem(
-    "walletMonitorTrial",
-    JSON.stringify({ trackUses, refreshUses })
-  );
-}, [trackUses, refreshUses]);
-  
 
 // ensure isOpen follows monitoredWallet changes so the arrow + open state never get out of sync
 useEffect(() => {
@@ -170,7 +183,8 @@ const componentOpen = isOpen;
 
 
   
-
+const trackUses = trialCount;
+const refreshUses = trialCount;
 
   // Load cached wallet data on component mount
   useEffect(() => {
@@ -193,12 +207,18 @@ const componentOpen = isOpen;
   }
 
   const handleAddWallet = async () => {
-    if (trackUses >= FREE_TRIAL_LIMIT) return;
+    
+// 🔒 Trial gate
+if (!canUseTrial) {
+  setWalletError("Free plan allows only 5 wallet checks. Upgrade to continue.");
+  return;
+}
 
-  setTrackUses((prev) => prev + 1);
-
+  
     if (!walletAddress.trim()) return
 
+    
+    
     setWalletError("")
     setIsLoadingWallet(true)
     buzzClick()
@@ -214,6 +234,12 @@ const componentOpen = isOpen;
       }
 
       setMonitoredWallet(data);
+
+      // ✅ Increment trial usage ONLY after success
+if (!isPaidUser) {
+  setTrialCount((prev) => prev + 1);
+}
+
       
       // Save to localStorage
       walletStorage.setCachedWallet({
@@ -231,9 +257,13 @@ const componentOpen = isOpen;
   }
 
   const handleRefresh = async () => {
-    if (refreshUses >= FREE_TRIAL_LIMIT) return;
+   if (!canUseTrial) {
+  setWalletError("Free plan allows only 5 refreshes. Upgrade to continue.");
+  return;
+}
 
-  setRefreshUses((prev) => prev + 1);
+
+  
     if (!walletAddress.trim()) return
 
     setWalletError("")
@@ -251,6 +281,10 @@ const componentOpen = isOpen;
       }
 
       setMonitoredWallet(data);
+
+      if (!isPaidUser) {
+  setTrialCount((prev) => prev + 1);
+}
       
       // Update localStorage with fresh data
       walletStorage.setCachedWallet({
@@ -266,6 +300,8 @@ const componentOpen = isOpen;
       setIsLoadingWallet(false)
     }
   }
+
+
 
   const handleClearCache = () => {
     walletStorage.clearCachedWallet();

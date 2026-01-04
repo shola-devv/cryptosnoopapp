@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@gemini-wallet/core": "^0.3.2",
     "@hookform/resolvers": "^3.10.0",
+    "@metamask/sdk": "^0.33.1",
     "@privy-io/react-auth": "^3.3.0",
     "@privy-io/server-auth": "^1.32.5",
     "@radix-ui/react-accordion": "1.2.2",
@@ -45,6 +47,7 @@
     "@tanstack/react-query-persist-client": "^5.90.14",
     "@upstash/ratelimit": "^2.0.6",
     "@upstash/redis": "^1.35.6",
+    "@web3modal/wagmi": "^5.1.11",
     "bcryptjs": "^3.0.2",
     "bitcoinjs-lib": "^7.0.0",
     "class-variance-authority": "^0.7.1",
@@ -62,6 +65,7 @@
     "next": "14.2.25",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.1",
+    "porto": "^0.2.37",
     "react": "^18.2.0",
     "react-day-picker": "9.8.0",
     "react-dom": "^18.2.0",

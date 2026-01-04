@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createPublicClient, http, decodeFunctionData } from 'viem';
 import { mainnet } from 'viem/chains';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth'; // Your NextAuth config
-import dbConnect from '@/lib/mongodb';
-import User from '@/models/User';
+import { authOptions } from "@/lib/nextAuthOptions";
+import connect from "@/lib/db";
+import User from "@/lib/models/user";
+import { strictRatelimit } from '@/lib/rate-limit'; // ✅ Added rate limiting
 
 // USDT Contract Address (Mainnet)
 const USDT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
@@ -15,7 +16,7 @@ const PLANS: {
   [key: string]: { 
     price: number; 
     duration: 'monthly' | 'yearly' | 'lifetime' | 'test';
-    months?: number; // For calculating expiry
+    months: number | null; // ✅ Fixed: can be null for lifetime
   } 
 } = {
   monthly: { 
@@ -31,7 +32,7 @@ const PLANS: {
   lifetime: { 
     price: parseFloat(process.env.LIFETIME_PRICE || '269'), 
     duration: 'lifetime',
-    months: 60 // No expiry
+    months: null // ✅ Fixed: lifetime has no expiry
   },
   test: { 
     price: parseFloat(process.env.TEST_PRICE || '3'), 
@@ -74,6 +75,36 @@ export async function POST(req: NextRequest) {
     }
 
     // ============================================
+    // 🚦 RATE LIMITING (NEW)
+    // ============================================
+    const identifier = session.user.email; // Rate limit by user email
+    const { success, remaining } = await strictRatelimit.limit(identifier);
+
+    console.log('🚦 Rate limit check:', {
+      user: identifier,
+      allowed: success,
+      remaining,
+    });
+
+    if (!success) {
+      console.warn('⚠️ Rate limit exceeded for:', identifier);
+      return NextResponse.json(
+        { 
+          error: 'Too many payment verification attempts. Please try again in 1 minute.',
+          remaining: 0,
+          retryAfter: 60, // seconds
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': String(Date.now() + 60000),
+          }
+        }
+      );
+    }
+
+    // ============================================
     // 2️⃣ PARSE REQUEST BODY
     // ============================================
     const body = await req.json();
@@ -87,6 +118,24 @@ export async function POST(req: NextRequest) {
           error: 'Missing required fields', 
           required: ['txHash', 'planId', 'userAddress'] 
         },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Validate txHash format
+    if (typeof txHash !== 'string' || !txHash.startsWith('0x') || txHash.length !== 66) {
+      console.error('❌ Invalid transaction hash format:', txHash);
+      return NextResponse.json(
+        { error: 'Invalid transaction hash format. Must be a valid Ethereum tx hash.' },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Validate userAddress format
+    if (typeof userAddress !== 'string' || !userAddress.startsWith('0x') || userAddress.length !== 42) {
+      console.error('❌ Invalid wallet address format:', userAddress);
+      return NextResponse.json(
+        { error: 'Invalid wallet address format.' },
         { status: 400 }
       );
     }
@@ -119,10 +168,13 @@ export async function POST(req: NextRequest) {
       tx = await publicClient.getTransaction({ 
         hash: txHash as `0x${string}` 
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Failed to fetch transaction:', error);
       return NextResponse.json(
-        { error: 'Transaction not found on blockchain' },
+        { 
+          error: 'Transaction not found on blockchain',
+          details: error?.message || 'Unable to fetch transaction data'
+        },
         { status: 404 }
       );
     }
@@ -157,10 +209,13 @@ export async function POST(req: NextRequest) {
       receipt = await publicClient.getTransactionReceipt({ 
         hash: txHash as `0x${string}` 
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Failed to fetch receipt:', error);
       return NextResponse.json(
-        { error: 'Failed to verify transaction status' },
+        { 
+          error: 'Failed to verify transaction status',
+          details: error?.message || 'Unable to fetch transaction receipt'
+        },
         { status: 500 }
       );
     }
@@ -206,7 +261,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { 
           error: 'Transaction is not a USDT transfer',
-          receivedContract: tx.to,
+          receivedContract: tx.to || 'null',
           expectedContract: USDT_ADDRESS,
         },
         { status: 400 }
@@ -222,10 +277,13 @@ export async function POST(req: NextRequest) {
         abi: TRANSFER_ABI,
         data: tx.input,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Failed to decode transaction data:', error);
       return NextResponse.json(
-        { error: 'Invalid transaction format' },
+        { 
+          error: 'Invalid transaction format',
+          details: 'This does not appear to be a valid USDT transfer transaction'
+        },
         { status: 400 }
       );
     }
@@ -288,7 +346,7 @@ export async function POST(req: NextRequest) {
     // ============================================
     let expiryDate: Date | null = null;
     
-    if (plan.months !== null) {
+    if (plan.months !== null) { // ✅ Fixed: check for null explicitly
       expiryDate = new Date();
       
       if (plan.months < 1) {
@@ -311,7 +369,7 @@ export async function POST(req: NextRequest) {
     // ============================================
     // 1️⃣2️⃣ UPDATE USER SUBSCRIPTION IN DATABASE
     // ============================================
-    await dbConnect();
+    await connect(); // ✅ Fixed: lowercase 'connect'
 
     const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
@@ -359,6 +417,10 @@ export async function POST(req: NextRequest) {
         timestamp: new Date().toISOString(),
         explorerUrl: `https://etherscan.io/tx/${txHash}`,
       },
+    }, {
+      headers: {
+        'X-RateLimit-Remaining': String(remaining),
+      }
     });
 
   } catch (error: any) {
@@ -370,7 +432,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Internal server error', 
-        details: error.message,
+        details: process.env.NODE_ENV === 'development' ? error.message : 'An unexpected error occurred',
         type: error.name,
       },
       { status: 500 }

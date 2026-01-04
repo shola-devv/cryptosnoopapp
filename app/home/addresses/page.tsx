@@ -26,10 +26,21 @@ export default function AccountsPage() {
 const { data: session, status } = useSession();
   const userId = (session?.user as any)?.id;
   // derive user plan from profile
-  const { user: profile } = useUserProfile();
-  const userPlan = profile?.subscription?.plan ?? "free";
-   
-  const maxAddresses = userPlan === "free" ? 10 : 50;
+
+  const { user, loading } = useUserProfile();
+    
+  const subscription = user?.subscription;
+
+const isPaidPlan =
+  subscription?.plan !== "free" &&
+  subscription?.status === "active";
+
+const FREE_LIMIT = 10;
+const PAID_LIMIT = 50;
+
+const maxAddresses = isPaidPlan ? PAID_LIMIT : FREE_LIMIT;
+
+
   //
   const [addressValidation, setAddressValidation] = useState<{
   isValid: boolean;
@@ -628,8 +639,12 @@ if (addresses.length >= maxAddresses) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                  {addresses.map((account: any) => (
-                    <tr key={account._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                  {addresses.map((account: any, index: number) => {
+                    const isLocked = !isPaidPlan && index >= FREE_LIMIT;
+
+                        return (
+                   
+                   <tr key={account._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                       <td className="px-6 py-4">
                         {editingId === account._id ? (
                           <div className="flex flex-col">
@@ -666,11 +681,19 @@ if (addresses.length >= maxAddresses) {
                             <span className="font-mono text-sm text-slate-900 dark:text-white truncate max-w-xs">
                               {account.address}
                             </span>
+                           
+                           
+                           
                             <button
-                              onClick={() => handleCopy(account.address, account._id)}
-                              className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                              title="Copy address"
-                            >
+  onClick={() => !isLocked && handleCopy(account.address, account._id)}
+  disabled={isLocked}
+  title={isLocked ? "Upgrade to access this address" : "Copy address"}
+  className={`p-1.5 rounded-lg transition-colors
+    ${isLocked
+      ? "opacity-40 cursor-not-allowed"
+      : "hover:bg-slate-200 dark:hover:bg-slate-700"}
+  `}
+>
                               {copiedId === account._id ? (
                                 <Check className="w-4 h-4 text-green-500" />
                               ) : (
@@ -746,20 +769,36 @@ if (addresses.length >= maxAddresses) {
                               )}
                             </button>
                           ) : (
+                            
                             <button
-                              onClick={() => toggleEditMode(account._id, account.address, account.label, account.category)}
-                              disabled={isSending}
-                              className="inline-flex items-center gap-1 px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-                            >
+  onClick={() =>
+    !isLocked &&
+    toggleEditMode(account._id, account.address, account.label, account.category)
+  }
+  disabled={isLocked || isSending}
+  title={isLocked ? "Upgrade to edit this address" : "Edit"}
+  className={`inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold
+    ${isLocked
+      ? "bg-slate-200 dark:bg-slate-800 opacity-40 cursor-not-allowed"
+      : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700"}
+  `}
+>
+
                               <Edit className="w-3.5 h-3.5" />
                               Edit
                             </button>
                           )}
-                          <button
-                            onClick={() => deleteAccount(account._id)}
-                            disabled={isSending}
-                            className="inline-flex items-center gap-1 px-3 py-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-lg text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors disabled:opacity-50"
-                          >
+                         <button
+  onClick={() => !isLocked && deleteAccount(account._id)}
+  disabled={isLocked || isSending}
+  title={isLocked ? "Upgrade to delete this address" : "Delete"}
+  className={`inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold
+    ${isLocked
+      ? "bg-red-100 dark:bg-red-900/20 opacity-40 cursor-not-allowed"
+      : "bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50"}
+  `}
+>
+
                             <Trash className="w-3.5 h-3.5" />
                             Delete
                           </button>
@@ -768,7 +807,7 @@ if (addresses.length >= maxAddresses) {
                       
 
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>
