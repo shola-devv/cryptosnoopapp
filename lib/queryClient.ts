@@ -22,9 +22,10 @@ if (typeof window !== 'undefined') {
     storage: window.localStorage,
   });
 
-  persistQueryClient({
-    queryClient,
-    persister: localStoragePersister,
-    maxAge: 1000 * 60 * 60 * 24, // optional: 24h max age
-  });
+ persistQueryClient({
+  queryClient: queryClient as any,
+  persister: localStoragePersister,
+  maxAge: 1000 * 60 * 60 * 24,
+});
+
 }
