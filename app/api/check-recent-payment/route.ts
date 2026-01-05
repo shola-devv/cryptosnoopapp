@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Get recent blocks (last ~5 minutes)
     const latestBlock = await publicClient.getBlockNumber();
-    const fromBlock = latestBlock - 20n;
+    const fromBlock = latestBlock - BigInt(20);
 
     console.log('📦 Scanning blocks:', {
       from: fromBlock.toString(),
