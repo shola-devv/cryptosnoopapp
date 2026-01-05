@@ -548,8 +548,8 @@ function PaymentInner() {
   <Image
     src="/trustwallet.png"
     alt="Wallet"
-    width={40}
-    height={40}
+    width={48}
+    height={48}
     priority
     className="object-contain"
   />
