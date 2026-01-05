@@ -517,9 +517,14 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                    <Wallet className="w-6 h-6 text-white" />
-                  </div>
+                  <Image
+  src="/metamask.png"
+  alt="Wallet"
+  width={48}
+  height={48}
+  priority
+  className="rounded-xl bg-orange-500 p-3"
+/>
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">MetaMask</div>
                     <div className="text-sm text-slate-600 dark:text-slate-400">Most popular • Auto-verify enabled</div>
@@ -536,12 +541,17 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                    <Wallet className="w-6 h-6 text-white" />
-                  </div>
+                  <Image
+  src="/trustwallet.png"
+  alt="Wallet"
+  width={48}
+  height={48}
+  priority
+  className="rounded-xl bg-orange-500 p-3"
+/>
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Trust Wallet</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">Mobile-first • Auto-verify enabled</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400"> • Auto-verify enabled</div>
                   </div>
                 </div>
                 <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-[#c750f7] transition-colors" />
@@ -555,12 +565,20 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                    <Wallet className="w-6 h-6 text-white" />
-                  </div>
+                 
+
+<Image
+  src="/coinbase.png"
+  alt="Wallet"
+  width={48}
+  height={48}
+  priority
+  className="rounded-xl bg-orange-500 p-3"
+/>
+
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Coinbase Wallet</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">Beginner friendly • Auto-verify enabled</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400"> • Auto-verify enabled</div>
                   </div>
                 </div>
                 <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-[#c750f7] transition-colors" />
@@ -574,12 +592,17 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                    <Wallet className="w-6 h-6 text-white" />
-                  </div>
+                  <Image
+  src="/rainbow.png"
+  alt="Wallet"
+  width={48}
+  height={48}
+  priority
+  className="rounded-xl bg-orange-500 p-3"
+/>
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Rainbow</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">Beautiful UI • Auto-verify enabled</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">• Auto-verify enabled</div>
                   </div>
                 </div>
                 <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-[#c750f7] transition-colors" />
@@ -591,13 +614,13 @@ function PaymentInner() {
                 <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-green-900 dark:text-green-300 font-semibold mb-2">
-                    ✨ Automatic Verification Active!
+                     Automatic Verification Active!
                   </p>
                   <ol className="space-y-1 text-sm text-green-800 dark:text-green-400 list-decimal list-inside">
                     <li>Click any wallet above to open it</li>
                     <li>Confirm the {paymentAmount} USDT payment</li>
                     <li>We'll automatically detect and verify your payment!</li>
-                    <li>No need to copy transaction hashes 🎉</li>
+                    <li>No need to copy transaction hashes </li>
                   </ol>
                 </div>
               </div>
@@ -612,7 +635,7 @@ function PaymentInner() {
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">
-                  Recipient Address
+                  CryptoSnoop subscription Address
                 </label>
                 <div className="flex items-center gap-2 bg-purple-50 dark:bg-slate-800 rounded-xl p-3 border border-purple-200 dark:border-purple-900">
                   <code className="flex-1 font-mono text-sm text-slate-900 dark:text-white break-all">
@@ -744,7 +767,7 @@ function PaymentInner() {
             <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300">
               <div>
                 <p className="font-semibold text-slate-900 dark:text-white mb-1">How does auto-detection work?</p>
-                <p>After clicking a wallet and sending payment, we automatically scan the Ethereum blockchain every  to find your transaction. No manual input needed!</p>
+                <p>After clicking a wallet and sending payment, we automatically scan the Ethereum blockchain  to find your transaction. No manual input needed!</p>
               </div>
               <div>
                 <p className="font-semibold text-slate-900 dark:text-white mb-1">Don&apos;t have a crypto wallet?</p>

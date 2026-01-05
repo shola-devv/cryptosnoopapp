@@ -478,7 +478,7 @@ if (addresses.length >= maxAddresses) {
           </p>
           <p className="text-sm text-slate-500 dark:text-slate-500 italic">
             Store wallet addresses, smart contract addresses, exchange deposit addresses, and more
-          </p>3
+          </p>
         </div>
 
  <SlotInfo
