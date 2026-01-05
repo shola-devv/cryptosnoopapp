@@ -26,10 +26,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Apply rate limiting (50 requests per 5 minutes per user)
-    const rateLimitResult = await strictRatelimit(
-      `check-payment:${session.user.email}`,
-      50, // 50 requests
-      300 // 5 minutes (300 seconds)
+    const rateLimitResult = await strictRatelimit.limit(
+      `check-payment:${session.user.email}`
     );
 
     if (!rateLimitResult.success) {
@@ -37,7 +35,7 @@ export async function POST(req: NextRequest) {
         { 
           error: 'Rate limit exceeded', 
           message: 'Too many payment check requests. Please wait a moment.',
-          retryAfter: rateLimitResult.reset 
+          remaining: rateLimitResult.remaining
         },
         { status: 429 }
       );
