@@ -30,6 +30,7 @@ const { data: session, status } = useSession();
   const { user, loading } = useUserProfile();
     
   const subscription = user?.subscription;
+  const userPlan = subscription?.plan ?? "free";
 
 const isPaidPlan =
   subscription?.plan !== "free" &&
@@ -477,7 +478,7 @@ if (addresses.length >= maxAddresses) {
           </p>
           <p className="text-sm text-slate-500 dark:text-slate-500 italic">
             Store wallet addresses, smart contract addresses, exchange deposit addresses, and more
-          </p>
+          </p>3
         </div>
 
  <SlotInfo
