@@ -521,8 +521,8 @@ function PaymentInner() {
   <Image
     src="/metamask.png"
     alt="Wallet"
-    width={24}
-    height={24}
+    width={40}
+    height={40}
     priority
     className="object-contain"
   />
@@ -541,15 +541,15 @@ function PaymentInner() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={startAutoDetection}
-                className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
+                className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-300 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
              <div className="w-12 h-12 flex items-center justify-center">
   <Image
     src="/trustwallet.png"
     alt="Wallet"
-    width={24}
-    height={24}
+    width={40}
+    height={40}
     priority
     className="object-contain"
   />
@@ -576,8 +576,8 @@ function PaymentInner() {
   <Image
     src="/coinbase.png"
     alt="Wallet"
-    width={24}
-    height={24}
+    width={40}
+    height={40}
     priority
     className="object-contain"
   />
@@ -604,8 +604,8 @@ function PaymentInner() {
   <Image
     src="/rainbow.png"
     alt="Wallet"
-    width={24}
-    height={24}
+    width={40}
+    height={40}
     priority
     className="object-contain"
   />
