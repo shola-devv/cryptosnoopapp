@@ -517,14 +517,17 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <Image
-  src="/metamask.png"
-  alt="Wallet"
-  width={48}
-  height={48}
-  priority
-  className="rounded-xl bg-orange-500 p-3"
-/>
+                 <div className="w-12 h-12 flex items-center justify-center">
+  <Image
+    src="/metamask.png"
+    alt="Wallet"
+    width={24}
+    height={24}
+    priority
+    className="object-contain"
+  />
+</div>
+
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">MetaMask</div>
                     <div className="text-sm text-slate-600 dark:text-slate-400">Most popular • Auto-verify enabled</div>
@@ -541,14 +544,17 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <Image
-  src="/trustwallet.png"
-  alt="Wallet"
-  width={48}
-  height={48}
-  priority
-  className="rounded-xl bg-orange-500 p-3"
-/>
+             <div className="w-12 h-12 flex items-center justify-center">
+  <Image
+    src="/trustwallet.png"
+    alt="Wallet"
+    width={24}
+    height={24}
+    priority
+    className="object-contain"
+  />
+</div>
+
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Trust Wallet</div>
                     <div className="text-sm text-slate-600 dark:text-slate-400"> • Auto-verify enabled</div>
@@ -562,20 +568,22 @@ function PaymentInner() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={startAutoDetection}
-                className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
+             className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
                  
-
-<Image
-  src="/coinbase.png"
-  alt="Wallet"
-  width={48}
-  height={48}
-  priority
-  className="rounded-xl bg-orange-500 p-3"
-/>
-
+               <div className="w-12 h-12 flex items-center justify-center">
+  <Image
+    src="/coinbase.png"
+    alt="Wallet"
+    width={24}
+    height={24}
+    priority
+    className="object-contain"
+  />
+</div>
+ 
+                
                   <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Coinbase Wallet</div>
                     <div className="text-sm text-slate-600 dark:text-slate-400"> • Auto-verify enabled</div>
@@ -592,15 +600,17 @@ function PaymentInner() {
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-xl hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <Image
-  src="/rainbow.png"
-  alt="Wallet"
-  width={48}
-  height={48}
-  priority
-  className="rounded-xl bg-orange-500 p-3"
-/>
-                  <div>
+             <div className="w-12 h-12 flex items-center justify-center">
+  <Image
+    src="/rainbow.png"
+    alt="Wallet"
+    width={24}
+    height={24}
+    priority
+    className="object-contain"
+  />
+</div>
+        <div>
                     <div className="font-semibold text-slate-900 dark:text-white">Rainbow</div>
                     <div className="text-sm text-slate-600 dark:text-slate-400">• Auto-verify enabled</div>
                   </div>
