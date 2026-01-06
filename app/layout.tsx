@@ -46,6 +46,7 @@ export const metadata: Metadata = {
         alt: "cryptosnoop preview"
       },
      ],
+     type: "website",
   },
    twitter: {
     card: "summary_large_image",
@@ -72,6 +73,24 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable}`}>
+
+    <head>
+    <Script
+      id="jsonld-logo"
+      type="application/ld+json"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "CryptoSnoop",
+          url: "https://cryptosnoop.app",
+          logo: "https://cryptosnoop.app/cryptosnoopwall.jpg",
+        }),
+      }}
+    />
+  </head>
+
       <body className="antialiased">
 
       <Script
