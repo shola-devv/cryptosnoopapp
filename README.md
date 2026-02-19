@@ -14,8 +14,10 @@ Built with typescript on Nextjs and nodejs, the app delivers a smooth and respon
 
 ## Technologies Used
 Nextjs
-- **JavaScript**: Handles application logic and fetches live data from the API.
+- **Typescript**: Handles application logic and fetches live data from the API.
 - **CSS**: For styling and ensuring a responsive layout.
+  Nodejs
+  redis
   
 ## Getting Started
 To run this app locally, follow the instructions below:
