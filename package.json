@@ -46,6 +46,7 @@
     "@upstash/ratelimit": "^2.0.6",
     "@upstash/redis": "^1.35.6",
     "@web3modal/wagmi": "^5.1.11",
+    "wagmi": "^3.6.16",
     "bcryptjs": "^3.0.2",
     "bitcoinjs-lib": "^7.0.0",
     "class-variance-authority": "^0.7.1",
