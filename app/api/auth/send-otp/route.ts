@@ -93,15 +93,15 @@ function generateSecureOTP(): string {
 
     // Generate 6-digit OTP
     const otp = generateSecureOTP();
-    console.log(`🎲 [Send OTP] Generated OTP: gotcha...(it's not the otp, duhh)`);
+  
 
     // Hash the OTP before storing
     const hashedOTP = await bcrypt.hash(otp, 10);
-    console.log(`🔐 [Send OTP] OTP hashed for storage`);
+   // console.log(`🔐 [Send OTP] OTP hashed for storage`);
 
     // Delete any existing OTP for this email
     await Otp.deleteMany({ email: emailString });
-    console.log(`🗑️ [Send OTP] Cleared old OTPs`);
+   // console.log(`🗑️ [Send OTP] Cleared old OTPs`);
 
     // Save new OTP (hashed)
     const otpRecord = new Otp({
@@ -111,7 +111,7 @@ function generateSecureOTP(): string {
     });
 
     await otpRecord.save();
-    console.log(` [Send OTP] OTP saved to DB`);
+    //console.log(` [Send OTP] OTP saved to DB`);
 
     // Configure email transporter
     const transporter = nodemailer.createTransport({

@@ -35,4 +35,4 @@ if (connection.readyState === 1) {
 // Ensure the model is only created once
 const Otp = mongoose.models.Otp || mongoose.model("Otp", OtpSchema);
 
-export default Otp;
+export default Otp
